@@ -15,9 +15,9 @@ import gift.domain.product.entity.Category;
 import gift.domain.product.entity.Product;
 import gift.domain.member.entity.Role;
 import gift.domain.member.entity.Member;
-import gift.domain.wishlist.dto.WishItemResponseDto;
+import gift.domain.wishlist.dto.WishItemResponse;
 import gift.domain.wishlist.repository.WishlistJpaRepository;
-import gift.domain.wishlist.dto.WishItemRequestDto;
+import gift.domain.wishlist.dto.WishItemRequest;
 import gift.domain.wishlist.entity.WishItem;
 import gift.exception.InvalidProductInfoException;
 import java.util.Collections;
@@ -57,14 +57,14 @@ class WishlistServiceTest {
     @DisplayName("위시리스트 추가 성공")
     void create_success() {
         // given
-        WishItemRequestDto wishItemRequestDto = new WishItemRequestDto(1L);
+        WishItemRequest wishItemRequest = new WishItemRequest(1L);
         given(productJpaRepository.findById(anyLong())).willReturn(Optional.of(product));
 
-        WishItem wishItem = wishItemRequestDto.toWishItem(MEMBER, product);
+        WishItem wishItem = wishItemRequest.toWishItem(MEMBER, product);
         given(wishlistJpaRepository.save(any(WishItem.class))).willReturn(wishItem);
 
         // when
-        WishItemResponseDto savedWishItem = wishlistService.create(wishItemRequestDto, MEMBER);
+        WishItemResponse savedWishItem = wishlistService.create(wishItemRequest, MEMBER);
 
         // then
         assertAll(
@@ -78,11 +78,11 @@ class WishlistServiceTest {
     @DisplayName("위시리스트 추가 서비스 실패 - 존재하지 않는 상품 ID")
     void create_fail_product_id_error() {
         // given
-        WishItemRequestDto wishItemRequestDto = new WishItemRequestDto(2L);
+        WishItemRequest wishItemRequest = new WishItemRequest(2L);
         given(productJpaRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // when & then
-        assertThatThrownBy(() -> wishlistService.create(wishItemRequestDto, MEMBER))
+        assertThatThrownBy(() -> wishlistService.create(wishItemRequest, MEMBER))
             .isInstanceOf(InvalidProductInfoException.class)
             .hasMessage("error.invalid.product.id");
     }
@@ -102,7 +102,7 @@ class WishlistServiceTest {
             .willReturn(new PageImpl<>(wishItemList));
 
         // when
-        Page<WishItemResponseDto> wishItems = wishlistService.readAll(PageRequest.of(0, 5), MEMBER);
+        Page<WishItemResponse> wishItems = wishlistService.readAll(PageRequest.of(0, 5), MEMBER);
 
         // then
         assertAll(
@@ -124,7 +124,7 @@ class WishlistServiceTest {
         wishlistService.delete(1L);
 
         // then
-        Page<WishItemResponseDto> wishlist = wishlistService.readAll(PageRequest.of(0, 5), MEMBER);
+        Page<WishItemResponse> wishlist = wishlistService.readAll(PageRequest.of(0, 5), MEMBER);
         assertThat(wishlist).isEmpty();
     }
 
@@ -152,7 +152,7 @@ class WishlistServiceTest {
         wishlistService.deleteAllByMemberId(MEMBER);
 
         // then
-        Page<WishItemResponseDto> wishlist = wishlistService.readAll(PageRequest.of(0, 5), MEMBER);
+        Page<WishItemResponse> wishlist = wishlistService.readAll(PageRequest.of(0, 5), MEMBER);
         assertThat(wishlist).isEmpty();
     }
 }

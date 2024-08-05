@@ -105,7 +105,7 @@ public class Product {
         long uniqueOptionNameCount = options.stream().map(Option::getName).distinct().count();
         boolean hasDuplicateOptionName = uniqueOptionNameCount != options.size();
 
-        if ((options.size() == 0) || hasDuplicateOptionName) {
+        if ((options.isEmpty()) || hasDuplicateOptionName) {
             throw new InvalidProductInfoException("error.invalid.product.options");
         }
     }
@@ -121,9 +121,14 @@ public class Product {
 
     public boolean hasOption(long optionId) {
         return options.stream()
+            .anyMatch(option -> option.getId() == optionId);
+    }
+
+    public Option getOption(long optionId) {
+        return options.stream()
             .filter(option -> option.getId() == optionId)
             .findAny()
-            .isPresent();
+            .orElseThrow(() -> new InvalidProductInfoException("error.invalid.option.id"));
     }
 
     public void addOption(Option option) {

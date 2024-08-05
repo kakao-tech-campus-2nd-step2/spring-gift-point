@@ -19,7 +19,7 @@ class AcceptanceTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private static final String ALLOWED_METHOD_NAMES = "GET,POST,PUT,DELETE,OPTIONS";
+    private static final String ALLOWED_METHOD_NAMES = "GET,POST,PUT,PATCH,DELETE,OPTIONS";
 
     @Test
     void cors() throws Exception {

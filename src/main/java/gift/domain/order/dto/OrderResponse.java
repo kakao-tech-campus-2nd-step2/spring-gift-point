@@ -7,16 +7,20 @@ public record OrderResponse(
     Long id,
     Long optionId,
     int quantity,
-    LocalDateTime orderDateTime,
-    String message
+    String message,
+    int originalPrice,
+    int finalPrice,
+    LocalDateTime orderDateTime
 ) {
-    public static OrderResponse from(Order order) {
+    public static OrderResponse from(Order order, int originalPrice) {
         return new OrderResponse(
             order.getId(),
             order.getOrderItems().getFirst().getId(),
             order.getOrderItems().getFirst().getQuantity(),
-            order.getOrderDateTime(),
-            order.getRecipientMessage()
+            order.getRecipientMessage(),
+            originalPrice,
+            order.getPurchasePrice(),
+            order.getOrderDateTime()
         );
     }
 }

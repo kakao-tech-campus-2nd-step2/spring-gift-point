@@ -2,10 +2,14 @@ package gift.domain.order.service;
 
 import gift.domain.member.entity.AuthProvider;
 import gift.domain.member.entity.Member;
+import gift.domain.order.dto.MultipleOrderRequest;
+import gift.domain.order.dto.MultipleOrderResponse;
 import gift.domain.order.dto.OrderItemRequest;
 import gift.domain.order.dto.OrderRequest;
 import gift.domain.order.dto.OrderResponse;
+import gift.domain.order.entity.DiscountPolicy;
 import gift.domain.order.entity.Order;
+import gift.domain.order.entity.Price;
 import gift.domain.order.repository.OrderJpaRepository;
 import gift.exception.InvalidOrderException;
 import org.springframework.stereotype.Service;
@@ -29,31 +33,47 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderResponse createAndSendMessage(OrderRequest orderRequest, Member member) {
+    public MultipleOrderResponse createMultipleAndSendMessage(MultipleOrderRequest orderRequest, Member member) {
         Order order = orderRequest.toOrder(member);
 
-//        orderItemService.create(member, order, orderRequest.orderItems());
-        Order savedOrder = orderJpaRepository.save(order);
+        Price originalPrice = orderItemService.createMultiple(member, order, orderRequest.orderItems());
+        Order savedOrder = purchase(member, originalPrice, order);
 
         if (member.getAuthProvider() != AuthProvider.KAKAO) {
             throw new InvalidOrderException("error.invalid.userinfo.provider");
         }
 
-//        if (!messageService.sendMessageToMe(member, OrderResponse.from(savedOrder)).equals("0")) {
-//            throw new ExternalApiException("error.kakao.talk.message.response");
-//        };
-        return OrderResponse.from(savedOrder);
+        MultipleOrderResponse response = MultipleOrderResponse.from(savedOrder, originalPrice.value());
+        messageService.sendMessageToMe(member, response).equals("0");
+        return response;
     }
 
     @Transactional
-    public OrderResponse create(OrderRequest orderRequest, Member member) {
+    public OrderResponse createOne(OrderRequest orderRequest, Member member) {
         Order order = orderRequest.toOrder(member);
+        OrderItemRequest orderItemRequest = new OrderItemRequest(orderRequest.optionId(), orderRequest.quantity());
 
-        OrderItemRequest orderItemRequest = new OrderItemRequest(null, orderRequest.optionId(),
-            orderRequest.quantity());
-        orderItemService.createOne(member, order, orderItemRequest);
+        Price originalPrice = orderItemService.createOne(member, order, orderItemRequest);
+        Order savedOrder = purchase(member, originalPrice, order);
+        return OrderResponse.from(savedOrder, originalPrice.value());
+    }
 
-        Order savedOrder = orderJpaRepository.save(order);
-        return OrderResponse.from(savedOrder);
+    private Order purchase(Member member, Price originalPrice, Order order) {
+        Price purchasePrice = applyDiscountPolicy(originalPrice, DiscountPolicy.DEFAULT);
+        order.assignPurchasePrice(purchasePrice);
+        member.usePoint(purchasePrice);
+
+        return orderJpaRepository.save(order);
+    }
+
+    private Price applyDiscountPolicy(Price originalPrice, DiscountPolicy discountPolicy) {
+        Price purchasePrice = originalPrice;
+
+        if (discountPolicy == DiscountPolicy.DEFAULT) {
+            if (originalPrice.value() >= 50000) {
+                purchasePrice = originalPrice.multiply(0.9);
+            }
+        }
+        return purchasePrice;
     }
 }
