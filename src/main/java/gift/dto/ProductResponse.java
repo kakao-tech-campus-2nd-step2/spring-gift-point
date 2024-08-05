@@ -3,14 +3,14 @@ package gift.dto;
 import gift.domain.Category;
 import gift.domain.Product;
 
-public class ProductDTO {
+public class ProductResponse {
     private Long id;
     private String name;
     private Long price;
     private String imageUrl;
     private Category category;
 
-    public ProductDTO(Long id, String name, Long price, String imageUrl, Category category) {
+    public ProductResponse(Long id, String name, Long price, String imageUrl, Category category) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -58,8 +58,8 @@ public class ProductDTO {
         this.category = category;
     }
 
-    public static ProductDTO convertToDto(Product product) {
-        return new ProductDTO(
+    public static ProductResponse convertToDto(Product product) {
+        return new ProductResponse(
                 product.getId(),
                 product.getName(),
                 product.getPrice(),
