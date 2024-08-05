@@ -3,11 +3,11 @@ package gift.option;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import gift.category.persistence.Category;
+import gift.category.persistence.entity.Category;
 import gift.category.persistence.CategoryRepository;
-import gift.option.persistence.Option;
+import gift.option.persistence.entity.Option;
 import gift.option.persistence.OptionRepository;
-import gift.product.persistence.Product;
+import gift.product.persistence.entity.Product;
 import gift.product.persistence.ProductRepository;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

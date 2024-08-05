@@ -2,7 +2,7 @@ package gift.category.application.service;
 
 import gift.category.application.dto.CategoryRequestDto;
 import gift.category.application.dto.CategoryResponseDto;
-import gift.category.persistence.Category;
+import gift.category.persistence.entity.Category;
 import gift.category.persistence.CategoryRepository;
 import gift.exception.AlreadyExistCategory;
 import gift.exception.InvalidCategory;

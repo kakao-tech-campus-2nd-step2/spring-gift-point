@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 
-import gift.member.persistence.Member;
+import gift.member.persistence.entity.Member;
 import gift.member.persistence.MemberRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;

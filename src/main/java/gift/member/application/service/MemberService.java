@@ -6,7 +6,7 @@ import gift.member.application.dto.PointResponseDto;
 import gift.member.util.JwtTokenUtil;
 import gift.member.application.dto.TokenResponseDto;
 import gift.member.application.dto.RegisterResponseDto;
-import gift.member.persistence.Member;
+import gift.member.persistence.entity.Member;
 import gift.member.persistence.MemberRepository;
 import java.util.Optional;
 import org.springframework.http.ResponseEntity;

@@ -1,16 +1,16 @@
 package gift.wishlist.application.service;
 
 import gift.exception.InvalidProduct;
-import gift.member.persistence.Member;
+import gift.member.persistence.entity.Member;
 import gift.member.persistence.MemberRepository;
-import gift.product.persistence.Product;
+import gift.product.persistence.entity.Product;
 import gift.product.persistence.ProductRepository;
 import gift.wishlist.application.dto.ProductDto;
 import gift.wishlist.application.dto.WishPageDto;
 import gift.wishlist.application.dto.WishRequestDto;
 import gift.wishlist.application.dto.WishResponseDto;
 import gift.wishlist.persistence.WishlistRepository;
-import gift.wishlist.persistence.Wishlist;
+import gift.wishlist.persistence.entity.Wishlist;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import org.springframework.data.domain.Page;

@@ -1,8 +1,8 @@
-package gift.product.persistence;
+package gift.product.persistence.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import gift.category.persistence.Category;
-import gift.option.persistence.Option;
+import gift.category.persistence.entity.Category;
+import gift.option.persistence.entity.Option;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

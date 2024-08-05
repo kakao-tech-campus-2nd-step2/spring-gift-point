@@ -1,7 +1,7 @@
-package gift.wishlist.persistence;
+package gift.wishlist.persistence.entity;
 
-import gift.member.persistence.Member;
-import gift.product.persistence.Product;
+import gift.member.persistence.entity.Member;
+import gift.product.persistence.entity.Product;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
