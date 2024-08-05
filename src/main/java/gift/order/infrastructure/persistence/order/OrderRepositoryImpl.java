@@ -1,4 +1,4 @@
-package gift.order.infrastructure.persistence;
+package gift.order.infrastructure.persistence.order;
 
 import gift.core.PagedDto;
 import gift.core.domain.order.Order;

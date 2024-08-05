@@ -18,17 +18,23 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ProductOptionRepository productOptionRepository;
     private final UserRepository userRepository;
+    private final OrderPointStrategy orderPointStrategy;
+    private final PointOperationSupport pointOperationSupport;
     private final OrderAlarmGateway orderAlarmGateway;
 
     public OrderServiceImpl(
             OrderRepository orderRepository,
             ProductOptionRepository productOptionRepository,
             UserRepository userRepository,
+            PointOperationSupport pointOperationSupport,
+            OrderPointStrategy orderPointStrategy,
             OrderAlarmGateway orderAlarmGateway
     ) {
         this.orderRepository = orderRepository;
         this.productOptionRepository = productOptionRepository;
         this.userRepository = userRepository;
+        this.pointOperationSupport = pointOperationSupport;
+        this.orderPointStrategy = orderPointStrategy;
         this.orderAlarmGateway = orderAlarmGateway;
     }
 
@@ -44,8 +50,11 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(OptionNotFoundException::new);
 
         option.validateOrderable(order.quantity());
+        pointOperationSupport.subtractPoint(order.userId(), order.usedPoint());
         productOptionRepository.save(orderedProductId, option.applyDecreaseQuantity(order.quantity()));
         Order orderResult = orderRepository.save(order);
+        Long givingPoint = orderPointStrategy.calculatePoint(order);
+        pointOperationSupport.addPoint(order.userId(), givingPoint);
         orderAlarmGateway.sendAlarm(gatewayAccessToken, orderResult.message());
         return orderResult;
     }

@@ -22,17 +22,40 @@ public class ProductCategoryEntity extends BaseEntity {
     protected ProductCategoryEntity() {
     }
 
-    protected ProductCategoryEntity(Long id, String name) {
+    protected ProductCategoryEntity(
+            Long id,
+            String name,
+            String color,
+            String imageUrl,
+            String description
+    ) {
         super(id);
         this.name = name;
+        this.color = color;
+        this.imageUrl = imageUrl;
+        this.description = description;
     }
 
-    protected ProductCategoryEntity(String name) {
+    protected ProductCategoryEntity(
+            String name,
+            String color,
+            String imageUrl,
+            String description
+    ) {
         this.name = name;
+        this.color = color;
+        this.imageUrl = imageUrl;
+        this.description = description;
     }
 
     public static ProductCategoryEntity fromDomain(ProductCategory productCategory) {
-        return new ProductCategoryEntity(productCategory.id(), productCategory.name());
+        return new ProductCategoryEntity(
+                productCategory.id(),
+                productCategory.name(),
+                productCategory.color(),
+                productCategory.imageUrl(),
+                productCategory.description()
+        );
     }
 
     public String getName() {

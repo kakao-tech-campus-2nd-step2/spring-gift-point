@@ -8,9 +8,10 @@ import gift.core.domain.order.Order;
 public record OrderRequest(
         Long optionId,
         Integer quantity,
+        Long point,
         String message
 ) {
     public Order toOrder(Long userId) {
-        return Order.newOrder(userId, optionId(), quantity(), message());
+        return Order.newOrder(userId, optionId(), point(), quantity(), message());
     }
 }

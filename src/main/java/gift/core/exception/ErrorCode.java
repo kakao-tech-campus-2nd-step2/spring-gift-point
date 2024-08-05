@@ -14,6 +14,8 @@ public enum ErrorCode {
     OPTION_NOT_ENOUGH_QUANTITY(HttpStatus.BAD_REQUEST, "주문 수량이 재고보다 많습니다."),
     NEGATIVE_QUANTITY(HttpStatus.BAD_REQUEST, "주문 수량은 음수가 될 수 없습니다."),
     OPTION_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "옵션 등록 제한을 초과하였습니다."),
+    POINT_NOT_ENOUGH(HttpStatus.BAD_REQUEST, "포인트가 부족합니다."),
+    NEGATIVE_POINT(HttpStatus.BAD_REQUEST, "포인트는 음수가 될 수 없습니다."),
 
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다!"),
     USER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "이미 존재하는 사용자입니다."),

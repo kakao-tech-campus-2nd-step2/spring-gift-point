@@ -1,4 +1,4 @@
-package gift.order.infrastructure.persistence;
+package gift.order.infrastructure.persistence.order;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

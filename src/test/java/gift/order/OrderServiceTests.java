@@ -8,9 +8,12 @@ import gift.core.domain.product.ProductOptionRepository;
 import gift.core.domain.product.exception.OptionNotFoundException;
 import gift.core.domain.user.UserRepository;
 import gift.core.domain.user.exception.UserNotFoundException;
+import gift.core.exception.ErrorCode;
 import gift.core.exception.validation.InvalidArgumentException;
 import gift.order.service.OrderAlarmGateway;
 import gift.order.service.OrderServiceImpl;
+import gift.order.service.OrderPointStrategy;
+import gift.order.service.PointOperationSupport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,8 +25,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class OrderServiceTests {
@@ -39,6 +41,12 @@ public class OrderServiceTests {
     @Mock
     private OrderAlarmGateway orderAlarmGateway;
 
+    @Mock
+    private PointOperationSupport pointOperationSupport;
+
+    @Mock
+    private OrderPointStrategy orderPointStrategy;
+
     private OrderService orderService;
 
     @BeforeEach
@@ -47,13 +55,15 @@ public class OrderServiceTests {
                 orderRepository,
                 productOptionRepository,
                 userRepository,
+                pointOperationSupport,
+                orderPointStrategy,
                 orderAlarmGateway
         );
     }
 
     @Test
     void testOrderProduct() {
-        Order order = Order.newOrder(1L, 1L, 1, "test");
+        Order order = Order.newOrder(1L, 1L, 100L, 1, "test");
 
         when(userRepository.existsById(1L)).thenReturn(true);
         when(productOptionRepository.getProductIdByOptionId(1L)).thenReturn(1L);
@@ -69,7 +79,7 @@ public class OrderServiceTests {
     @Test
     @DisplayName("주문 시 기입하는 유저 ID가 존재하지 않는 유저의 ID일 때 예외가 발생한다.")
     void testOrderProductWhenUserDoesNotExist() {
-        Order order = Order.newOrder(1L, 1L, 1, "test");
+        Order order = Order.newOrder(1L, 1L, 100L, 1, "test");
 
         when(userRepository.existsById(1L)).thenReturn(false);
 
@@ -79,7 +89,7 @@ public class OrderServiceTests {
     @Test
     @DisplayName("주문 시 기입하는 옵션 ID가 존재하지 않는 옵션의 ID일 때 예외가 발생한다.")
     void testOrderProductWhenOptionDoesNotExist() {
-        Order order = Order.newOrder(1L, 1L, 1, "test");
+        Order order = Order.newOrder(1L, 1L, 100L, 1, "test");
 
         when(userRepository.existsById(1L)).thenReturn(true);
         when(productOptionRepository.getProductIdByOptionId(1L)).thenReturn(1L);
@@ -91,7 +101,7 @@ public class OrderServiceTests {
     @Test
     @DisplayName("주문 시 기입하는 수량이 주문 가능 수량보다 클 때 예외가 발생한다.")
     void testOrderProductWhenQuantityIsGreaterThanOrderable() {
-        Order order = Order.newOrder(1L, 1L, 15, "test");
+        Order order = Order.newOrder(1L, 1L, 100L, 100, "test");
 
         when(userRepository.existsById(1L)).thenReturn(true);
         when(productOptionRepository.getProductIdByOptionId(1L)).thenReturn(1L);
@@ -103,11 +113,38 @@ public class OrderServiceTests {
     @Test
     @DisplayName("주문 시 기입하는 수량이 0보다 작을 때 예외가 발생한다.")
     void testOrderProductWhenQuantityIsNegative() {
-        Order order = Order.newOrder(1L, 1L, -10, "test");
+        Order order = Order.newOrder(1L, 1L, 100L, -1, "test");
 
         when(userRepository.existsById(1L)).thenReturn(true);
         when(productOptionRepository.getProductIdByOptionId(1L)).thenReturn(1L);
         when(productOptionRepository.findById(1L)).thenReturn(Optional.of(ProductOption.of("test", 10)));
+
+        assertThrows(InvalidArgumentException.class, () -> orderService.orderProduct(order, "test"));
+    }
+
+    @Test
+    @DisplayName("주문 시 기입하는 포인트가 0보다 작을 때 예외가 발생한다.")
+    void testOrderProductWhenPointIsNegative() {
+        Order order = Order.newOrder(1L, 1L, -1L, 1, "test");
+
+        when(userRepository.existsById(1L)).thenReturn(true);
+        when(productOptionRepository.getProductIdByOptionId(1L)).thenReturn(1L);
+        when(productOptionRepository.findById(1L)).thenReturn(Optional.of(ProductOption.of("test", 10)));
+        when(orderRepository.save(order)).thenReturn(order);
+        when(orderPointStrategy.calculatePoint(order)).thenThrow(new InvalidArgumentException(ErrorCode.NEGATIVE_POINT));
+
+        assertThrows(InvalidArgumentException.class, () -> orderService.orderProduct(order, "test"));
+    }
+
+    @Test
+    @DisplayName("주문 시 사용하려는 포인트가 가지고 있는 포인트보다 많을 때 발생한다.")
+    void testOrderProductWhenPointIsGreaterThanRemainPoint() {
+        Order order = Order.newOrder(1L, 1L, 100L, 1, "test");
+
+        when(userRepository.existsById(1L)).thenReturn(true);
+        when(productOptionRepository.getProductIdByOptionId(1L)).thenReturn(1L);
+        when(productOptionRepository.findById(1L)).thenReturn(Optional.of(ProductOption.of("test", 10)));
+        doThrow(new InvalidArgumentException(ErrorCode.POINT_NOT_ENOUGH)).when(pointOperationSupport).subtractPoint(anyLong(), anyLong());
 
         assertThrows(InvalidArgumentException.class, () -> orderService.orderProduct(order, "test"));
     }
