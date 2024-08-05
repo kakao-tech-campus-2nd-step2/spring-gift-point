@@ -1,3 +1,4 @@
+
 INSERT INTO category (name, color, image_url, description) VALUES ('생일', '#5949a3', 'https://img1.daumcdn.net/thumb/S104x104/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fgift%2Fhome%2Ftheme%2F292020231106_MXMUB.png', '예산에 쏙쏙 맞춰 AI가 자동으로 추천드려요!');
 INSERT INTO category (name, color, image_url, description) VALUES ('졸업선물', '#FEECE2', 'https://img1.daumcdn.net/thumb/S104x104/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fgift%2Fhome%2Ftheme%2F20240214_EWQEQ.png', '');
 INSERT INTO category (name, color, image_url, description) VALUES ('스몰럭셔리', '#B67352', 'https://img1.daumcdn.net/thumb/S104x104/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fgift%2Fhome%2Ftheme%2F292320231231_EQOWK.png', '');
