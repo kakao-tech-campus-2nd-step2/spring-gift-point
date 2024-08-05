@@ -1,42 +1,252 @@
 <!DOCTYPE html>
+<div th:replace="~{layout :: header}"></div>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Shopping Mall</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-</head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Shopping Mall</a>
-    <div class="collapse navbar-collapse">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/}">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/products}">Manage Products</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/wishes}">Wishlist</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/members}">Profile</a>
-            </li>
-        </ul>
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/login}">Login</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/logout}">Logout</a>
-            </li>
-        </ul>
-    </div>
-</nav>
 <div class="container mt-4">
-    <div th:replace="~{::content}"></div>
+    <div class="d-flex justify-content-between mb-3">
+        <h2>Manage Members</h2>
+        <div>
+            <button class="btn btn-danger" id="deleteSelected">Delete</button>
+            <button class="btn btn-success" id="addMember">Add New Member</button>
+        </div>
+    </div>
+    <!-- Search Box -->
+    <div class="row mb-3">
+        <div class="col-md-8">
+            <input type="text" class="form-control" id="searchMemberId" placeholder="Member ID 입력">
+        </div>
+        <div class="col-md-4">
+            <button class="btn btn-primary btn-block" id="searchMember">Search</button>
+        </div>
+    </div>
+    <!-- Members Table -->
+    <table class="table table-striped">
+        <!-- table header -->
+        <thead class="thead-dark">
+        <tr>
+            <th><input type="checkbox" id="selectAll"></th>
+            <th>Member Type</th>
+            <th>Email</th>
+            <th>Nickname</th>
+            <th>Points</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="memberTableBody">
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <nav aria-label="Page navigation example">
+        <ul class="pagination" id="pagination">
+        </ul>
+    </nav>
 </div>
+
+<!-- Member Modal -->
+<div class="modal fade" id="memberModal" tabindex="-1" role="dialog" aria-labelledby="memberModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="memberModalLabel">Add New Member</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- form 을 통해 POST, PUT api 요청을 보낸다 -->
+                <form id="memberForm">
+                    <input type="hidden" id="memberId" name="id">
+                    <div class="form-group">
+                        <label for="memberEmail">Email</label>
+                        <input type="email" class="form-control" id="memberEmail" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="memberPassword">Password</label>
+                        <input type="password" class="form-control" id="memberPassword" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="memberNickname">Nickname</label>
+                        <input type="text" class="form-control" id="memberNickname" name="nickname" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="memberPoint">Point</label>
+                        <input type="number" class="form-control" id="memberPoint" name="point" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveMember">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        const apiBaseUrl = '/api/members';
+        let currentPage = 0;
+
+        function loadMembers(page) {
+            $.get(apiBaseUrl + '?page=' + page, function (response) {
+                $('#memberTableBody').empty();
+                response.data.forEach(member => {
+                    $('#memberTableBody').append(`
+                        <tr data-id="${member.id}">
+                            <td><input type="checkbox" class="memberCheckbox"></td>
+                            <td>${member.memberType}</td>
+                            <td>${member.email}</td>
+                            <td>${member.nickname}</td>
+                            <td>${member.point}</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm editMember">✏️</button>
+                                <button class="btn btn-danger btn-sm deleteMember">🗑️</button>
+                            </td>
+                        </tr>
+                    `);
+                });
+
+                $('#pagination').empty();
+                for (let i = 0; i < response.page; i++) {
+                    $('#pagination').append(`
+                        <li class="page-item ${i === currentPage ? 'active' : ''}">
+                            <a class="page-link" href="#">${i + 1}</a>
+                        </li>
+                    `);
+                }
+            });
+        }
+
+        $('#pagination').on('click', '.page-link', function (e) {
+            e.preventDefault();
+            const page = $(this).text() - 1;
+            if (page !== currentPage) {
+                currentPage = page;
+                loadMembers(currentPage);
+            }
+        });
+
+        $('#addMember').click(function () {
+            $('#memberModalLabel').text('Add New Member');
+            $('#memberForm')[0].reset();
+            $('#memberId').val('');
+            $('#memberModal').modal('show');
+        });
+
+        $('#saveMember').click(function () {
+            const memberData = {
+                email: $('#memberEmail').val(),
+                password: $('#memberPassword').val(),
+                nickname: $('#memberNickname').val(),
+                point: $('#memberPoint').val()
+            };
+            const memberId = $('#memberId').val();
+
+            const ajaxOptions = {
+                url: apiBaseUrl,
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(memberData),
+                success: function () {
+                    $('#memberModal').modal('hide');
+                    loadMembers(currentPage);
+                },
+                error: function (xhr) {
+                    if (xhr.status >= 400 && xhr.status < 500) {
+                        alert(xhr.responseJSON.message);
+                    }
+                }
+            };
+
+            if (memberId) {
+                ajaxOptions.url = apiBaseUrl + '/' + memberId;
+                ajaxOptions.type = 'PUT';
+            }
+
+            $.ajax(ajaxOptions);
+        });
+
+        $(document).on('click', '.editMember', function () {
+            const memberId = $(this).closest('tr').data('id');
+            $.get(apiBaseUrl + '/' + memberId, function (response) {
+                $('#memberModalLabel').text('Edit Member');
+                $('#memberId').val(response.data.id);
+                $('#memberEmail').val(response.data.email);
+                $('#memberPassword').val(response.data.password);
+                $('#memberNickname').val(response.data.nickname);
+                $('#memberPoint').val(response.data.point);
+                $('#memberModal').modal('show');
+            });
+        });
+
+        $(document).on('click', '.deleteMember', function () {
+            const memberId = $(this).closest('tr').data('id');
+            $.ajax({
+                url: apiBaseUrl + '/' + memberId,
+                type: 'DELETE',
+                success: function () {
+                    loadMembers(currentPage);
+                }
+            });
+        });
+
+        $('#deleteSelected').click(function () {
+            $('.memberCheckbox:checked').each(function () {
+                const memberId = $(this).closest('tr').data('id');
+                $.ajax({
+                    url: apiBaseUrl + '/' + memberId,
+                    type: 'DELETE',
+                    success: function () {
+                        loadMembers(currentPage);
+                    }
+                });
+            });
+        });
+
+        $('#selectAll').click(function () {
+            $('.memberCheckbox').prop('checked', this.checked);
+        });
+
+        $('#searchMember').click(function () {
+            const memberId = $('#searchMemberId').val();
+            if (memberId) {
+                $.ajax({
+                    url: apiBaseUrl + '/' + memberId,
+                    type: 'GET',
+                    success: function (response) {
+                        const $memberTableBody = $('#memberTableBody');
+                        $memberTableBody.empty();
+                        const member = response.data;
+                        $memberTableBody.append(`
+                            <tr data-id="${member.id}">
+                                <td><input type="checkbox" class="memberCheckbox"></td>
+                                <td>${member.memberType}</td>
+                                <td>${member.email}</td>
+                                <td>${member.nickname}</td>
+                                <td>${member.point}</td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm editMember">✏️</button>
+                                    <button class="btn btn-danger btn-sm deleteMember">🗑️</button>
+                                </td>
+                            </tr>
+                        `);
+                    },
+                    error: function (xhr) {
+                        if (xhr.responseJSON && xhr.responseJSON.code === 'M002') {
+                            alert(xhr.responseJSON.message);
+                            return;
+                        }
+                        alert('An error occurred while fetching the member.');
+                    }
+                });
+            } else {
+                loadMembers(currentPage);
+            }
+        });
+
+        loadMembers(currentPage);
+    });
+</script>
 </body>
 </html>

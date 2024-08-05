@@ -10,7 +10,7 @@ import java.util.Objects;
 
 @Embeddable
 public class OptionQuantity {
-    public static final long MIN_COUNT = 1L;
+    public static final long MIN_COUNT = 0L;
     public static final long MAX_COUNT = 100_000_000L;
 
     @Column(name = "quantity")

@@ -111,7 +111,7 @@ INSERT INTO products (id, name, price, image_url, category_id) VALUES
 
 
 -- options
-INSERT INTO options (name, quantity, product_id) VALUES ('추가 샷', 1, 1);
+INSERT INTO options (name, quantity, product_id) VALUES ('추가 샷', 10, 1);
 INSERT INTO options (name, quantity, product_id) VALUES ('초코 케이크', 1, 2);
 INSERT INTO options (name, quantity, product_id) VALUES ('초콜릿', 1, 3);
 INSERT INTO options (name, quantity, product_id) VALUES ('스낵 교환', 1, 4);
@@ -201,9 +201,9 @@ INSERT INTO options (name, quantity, product_id) VALUES ('연기학원 수강권
 
 
 -- members
-INSERT INTO members (member_type, email, password, nickname) VALUES ('USER', 'email', 'password', 'nickname');
-INSERT INTO members (member_type, email, password, nickname) VALUES ('USER', 'email1', 'password1', 'nickname1');
-INSERT INTO members (member_type, email, password, nickname) VALUES ('USER', 'email2', 'password2', 'nickname2');
+INSERT INTO members (member_type, email, password, nickname, point) VALUES ('USER', 'email', 'password', 'nickname', 0);
+INSERT INTO members (member_type, email, password, nickname, point) VALUES ('USER', 'email1', 'password1', 'nickname1', 0);
+INSERT INTO members (member_type, email, password, nickname, point) VALUES ('USER', 'email2', 'password2', 'nickname2', 0);
 
 -- wishes
 

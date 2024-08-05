@@ -11,7 +11,7 @@ Content-Type: application/json
 {
   "email": "email6",
   "password": "password3",
-  "nickName": "nickname6"
+  "nickname": "nickname6"
 }
 
 ### update member
@@ -21,7 +21,8 @@ Content-Type: application/json
 {
   "email": "email12",
   "password": "password3",
-  "nickName": "nickname9"
+  "nickname": "nickname9",
+  "point": 20
 }
 
 ### delete member

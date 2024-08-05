@@ -24,8 +24,7 @@ public class MemberService {
     }
 
     public Member getMemberById(Long id) {
-        return memberRepository.findById(id)
-                .orElseThrow(MemberNotFoundException::new);
+        return memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
     }
 
     public Member createMember(MemberServiceDto memberServiceDto) {
@@ -34,8 +33,8 @@ public class MemberService {
     }
 
     public Member updateMember(MemberServiceDto memberServiceDto) {
-        validateMemberExists(memberServiceDto.id());
-        validateEmailAndNicknameUnique(memberServiceDto);
+        Member existingMember = validateMemberExists(memberServiceDto.id());
+        validateEmailAndNicknameUnique(memberServiceDto, existingMember);
         return memberRepository.save(memberServiceDto.toMember());
     }
 
@@ -44,10 +43,12 @@ public class MemberService {
         memberRepository.deleteById(id);
     }
 
-    private void validateMemberExists(Long id) {
-        if (!memberRepository.existsById(id)) {
-            throw new MemberNotFoundException();
-        }
+    public Long getPoint(Long memberId) {
+        return memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new).getPoint();
+    }
+
+    private Member validateMemberExists(Long id) {
+        return memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
     }
 
     private void validateEmailAndNicknameUnique(MemberServiceDto memberServiceDto) {
@@ -59,4 +60,18 @@ public class MemberService {
             throw new DuplicateNicknameException();
         }
     }
+
+    private void validateEmailAndNicknameUnique(MemberServiceDto memberServiceDto, Member existingMember) {
+        boolean isEmailChanged = !existingMember.getEmail().equals(memberServiceDto.email());
+        boolean isNicknameChanged = !existingMember.getNickname().equals(memberServiceDto.nickName());
+
+        if (isEmailChanged && memberRepository.existsByEmail(memberServiceDto.email())) {
+            throw new DuplicateEmailException();
+        }
+
+        if (isNicknameChanged && memberRepository.existsByNickname(memberServiceDto.nickName())) {
+            throw new DuplicateNicknameException();
+        }
+    }
+
 }

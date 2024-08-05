@@ -1,0 +1,3 @@
+### get point
+GET http://localhost:8080/api/points
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJfaWQiOjEsIm1lbWJlcl90eXBlIjoiVVNFUiIsImlhdCI6MTcyMjUyNjkxOCwiZXhwIjo0NjA3NDMyNTQ1fQ.tiARqtddceU_ET1R78GihoYkG4HBekaH-T2nO0gVjMHHZBTXcok8EMYRUfHeSFJD445qgURRqi8P336c94bL6Q

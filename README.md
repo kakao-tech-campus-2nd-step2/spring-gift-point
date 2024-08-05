@@ -1,31 +1,46 @@
-# spring-gift-point
+## 포인트 전략
 
----
+### 정책
+1. 사용자별로 포인트 적립해주기!
 
-## Step1
+2. 구매시 0.5% 적립
 
-### 요구 사항
-API 문서 통합
+## API 문서
+1. 적립 포인트 조회
+```
+GET http://localhost:8080/api/points
+Authorization: Bearer <JWT_TOKEN>
+Content-Type: application/json
+```
 
-### 리뷰 내용
-
-
-### 구현 기능
-이전 과정에서 수정할 것들
-- [ ] 카테고리 테스트 작성
-- [ ] 옵션 테스트 작성
-- [ ] 전체적인 UI 구현
-- [ ] 불필요한 ResultResponseDto 제거
-- [ ] Stock 을 별도 테이블로 분리하기
-- [ ] 카카오 로그인 테스트
-- [ ] 카카오 주문하기 테스트
-
-step1 에서 구현할 것들  
-- [ ] API 문서 통합하기
+응답
+```
+{
+  "point": 1200 
+}
+```
 
 
+2. 관리자 화면에서만 포인트 추가 될 수 있도록 :
+3. 구매시 자동 적립
 
+(사용자가 포인트 사용하는 부분 구현할건지 말건지!?)
+4. 구매시 포인트 사용 어떻게 할건지?
+   -> 구매 요청 객체?
 
+```
+POST http://localhost:8080/api/orders
+Authorization: Bearer <JWT_TOKEN>
+Content-Type: application/json
+
+body 
+{
+  "quantity": 12,         
+  "message": "message",
+  "option_id": 1
+  "using_point" : 300
+}
+```
 
 
 
