@@ -1,12 +1,9 @@
 package gift.service.admin;
 
-import gift.common.enums.Role;
 import gift.dto.paging.PagingResponse;
-import gift.dto.point.MemberPointRequest;
 import gift.dto.point.MemberPointResponse;
-import gift.dto.product.ProductResponse;
 import gift.dto.user.UserResponse;
-import gift.exception.UserNotFoundException;
+import gift.exception.EntityNotFoundException;
 import gift.model.user.User;
 import gift.repository.user.UserRepository;
 import org.springframework.data.domain.*;
@@ -24,7 +21,7 @@ public class AdminService {
         this.userRepository = userRepository;
     }
 
-    public PagingResponse<UserResponse.Info> getUserList(User user, int page, int size){
+    public PagingResponse<UserResponse.Info> getUserList(User user, int page, int size) {
         user.isAdmin();
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("id").ascending());
         Page<User> users = userRepository.findAll(pageRequest);
@@ -36,11 +33,11 @@ public class AdminService {
 
     }
 
-    public MemberPointResponse.Info addPointToUser(User user,int depositPoint,Long userId){
+    public MemberPointResponse.Info addPointToUser(User user, int depositPoint, Long userId) {
         user.isAdmin();
 
         User existUser = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 멤버입니다."));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."));
 
         existUser.addPoint(depositPoint);
 

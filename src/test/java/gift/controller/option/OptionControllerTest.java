@@ -63,7 +63,7 @@ class OptionControllerTest {
     @Test
     @DisplayName("특정 상품의 옵션을 가져오는 메서드 테스트")
     void testGetAllOptionsFromGift() throws Exception {
-        Mockito.when(optionService.getOptionsByGiftId(1L)).thenReturn(Collections.singletonList(optionResponse));
+        Mockito.when(optionService.getOptionsByGiftId(1L)).thenReturn(optionResponseList);
 
         mockMvc.perform(get("/api/products/1/options"))
                 .andExpect(status().isOk())

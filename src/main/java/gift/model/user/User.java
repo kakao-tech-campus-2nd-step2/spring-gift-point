@@ -82,13 +82,13 @@ public class User {
 
     public void checkLoginType(LoginType loginType) {
         if (this.loginType != loginType) {
-            throw new InvalidUserException("카카오 서비스를 이용할 수 없는 유저입니다.");
+            throw new AuthenticationException("카카오 서비스를 이용할 수 없는 유저입니다.");
         }
     }
 
     public void isDefaultLogin() {
         if (this.loginType != LoginType.DEFAULT) {
-            throw new InvalidUserException("일반 로그인을 할 수 없습니다.(소셜 로그인 유저)");
+            throw new AuthenticationException("일반 로그인을 할 수 없습니다.(소셜 로그인 유저)");
         }
     }
 

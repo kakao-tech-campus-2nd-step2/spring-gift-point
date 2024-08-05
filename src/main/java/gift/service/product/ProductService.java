@@ -5,8 +5,7 @@ import gift.dto.option.OptionRequest;
 import gift.dto.paging.PagingResponse;
 import gift.dto.product.ProductRequest;
 import gift.dto.product.ProductResponse;
-import gift.exception.CategoryNotFoundException;
-import gift.exception.ProductNotFoundException;
+import gift.exception.EntityNotFoundException;
 import gift.model.category.Category;
 import gift.model.option.Option;
 import gift.model.product.Product;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,13 +43,14 @@ public class ProductService {
                 .collect(Collectors.toList());
         return new PagingResponse<>(page, productResponse, size, gifts.getTotalElements(), gifts.getTotalPages());
     }
+
     @Transactional(readOnly = true)
-    public PagingResponse<ProductResponse.Info> getAllGiftsByCategoryId(Long categoryId,int page, int size) {
+    public PagingResponse<ProductResponse.Info> getAllGiftsByCategoryId(Long categoryId, int page, int size) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(()-> new CategoryNotFoundException("존재하지 않는 카테고리입니다."));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 카테고리입니다."));
 
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("id").ascending());
-        Page<Product> gifts = productRepository.findAllByCategory(category,pageRequest);
+        Page<Product> gifts = productRepository.findAllByCategory(category, pageRequest);
         List<ProductResponse.Info> productResponse = gifts.stream()
                 .map(ProductResponse.Info::fromEntity)
                 .collect(Collectors.toList());
@@ -62,14 +61,14 @@ public class ProductService {
     @Transactional(readOnly = true)
     public ProductResponse.Info getGift(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 상품입니다."));
         return ProductResponse.Info.fromEntity(product);
     }
 
     @Transactional
     public ProductResponse.Info addGift(ProductRequest.Create giftRequest) {
         Category category = categoryRepository.findById(giftRequest.categoryId())
-                .orElseThrow(() -> new NoSuchElementException("해당 카테고리 id가 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("해당 카테고리 id가 없습니다."));
 
         List<Option> options = giftRequest.options().stream().map(OptionRequest.Create::toEntity).toList();
 
@@ -80,9 +79,9 @@ public class ProductService {
     @Transactional
     public void updateGift(ProductRequest.Update giftRequest, Long id) {
         Category category = categoryRepository.findById(giftRequest.categoryId())
-                .orElseThrow(() -> new NoSuchElementException("해당 카테고리 id가 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("해당 카테고리 id가 없습니다."));
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("해당 Gift가 없습니다. id : " + id));
+                .orElseThrow(() -> new EntityNotFoundException("해당 Gift가 없습니다. id : " + id));
         product.modify(giftRequest.name(), giftRequest.price(), giftRequest.imageUrl(), category);
         productRepository.save(product);
     }

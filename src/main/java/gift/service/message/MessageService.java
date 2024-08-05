@@ -1,18 +1,13 @@
 package gift.service.message;
 
-import gift.dto.order.OrderRequest;
-import gift.exception.OptionNotFoundException;
-import gift.exception.ProductNotFoundException;
+import gift.exception.EntityNotFoundException;
 import gift.model.option.Option;
 import gift.model.product.Product;
 import gift.model.token.OAuthToken;
 import gift.model.user.User;
 import gift.repository.option.OptionRepository;
-import gift.repository.order.OrderRepository;
 import gift.repository.product.ProductRepository;
 import gift.repository.token.OAuthTokenRepository;
-import gift.repository.user.UserRepository;
-import gift.repository.wish.WishRepository;
 import gift.util.KakaoApiCaller;
 import gift.util.TokenUtil;
 import org.springframework.stereotype.Service;
@@ -36,7 +31,7 @@ public class MessageService {
                           OAuthTokenRepository OAuthTokenRepository,
                           KakaoApiCaller kakaoApiCaller,
                           TokenUtil tokenUtil
-                          ) {
+    ) {
         this.optionRepository = optionRepository;
         this.productRepository = productRepository;
         this.OAuthTokenRepository = OAuthTokenRepository;
@@ -46,9 +41,9 @@ public class MessageService {
 
     public void sendMessage(Long optionId, Long productId, int quantity, String customMessage, User user) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ProductNotFoundException("해당 상품이 존재하지 않습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("해당 상품이 존재하지 않습니다."));
         Option option = optionRepository.findById(optionId)
-                .orElseThrow(() -> new OptionNotFoundException("해당 옵션이 존재하지 않습니다,"));
+                .orElseThrow(() -> new EntityNotFoundException("해당 옵션이 존재하지 않습니다,"));
         OAuthToken OAuthToken = OAuthTokenRepository.findByUser(user).orElseThrow(() -> new NoSuchElementException("사용자가 카카오토큰을 가지고있지않습니다!"));
         OAuthToken = tokenUtil.checkExpiredToken(OAuthToken);
         String message = String.format("상품 : %s\\n옵션 : %s\\n수량 : %s\\n메시지 : %s\\n주문이 완료되었습니다!"

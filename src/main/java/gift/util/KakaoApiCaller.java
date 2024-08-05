@@ -2,7 +2,7 @@ package gift.util;
 
 import gift.common.properties.KakaoProperties;
 import gift.dto.OAuth.*;
-import gift.exception.InvalidAuthCodeException;
+import gift.exception.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -52,7 +52,7 @@ public class KakaoApiCaller {
 
             return resp;
         }catch (HttpClientErrorException e) {
-            throw new InvalidAuthCodeException("유효하지 않은 인가코드입니다.");
+            throw new AuthenticationException("유효하지 않은 인가코드입니다.");
         }
 
     }

@@ -31,22 +31,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(UserAlreadyExistException.class)
-    public ResponseEntity<ProblemDetail> handleUserAlreadyExistException(UserAlreadyExistException ex) {
+    @ExceptionHandler(AlreadyExistException.class)
+    public ResponseEntity<ProblemDetail> handleUserAlreadyExistException(AlreadyExistException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
         problemDetail.setDetail(ex.getMessage());
         return ResponseEntity.status(ex.getStatus()).body(problemDetail);
     }
 
-    @ExceptionHandler(InvalidAuthCodeException.class)
-    public ResponseEntity<ProblemDetail> handleInvalidAuthCodeException(InvalidAuthCodeException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
-        problemDetail.setDetail(ex.getMessage());
-        return ResponseEntity.status(ex.getStatus()).body(problemDetail);
-    }
-
-    @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<ProblemDetail> handleProductNotFoundException(ProductNotFoundException ex) {
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ProblemDetail> handleInvalidAuthCodeException(AuthenticationException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
         problemDetail.setDetail(ex.getMessage());
         return ResponseEntity.status(ex.getStatus()).body(problemDetail);
@@ -59,40 +52,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(problemDetail);
     }
 
-
-    @ExceptionHandler(CategoryNotFoundException.class)
-    public ResponseEntity<ProblemDetail> handleCategoryNotFoundException(CategoryNotFoundException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
-        problemDetail.setDetail(ex.getMessage());
-        return ResponseEntity.status(ex.getStatus()).body(problemDetail);
-    }
-    @ExceptionHandler(WishNotFoundException.class)
-    public ResponseEntity<ProblemDetail> handleWishNotFoundException(WishNotFoundException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
-        problemDetail.setDetail(ex.getMessage());
-        return ResponseEntity.status(ex.getStatus()).body(problemDetail);
-    }
-    @ExceptionHandler(OptionNotFoundException.class)
-    public ResponseEntity<ProblemDetail> handleOptionNotFoundException(OptionNotFoundException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
-        problemDetail.setDetail(ex.getMessage());
-        return ResponseEntity.status(ex.getStatus()).body(problemDetail);
-    }
-
-    @ExceptionHandler(InvalidUserException.class)
-    public ResponseEntity<ProblemDetail> handleInvalidUserException(InvalidUserException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
-        problemDetail.setDetail(ex.getMessage());
-        return ResponseEntity.status(ex.getStatus()).body(problemDetail);
-    }
     @ExceptionHandler(WishInvalidAuthException.class)
     public ResponseEntity<ProblemDetail> handleWishInvalidAuthException(WishInvalidAuthException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
-        problemDetail.setDetail(ex.getMessage());
-        return ResponseEntity.status(ex.getStatus()).body(problemDetail);
-    }
-    @ExceptionHandler(WishAlreadyExistException.class)
-    public ResponseEntity<ProblemDetail> handleWishAlreadyExistException(WishAlreadyExistException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
         problemDetail.setDetail(ex.getMessage());
         return ResponseEntity.status(ex.getStatus()).body(problemDetail);
@@ -109,14 +70,16 @@ public class GlobalExceptionHandler {
         problemDetail.setDetail(ex.getMessage());
         return ResponseEntity.status(ex.getStatus()).body(problemDetail);
     }
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ProblemDetail> handleUserNotFoundException(UserNotFoundException ex) {
+
+    @ExceptionHandler(LackPointException.class)
+    public ResponseEntity<ProblemDetail> handleLackPointException(LackPointException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
         problemDetail.setDetail(ex.getMessage());
         return ResponseEntity.status(ex.getStatus()).body(problemDetail);
     }
-    @ExceptionHandler(LackPointException.class)
-    public ResponseEntity<ProblemDetail> handleLackPointException(LackPointException ex) {
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ProblemDetail> handleEntityNotFoundException(EntityNotFoundException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
         problemDetail.setDetail(ex.getMessage());
         return ResponseEntity.status(ex.getStatus()).body(problemDetail);

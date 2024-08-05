@@ -7,7 +7,6 @@ import gift.model.product.Product;
 import gift.model.user.User;
 import gift.model.wish.Wish;
 import gift.repository.product.ProductRepository;
-import gift.repository.user.UserRepository;
 import gift.repository.wish.WishRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,23 +20,21 @@ import java.util.stream.Collectors;
 public class WishService {
 
     private final WishRepository wishRepository;
-    private final UserRepository userRepository;
     private final ProductRepository productRepository;
 
     @Autowired
-    public WishService(WishRepository wishRepository, UserRepository userRepository, ProductRepository productRepository) {
+    public WishService(WishRepository wishRepository, ProductRepository productRepository) {
         this.wishRepository = wishRepository;
-        this.userRepository = userRepository;
         this.productRepository = productRepository;
     }
 
     public void addGiftToUser(User user, Long giftId, int quantity) {
         Product product = productRepository.findById(giftId)
-                .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 상품입니다."));
 
         wishRepository.findByUserAndProduct(user, product)
                 .ifPresent(wish -> {
-                    throw new WishInvalidAuthException("이미 위시 리스트에 추가된 상품입니다.");
+                    throw new AlreadyExistException("이미 위시 리스트에 추가된 상품입니다.");
                 });
 
         Wish userGift = new Wish(user, product, quantity);
@@ -46,8 +43,8 @@ public class WishService {
 
     @Transactional
     public void removeGiftFromUser(User user, Long wishId) {
-        Wish wish =  wishRepository.findById(wishId)
-                .orElseThrow(() -> new WishNotFoundException("존재하지 않는 위시리스트입니다."));
+        Wish wish = wishRepository.findById(wishId)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 위시리스트입니다."));
         if (wish.getUser().getId() != user.getId()) {
             throw new WishInvalidAuthException("본인의 위시리스트만 삭제 가능합니다.");
         }
@@ -67,7 +64,7 @@ public class WishService {
     @Transactional
     public void updateWishQuantity(User user, Long giftId, int quantity) {
         Product product = productRepository.findById(giftId)
-                .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 상품입니다."));
         wishRepository.findByUserAndProduct(user, product)
                 .ifPresentOrElse(
                         existingWish -> {
@@ -75,7 +72,7 @@ public class WishService {
                             wishRepository.save(existingWish);
                         },
                         () -> {
-                            throw new WishNotFoundException("존재하지 않는 위시리스트입니다.");
+                            throw new EntityNotFoundException("존재하지 않는 위시리스트입니다.");
                         }
                 );
     }

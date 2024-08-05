@@ -45,7 +45,7 @@ public class KakaoAuthService {
         user.checkLoginType(LoginType.KAKAO);
 
         saveKakaoAccessToken(tokenResponse.accessToken(), tokenResponse.refreshToken(), user);
-        return new LoginInfoResponse.Info(userInfo.name(),jwtUtil.generateJWT(user));
+        return new LoginInfoResponse.Info(userInfo.name(), jwtUtil.generateJWT(user));
     }
 
     private void saveKakaoAccessToken(String accessToken, String refreshToken, User user) {
