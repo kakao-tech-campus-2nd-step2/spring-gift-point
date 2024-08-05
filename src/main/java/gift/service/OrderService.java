@@ -44,7 +44,7 @@ public class OrderService {
     @Transactional
     public void handleOrder(Long memberId, OrderRequestDto request) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_MEMBER,memberId));
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_MEMBER, memberId));
         Option option = subtractOption(request.optionId(), request.quantity());
         Optional<Wish> wish = wishRepository.findByMemberIdAndProductId(memberId, option.getProduct().getId());
         wish.ifPresent(wishRepository::delete);
@@ -54,7 +54,7 @@ public class OrderService {
 
     private Option subtractOption(Long optionId, Integer quantity) {
         Option option = optionRepository.findById(optionId)
-                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_OPTION,optionId));
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_OPTION, optionId));
         option.subtract(quantity);
         return option;
     }
@@ -70,7 +70,7 @@ public class OrderService {
                 .body(body)
                 .retrieve()
                 .onStatus(HttpStatusCode::isError, (req, res) -> {
-                    log.error("{}: msg : {}", res.getStatusCode(),res.getHeaders());
+                    log.error("{}: msg : {}", res.getStatusCode(), res.getHeaders());
                     throw new RuntimeException("주문 처리 중 에러가 발생하였습니다.");
                 });
         log.info(response.toString());

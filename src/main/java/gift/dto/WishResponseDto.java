@@ -13,7 +13,7 @@ public class WishResponseDto {
         this.wishId = wish.getId();
         this.productId = wish.getProduct().getId();
         this.productPrice = wish.getProduct().getPrice();
-        this.productImageUrl = wish.getProduct().getImgUrl();
+        this.productImageUrl = wish.getProduct().getImageUrl();
         this.productName = wish.getProduct().getName();
     }
 

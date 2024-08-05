@@ -36,7 +36,6 @@ public class WishService {
                         () -> {
                             Wish newWish = new Wish(member, getProduct(request.getProductId()), request.getQuantity());
                             wishRepository.save(newWish);
-                            System.out.println(newWish.getCreatedDate());
                         }
                 );
     }

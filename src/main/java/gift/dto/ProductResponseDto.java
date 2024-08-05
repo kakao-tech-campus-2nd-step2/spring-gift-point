@@ -16,7 +16,7 @@ public class ProductResponseDto {
         this.id = product.getId();
         this.name = product.getName();
         this.price = product.getPrice();
-        this.imageUrl = product.getImgUrl();
+        this.imageUrl = product.getImageUrl();
         this.category = product.getCategory().getName();
         this.options = product.getOptions().stream().map(OptionResponseDto::new).toList();
     }

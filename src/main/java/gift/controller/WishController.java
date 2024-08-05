@@ -45,7 +45,7 @@ public class WishController {
     public ResponseEntity<Page<WishResponseDto>> getMemberWishList(
             @LoginMember UserDetails userDetails,
             @PageableDefault(sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable
-    ){
+    ) {
         return ResponseEntity.ok(wishService.getAllWishes(userDetails.id(), pageable));
     }
 

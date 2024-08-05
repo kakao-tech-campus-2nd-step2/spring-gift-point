@@ -39,7 +39,7 @@ public class ProductService {
         if (isOptionDuplicate(options)) {
             throw new CustomException(ErrorCode.DUPLICATE_OPTION);
         }
-        Product product = new Product(requestDto.name(), requestDto.price(), requestDto.imgUrl(), category, options);
+        Product product = new Product(requestDto.name(), requestDto.price(), requestDto.imageUrl(), category, options);
         productRepository.save(product);
     }
 
@@ -47,7 +47,7 @@ public class ProductService {
     public Page<ProductResponseDto> findAll(Pageable pageable, Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CustomException(INVALID_CATEGORY));
-        return productRepository.findAllByCategory(pageable,category)
+        return productRepository.findAllByCategory(pageable, category)
                 .map(ProductResponseDto::new);
     }
 
@@ -64,7 +64,7 @@ public class ProductService {
                 .orElseThrow(() -> new CustomException(INVALID_PRODUCT, id));
         Category category = categoryRepository.findById(request.getCategory())
                 .orElseThrow(() -> new CustomException(INVALID_CATEGORY, id));
-        product.update(request.getName(), request.getPrice(), request.getImgUrl(), category);
+        product.update(request.getName(), request.getPrice(), request.getImageUrl(), category);
         return new ProductResponseDto(product);
     }
 

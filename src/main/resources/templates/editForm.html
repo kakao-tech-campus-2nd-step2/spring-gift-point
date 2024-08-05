@@ -34,9 +34,9 @@
         <p th:if = "${#fields.hasErrors('price')}" class="errorMessage" th:errors="*{price}">Incorrect data</p>
     </div>
     <div>
-        <label for="imgUrl">사진 링크</label>
-        <input type="text" id="imgUrl" th:field="*{imgUrl}" class="form-control" value="10" th:class="${#fields.hasErrors('imgUrl')} ? 'form-control fieldError' : 'form-control'">
-        <p th:if = "${#fields.hasErrors('imgUrl')}" class="errorMessage" th:errors="*{imgUrl}">Incorrect data</p>
+        <label for="imageUrl">사진 링크</label>
+        <input type="text" id="imageUrl" th:field="*{imageUrl}" class="form-control" value="10" th:class="${#fields.hasErrors('imageUrl')} ? 'form-control fieldError' : 'form-control'">
+        <p th:if = "${#fields.hasErrors('imageUrl')}" class="errorMessage" th:errors="*{imageUrl}">Incorrect data</p>
     </div>
     <hr class="my-4">
     <div class="row">

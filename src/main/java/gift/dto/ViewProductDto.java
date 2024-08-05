@@ -16,7 +16,7 @@ public class ViewProductDto {
     private String name;
 
     @NotBlank(message = "상품 사진은 필수항목입니다.")
-    private String imgUrl;
+    private String imageUrl;
 
     @NotNull(message = "상품 가격은 필수항목입니다.")
     @Min(value = 0, message = "상품의 가격은 0원 이상이어야합니다.")
@@ -29,8 +29,8 @@ public class ViewProductDto {
         return name;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public Integer getPrice() {
@@ -45,8 +45,8 @@ public class ViewProductDto {
         this.name = name;
     }
 
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
+    public void setImageUrl(String imgUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public void setPrice(int price) {

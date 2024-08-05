@@ -1,13 +1,16 @@
 package gift.controller;
 
-import gift.dto.*;
+import gift.dto.CategoryResponseDto;
+import gift.dto.ProductChangeRequestDto;
+import gift.dto.ProductResponseDto;
+import gift.dto.ViewProductDto;
 import gift.service.CategoryService;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,18 +28,15 @@ public class WebController {
 
     @GetMapping("/")
     public String itemList(Model model,
-                           @RequestParam(required = false, defaultValue = "0", value = "page") int pageNum,
-                           @RequestParam(required = false, defaultValue = "10", value = "size") int size,
-                           @RequestParam(required = false, defaultValue = "name,asc", value = "sort") String[] sort,
-                           @RequestParam(required = false, defaultValue = "1", value = "categoryId") Long categoryId) {
-        Pageable pageable = PageRequest.of(pageNum, size, Sort.by(sort[1], sort[0]));
-        Page<ProductResponseDto> products = productService.findAll(pageable,categoryId);
+                           @PageableDefault(sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
+                           @RequestParam(value = "categoryId", required = false, defaultValue = "1") Long categoryId) {
+        Page<ProductResponseDto> products = productService.findAll(pageable, categoryId);
         model.addAttribute("products", products);
         return "items";
     }
 
     @GetMapping("products/add")
-    public String getAddForm(Model model,Pageable pageable) {
+    public String getAddForm(Model model, Pageable pageable) {
         Page<CategoryResponseDto> list = categoryService.getAll(pageable);
         model.addAttribute("requestDto", new ViewProductDto());
         model.addAttribute("list", list);

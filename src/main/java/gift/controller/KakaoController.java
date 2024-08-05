@@ -1,8 +1,8 @@
 package gift.controller;
 
 import gift.config.KakaoProperties;
-import gift.dto.SuccessResponse;
 import gift.dto.KakaoToken;
+import gift.dto.SuccessResponse;
 import gift.service.KakaoOAuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpHeaders;
@@ -42,7 +42,7 @@ public class KakaoController {
     }
 
     @GetMapping("/redirect")
-    public ResponseEntity<Object> getTokenAndUserInfo(
+    public ResponseEntity<Void> getTokenAndUserInfo(
             @RequestParam(value = "code") String kakaoCode
     ) {
         String returnUrl = "http://localhost:3000/token.html?tokenValue=";
@@ -50,7 +50,7 @@ public class KakaoController {
         String token = kakaoOAuthService.kakaoMemberRegister(kakaoToken);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(returnUrl + token));
-        return new ResponseEntity<>(headers, HttpStatus.OK);
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 
     @PostMapping("/unlink")

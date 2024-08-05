@@ -21,7 +21,7 @@ public class Product {
     private int price;
     @NotNull
     @Column
-    private String imgUrl;
+    private String imageUrl;
 
     @JoinColumn(name = "category_id")
     @NotNull
@@ -34,20 +34,20 @@ public class Product {
     protected Product() {
     }
 
-    public Product(String name, int price, String imgUrl, Category category, List<Option> options) {
+    public Product(String name, int price, String imageUrl, Category category, List<Option> options) {
         checkName(name);
         this.name = name;
         this.price = price;
-        this.imgUrl = imgUrl;
+        this.imageUrl = imageUrl;
         this.category = category;
         addOptions(options);
     }
 
-    public void update(String name, int price, String imgUrl, Category category) {
+    public void update(String name, int price, String imageUrl, Category category) {
         checkName(name);
         this.name = name;
         this.price = price;
-        this.imgUrl = imgUrl;
+        this.imageUrl = imageUrl;
         this.category = category;
     }
 
@@ -63,8 +63,8 @@ public class Product {
         return price;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public Category getCategory() {
