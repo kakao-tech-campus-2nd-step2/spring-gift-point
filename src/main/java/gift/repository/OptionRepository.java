@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public interface OptionRepository extends JpaRepository<Option, Long> {
     List<Option> findByProductId(Long productId);
+
     Optional<Option> findByName(String name);
 
 }

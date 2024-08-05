@@ -10,7 +10,8 @@ public class CategoryDto {
 
     // Getters and Setters
 
-    public CategoryDto() {}
+    public CategoryDto() {
+    }
 
     public CategoryDto(Long id, String name, String color, String imageUrl, String description) {
         this.id = id;

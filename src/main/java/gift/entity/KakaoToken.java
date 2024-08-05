@@ -3,7 +3,6 @@ package gift.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 @Entity
 public class KakaoToken {
@@ -36,7 +35,7 @@ public class KakaoToken {
         return accessToken;
     }
 
-    public String getRefreshToken(){
+    public String getRefreshToken() {
         return refreshToken;
     }
 }

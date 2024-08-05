@@ -1,8 +1,8 @@
-package gift.dto;
+package gift.dto.response;
 
 public class TokenResponse {
-    private String accessToken;
-    private String refreshToken;
+    private final String accessToken;
+    private final String refreshToken;
 
     public TokenResponse(String accessToken, String refreshToken) {
         this.accessToken = accessToken;

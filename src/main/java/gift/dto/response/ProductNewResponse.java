@@ -10,7 +10,7 @@ public class ProductNewResponse {
     private String imageUrl;
     private boolean isWish;
 
-    public ProductNewResponse(Long productId, String name, int price, String imageUrl){
+    public ProductNewResponse(Long productId, String name, int price, String imageUrl) {
         this.productId = productId;
         this.name = name;
         this.price = price;

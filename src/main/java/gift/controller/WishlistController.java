@@ -17,7 +17,7 @@ public class WishlistController {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    public WishlistController(WishlistService wishlistService,JwtTokenProvider jwtTokenProvider) {
+    public WishlistController(WishlistService wishlistService, JwtTokenProvider jwtTokenProvider) {
         this.wishlistService = wishlistService;
         this.jwtTokenProvider = jwtTokenProvider;
     }

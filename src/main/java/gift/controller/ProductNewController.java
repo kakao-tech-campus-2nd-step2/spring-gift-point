@@ -24,14 +24,16 @@ public class ProductNewController {
     private final ProductService productService;
     private final WishlistService wishlistService;
 
+
     public ProductNewController(ProductService productService, WishlistService wishlistService) {
         this.productService = productService;
-        this.wishlistService= wishlistService;
+        this.wishlistService = wishlistService;
+
     }
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductNewResponse> getProduct(@PathVariable Long id, @RequestAttribute("userId") Long userId){
+    public ResponseEntity<ProductNewResponse> getProduct(@PathVariable Long id, @RequestAttribute("userId") Long userId) {
         Product product = productService.getProductById(id);
         boolean isWish = wishlistService.isProductInWishlist(userId, id);
         ProductNewResponse response = new ProductNewResponse(product, isWish);
@@ -51,9 +53,5 @@ public class ProductNewController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(productResponsesList);
     }
-
-
-
-
 
 }
