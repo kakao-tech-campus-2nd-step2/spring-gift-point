@@ -1,8 +1,8 @@
 package gift.wish.entity;
 
 import gift.common.entity.BaseEntity;
-import gift.exception.CustomException;
-import gift.exception.ErrorCode;
+import gift.common.exception.CustomException;
+import gift.common.exception.ErrorCode;
 import gift.product.entity.Product;
 import gift.product.option.entity.Option;
 import gift.user.entity.User;

@@ -1,7 +1,7 @@
 package gift.product.service;
 
-import gift.exception.CustomException;
-import gift.exception.ErrorCode;
+import gift.common.exception.CustomException;
+import gift.common.exception.ErrorCode;
 import gift.product.category.entity.Category;
 import gift.product.category.repository.CategoryJpaRepository;
 import gift.product.dto.request.CreateProductRequest;

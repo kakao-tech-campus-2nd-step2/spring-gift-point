@@ -7,7 +7,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
 
-import gift.exception.CustomException;
+import gift.common.exception.CustomException;
 import gift.product.category.entity.Category;
 import gift.product.entity.Product;
 import gift.product.option.dto.request.CreateOptionRequest;

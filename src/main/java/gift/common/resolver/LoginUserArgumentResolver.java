@@ -1,6 +1,6 @@
-package gift.resolver;
+package gift.common.resolver;
 
-import gift.annotation.LoginUser;
+import gift.common.annotation.LoginUser;
 import gift.user.service.UserService;
 import gift.util.auth.JwtUtil;
 import org.springframework.core.MethodParameter;

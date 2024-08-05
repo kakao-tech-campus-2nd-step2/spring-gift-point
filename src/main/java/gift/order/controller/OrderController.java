@@ -1,6 +1,6 @@
 package gift.order.controller;
 
-import gift.annotation.LoginUser;
+import gift.common.annotation.LoginUser;
 import gift.order.dto.request.OrderRequest;
 import gift.order.dto.response.OrderResponse;
 import gift.order.service.OrderService;

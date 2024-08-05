@@ -1,7 +1,7 @@
 package gift.product.option.entity;
 
-import gift.exception.CustomException;
-import gift.exception.ErrorCode;
+import gift.common.exception.CustomException;
+import gift.common.exception.ErrorCode;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;

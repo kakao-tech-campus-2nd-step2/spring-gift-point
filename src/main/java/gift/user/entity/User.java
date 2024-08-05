@@ -1,7 +1,7 @@
 package gift.user.entity;
 
-import gift.exception.CustomException;
-import gift.exception.ErrorCode;
+import gift.common.exception.CustomException;
+import gift.common.exception.ErrorCode;
 import gift.wish.entity.Wish;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

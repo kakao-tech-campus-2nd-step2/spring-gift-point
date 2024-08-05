@@ -1,6 +1,6 @@
 package gift.user.controller;
 
-import gift.annotation.LoginUser;
+import gift.common.annotation.LoginUser;
 import gift.user.dto.request.ChargePointRequest;
 import gift.user.dto.response.PointResponse;
 import gift.user.entity.User;
