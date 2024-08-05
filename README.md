@@ -72,6 +72,56 @@
 
 
 
+## 3단계(포인트) 요구사항
+
+### 기능 요구 사항
+
+상품 구매에 사용할 수 있는 포인트 기능을 구현한다
+
+
+
+### 기능 목록
+
+* 포인트는 사용자별로 보유한다.
+
+  * [ ] User에 point 필드 추가
+
+* 주문 방식 변경
+
+  * 주문 요청 시 포인트 사용 여부 선택, 포인트 사용 외 실제 결제 가격의 10% 적립
+
+  * Request
+
+    ``````http
+    POST /api/orders HTTP/1.1
+    Authorization: Bearer {token}
+    Content-Type: application/json
+    
+    {
+        "optionId": 1,
+        "quantity": 2,
+        "message": "Please handle this order with care."
+        "usePoint": true,
+        "point": 1000
+    }
+    ``````
+
+  * Response
+
+    ``````http
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+    
+    {
+        "orderId": 1,
+        "totalPrice": 50000, // 총 금액
+        "discountedPrice": 1000, //할인될 금액
+        "accumulatedPoint": 4900 // (총금액 - 할인될 금액) / 10
+    }
+    ``````
+
+
+
 ---
 
 # 1주차 과제 요구사항(spring-gift-product)
