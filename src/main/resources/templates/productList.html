@@ -62,7 +62,7 @@
 
 <script>
     function redirectToKakaoLogin() {
-        var clientId = /*[[${kakao.clientId}]]*/ '';
+        var clientId = /*[[${kakao.clientId}]]*/ 'e8e08bb6228519a26c62ca8c78e14f4d';
         var redirectUri = /*[[${kakao.redirectUri}]]*/ 'http://localhost:8080';
         var kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code`;
         window.location.href = kakaoAuthUrl;
