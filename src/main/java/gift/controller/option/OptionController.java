@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/products")
 public class OptionController implements OptionSpecification {
@@ -22,14 +20,14 @@ public class OptionController implements OptionSpecification {
     }
 
     @GetMapping("/options")
-    public ResponseEntity<List<OptionResponse>> getAllOptions() {
-        List<OptionResponse> options = optionService.getAllOptions();
+    public ResponseEntity<OptionResponse.InfoList> getAllOptions() {
+        OptionResponse.InfoList options = optionService.getAllOptions();
         return ResponseEntity.ok(options);
     }
 
     @GetMapping("/{id}/options")
-    public ResponseEntity<List<OptionResponse>> getAllOptionsFromGift(@PathVariable Long id) {
-        List<OptionResponse> options = optionService.getOptionsByGiftId(id);
+    public ResponseEntity<OptionResponse.InfoList> getAllOptionsFromGift(@PathVariable Long id) {
+        OptionResponse.InfoList options = optionService.getOptionsByGiftId(id);
         return ResponseEntity.ok(options);
     }
 

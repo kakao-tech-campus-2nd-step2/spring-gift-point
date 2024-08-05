@@ -1,7 +1,7 @@
 package gift.dto.paging;
 
 public class PagingRequest {
-    private int page = 1;
+    private int page = 0;
     private int size = 5;
 
     public PagingRequest(int page, int size) {

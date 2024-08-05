@@ -6,8 +6,8 @@ public class PagingResponse<T> {
     private final List<T> content;
     private final int page;
     private final int size;
-    private final long totalElements;
     private final int totalPages;
+    private final long totalElements;
 
     public PagingResponse(int page, List<T> content, int size, long totalElements, int totalPages) {
         this.page = page;

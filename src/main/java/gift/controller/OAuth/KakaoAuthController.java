@@ -1,16 +1,17 @@
 package gift.controller.OAuth;
 
+import gift.dto.OAuth.LoginInfoResponse;
 import gift.service.OAuth.KakaoAuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/kakao")
+@RequestMapping("/api/oauth/kakao")
 public class KakaoAuthController implements KakaoAuthSpecification {
 
     private final KakaoAuthService kakaoAuthService;
@@ -21,14 +22,25 @@ public class KakaoAuthController implements KakaoAuthSpecification {
     }
 
     @GetMapping("/login")
-    public void getAuthCode(HttpServletResponse response) throws IOException {
-        String url = kakaoAuthService.createCodeUrl();
-        response.sendRedirect(url);
+    public ResponseEntity<Void> getAuthCode(HttpServletResponse response,
+                                            @RequestParam("redirect-url") String redirectUrl) throws IOException {
+        String url = kakaoAuthService.createCodeUrl(redirectUrl);
+
+        return ResponseEntity.status(HttpStatus.SEE_OTHER)
+                .header("location", url)
+                .build();
     }
 
-    @GetMapping("/auth")
-    public ResponseEntity<Map<String, String>> getAccessToken(@RequestParam String code) {
-        String token = kakaoAuthService.register(code);
-        return ResponseEntity.ok(Map.of("access_token", token));
+    @GetMapping("/login/callback")
+    public ResponseEntity<Map<String, String>> getAccessToken(
+            @RequestParam String code,
+            @RequestParam("redirect-url") String redirectUrl) {
+        LoginInfoResponse.Info loginInfo = kakaoAuthService.register(code, redirectUrl);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", loginInfo.token());
+
+        Map<String, String> responseBody = Map.of("name", loginInfo.name());
+        return ResponseEntity.ok().headers(headers).body(responseBody);
     }
 }

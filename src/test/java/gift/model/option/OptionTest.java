@@ -1,10 +1,9 @@
 package gift.model.option;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class OptionTest {
 
@@ -25,7 +24,7 @@ public class OptionTest {
     @Test
     @DisplayName("수량 차감시 수량이 부족하면 예외가 발생하는지 테스트")
     void testSubtractQuantityInsufficient() {
-       assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () -> {
             option.subtract(15);
         });
     }

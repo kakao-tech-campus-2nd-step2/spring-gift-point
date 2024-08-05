@@ -1,143 +1,205 @@
 INSERT INTO category (name, color, imageUrl, description)
-VALUES ('교환권', '#FF5733', 'http://example.com/exchange.jpg', '설명1'),
-       ('상품권', '#33FF57', 'http://example.com/giftcard.jpg', '설명2'),
-       ('뷰티', '#3357FF', 'http://example.com/beauty.jpg', '설명3'),
-       ('패션', '#FF33A5', 'http://example.com/fashion.jpg', '설명4'),
-       ('식품', '#33FFA5', 'http://example.com/food.jpg', '설명5'),
-       ('리빙/도서', '#FFA533', 'http://example.com/living_books.jpg', '설명6'),
-       ('레저/스포츠', '#A533FF', 'http://example.com/leisure_sports.jpg', '설명7'),
-       ('아티스트/캐릭터', '#FF33FF', 'http://example.com/artist_character.jpg', '설명8'),
-       ('유아동/반려', '#FFA5FF', 'http://example.com/kids_pets.jpg', '설명9'),
-       ('디지털/가전', '#33FFA5', 'http://example.com/digital_appliances.jpg', '설명10'),
-       ('카카오프렌즈', '#FF5733', 'http://example.com/kakao_friends.jpg', '설명11'),
-       ('트렌드선물', '#5733FF', 'http://example.com/trend_gifts.jpg', '설명12'),
-       ('백화점', '#33FF57', 'http://example.com/department_store.jpg', '설명13'),
-       ('홈/가전', '#FF5733', 'http://example.com/home_appliances.jpg', '설명14'),
-       ('커피/디저트', '#33FF57', 'http://example.com/coffee_dessert.jpg', '설명15'),
-       ('도서/음반', '#3357FF', 'http://example.com/books_music.jpg', '설명16'),
-       ('여행/숙박', '#FF33A5', 'http://example.com/travel_accommodation.jpg', '설명17'),
-       ('건강/뷰티', '#33FFA5', 'http://example.com/health_beauty.jpg', '설명18'),
-       ('자동차/공구', '#FFA533', 'http://example.com/automotive_tools.jpg', '설명19'),
-       ('화장품/향수', '#A533FF', 'http://example.com/cosmetics_perfume.jpg', '설명20'),
-       ('완구/취미', '#FF33FF', 'http://example.com/toys_hobbies.jpg', '설명21'),
-       ('음식점', '#FFA5FF', 'http://example.com/restaurants.jpg', '설명22'),
-       ('의류/잡화', '#33FFA5', 'http://example.com/clothing_accessories.jpg', '설명23'),
-       ('반려동물', '#FF5733', 'http://example.com/pets.jpg', '설명24'),
-       ('헬스/피트니스', '#33FF57', 'http://example.com/health_fitness.jpg', '설명25'),
-       ('전자기기', '#3357FF', 'http://example.com/electronics.jpg', '설명26'),
-       ('가구/인테리어', '#FF33A5', 'http://example.com/furniture_interior.jpg', '설명27'),
-       ('액세서리', '#33FFA5', 'http://example.com/accessories.jpg', '설명28'),
-       ('주얼리', '#FFA533', 'http://example.com/jewelry.jpg', '설명29'),
-       ('가전제품', '#A533FF', 'http://example.com/appliances.jpg', '설명30');
+VALUES ('교환권', '#FF5733', 'https://cdn.pixabay.com/photo/2015/08/11/08/21/coupon-883642_640.png', '다양한 상품으로 교환할 수 있는 교환권'),
+       ('상품권', '#33FF57', 'https://cdn.pixabay.com/photo/2014/10/23/10/10/dollars-499481_640.jpg', '다양한 매장에서 사용할 수 있는 상품권'),
+       ('뷰티', '#3357FF', 'https://cdn.pixabay.com/photo/2016/05/02/17/56/lipstick-1367771_640.jpg', '뷰티 제품 및 화장품'),
+       ('패션', '#FF33A5', 'https://cdn.pixabay.com/photo/2021/11/12/13/14/sweater-6788998_640.jpg', '최신 유행 패션 아이템'),
+       ('식품', '#33FFA5', 'https://cdn.pixabay.com/photo/2019/08/15/09/03/pizza-4407510_640.jpg', '다양한 음식 및 식료품'),
+       ('리빙/도서', '#FFA533', 'https://cdn.pixabay.com/photo/2017/08/09/10/32/reading-2614105_640.jpg', '생활용품 및 도서'),
+       ('레저/스포츠', '#A533FF', 'https://cdn.pixabay.com/photo/2023/07/22/04/15/motorbike-8142649_640.jpg', '레저 및 스포츠 용품'),
+       ('아티스트/캐릭터', '#FF33FF', 'https://cdn.pixabay.com/photo/2022/08/07/08/32/tiger-7370142_640.png', '아티스트 및 캐릭터 상품'),
+       ('유아동/반려', '#FFA5FF', 'https://cdn.pixabay.com/photo/2017/11/10/08/08/baby-2935722_640.jpg', '유아 및 반려동물 용품'),
+       ('디지털/가전', '#33FFA5', 'https://cdn.pixabay.com/photo/2018/08/09/03/58/home-3593730_640.jpg', '디지털 기기 및 가전 제품'),
+       ('카카오프렌즈', '#FF5733',
+        'https://i.namu.wiki/i/vDDaVK4wm1-vPZgAOI65rbhLhr1vPCzBgoRKSS7mEFx4IH2vtHvvMN41Umw-taptksIW_WqnjwOdcGbAMpAmrQ.webp',
+        '카카오프렌즈 캐릭터 상품'),
+       ('트렌드선물', '#5733FF', 'https://cdn.pixabay.com/photo/2014/04/03/11/36/gift-311970_640.png', '최신 트렌드의 선물 아이템'),
+       ('홈/가전', '#FF5733', 'https://cdn.pixabay.com/photo/2021/08/19/06/47/architecture-6557219_640.jpg', '가정용 가전 및 인테리어 용품'),
+       ('커피/디저트', '#33FF57', 'https://cdn.pixabay.com/photo/2019/11/11/11/35/cafe-4618121_640.jpg', '커피 및 디저트'),
+       ('도서/음반', '#3357FF', 'https://cdn.pixabay.com/photo/2016/11/29/01/22/album-1866523_640.jpg', '도서 및 음반'),
+       ('여행/숙박', '#FF33A5', 'https://cdn.pixabay.com/photo/2020/02/27/20/48/aircraft-4885805_640.jpg', '여행 및 숙박 관련 상품'),
+       ('건강/뷰티', '#33FFA5', 'https://cdn.pixabay.com/photo/2023/08/30/09/44/woman-8222956_640.jpg', '건강 및 뷰티 제품'),
+       ('자동차/공구', '#FFA533', 'https://cdn.pixabay.com/photo/2024/05/10/23/34/car-8753811_640.png', '자동차 및 공구 용품');
 
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('coffee', 1500, 'image1', 15);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('meat', 15500, 'image2', 5);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('egg', 3000, 'image3', 5);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('soup', 40000, 'image4', 5);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('bread', 2500, 'image5', 5);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('milk', 1000, 'image6', 5);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('cheese', 7000, 'image7', 5);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('chocolate', 3500, 'image8', 15);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('wine', 45000, 'image9', 15);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('beer', 2000, 'image10', 15);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('juice', 1200, 'image11', 15);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('water', 500, 'image12', 15);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('soda', 800, 'image13', 15);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('apple', 300, 'image14', 5);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('banana', 600, 'image15', 5);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('grape', 2500, 'image16', 5);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('peach', 1500, 'image17', 5);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('pineapple', 3500, 'image18', 5);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('mango', 4000, 'image19', 5);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('strawberry', 3000, 'image20', 5);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('blueberry', 5000, 'image21', 5);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('raspberry', 6000, 'image22', 5);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('blackberry', 5500, 'image23', 5);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('orange', 2000, 'image24', 5);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('lemon', 1000, 'image25', 5);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('lime', 1100, 'image26', 5);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('avocado', 7000, 'image27', 5);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('broccoli', 2000, 'image28', 5);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('carrot', 1000, 'image29', 5);
-INSERT INTO gift (name, price, imageUrl, category_id)
-VALUES ('tomato', 1500, 'image30', 5);
 
-INSERT INTO gift_option (name, quantity, gift_id)
+
+
+INSERT INTO product (name, price, imageUrl, category_id)
+VALUES ('커피', 1500, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 14),
+       ('고기', 15500, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 5),
+       ('계란', 3000, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 5),
+       ('수프', 40000, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 5),
+       ('빵', 2500, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 5),
+       ('우유', 1000, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 5),
+       ('치즈', 7000, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 5),
+       ('초콜릿', 3500, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 14),
+       ('와인', 45000, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 14),
+       ('맥주', 2000, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 14),
+       ('주스', 1200, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 14),
+       ('물', 500, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 14),
+       ('소다', 800, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 14),
+       ('사과', 300, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 5),
+       ('바나나', 600, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 5),
+       ('포도', 2500, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 5),
+       ('복숭아', 1500, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 5),
+       ('파인애플', 3500, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 5),
+       ('망고', 4000, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 5),
+       ('딸기', 3000, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 5),
+       ('블루베리', 5000, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 5),
+       ('라즈베리', 6000, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 5),
+       ('블랙베리', 5500, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 5),
+       ('오렌지', 2000, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 5),
+       ('레몬', 1000, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 5),
+       ('라임', 1100, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 5),
+       ('아보카도', 7000, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 5),
+       ('브로콜리', 2000, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 5),
+       ('당근', 1000, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 5),
+       ('토마토', 1500, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 5),
+       ('가전교환권', 200000, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 1),
+       ('문화상품권', 200000, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 2),
+       ('립스틱', 20000, 'https://i.namu.wiki/i/GQMqb8jtiqpCo6_US7jmWDO30KfPB2MMvbdURVub61Rs6ALKqbG-nUATj-wNk7bXXWIDjiLHJxWYkTELUgybkA.webp', 3);
+
+
+-- 프로덕트 옵션 추가
+INSERT INTO product_option (name, quantity, product_id)
 VALUES ('Americano', 10, 1),
        ('Latte', 5, 1),
-       ('ColdBrew', 20, 1);
+       ('ColdBrew', 20, 1),
+       ('BeefSteak', 8, 2),
+       ('PorkRibs', 12, 2),
+       ('ChickenBreast', 15, 2),
+       ('ScrambledEggs', 30, 3),
+       ('BoiledEggs', 25, 3),
+       ('Omelette', 20, 3),
+       ('TomatoSoup', 5, 4),
+       ('ChickenSoup', 8, 4),
+       ('MushroomSoup', 6, 4),
+       ('WholeWheatBread', 10, 5),
+       ('MultigrainBread', 12, 5),
+       ('Sourdough', 8, 5),
+       ('SkimMilk', 15, 6),
+       ('WholeMilk', 10, 6),
+       ('AlmondMilk', 5, 6),
+       ('CheddarCheese', 10, 7),
+       ('MozzarellaCheese', 8, 7),
+       ('ParmesanCheese', 5, 7),
+       ('DarkChocolate', 15, 8),
+       ('MilkChocolate', 12, 8),
+       ('WhiteChocolate', 10, 8),
+       ('RedWine', 6, 9),
+       ('WhiteWine', 4, 9),
+       ('RoseWine', 8, 9),
+       ('CraftBeer', 20, 10),
+       ('IPA', 15, 10),
+       ('Lager', 12, 10),
+       ('OrangeJuice', 25, 11),
+       ('AppleJuice', 20, 11),
+       ('GrapeJuice', 15, 11),
+       ('SparklingWater', 30, 12),
+       ('SpringWater', 25, 12),
+       ('MineralWater', 20, 12),
+       ('CocaCola', 50, 13),
+       ('Pepsi', 40, 13),
+       ('Sprite', 30, 13),
+       ('GreenApple', 10, 14),
+       ('RedApple', 15, 14),
+       ('GoldenApple', 8, 14),
+       ('Banana', 20, 15),
+       ('Plantain', 15, 15),
+       ('BabyBanana', 10, 15),
+       ('RedGrapes', 12, 16),
+       ('GreenGrapes', 10, 16),
+       ('BlackGrapes', 8, 16),
+       ('YellowPeach', 15, 17),
+       ('WhitePeach', 10, 17),
+       ('FlatPeach', 5, 17),
+       ('PineappleSlices', 20, 18),
+       ('PineappleChunks', 15, 18),
+       ('DriedPineapple', 10, 18),
+       ('MangoChunks', 25, 19),
+       ('MangoPuree', 15, 19),
+       ('DriedMango', 10, 19),
+       ('StrawberryJam', 30, 20),
+       ('FreshStrawberry', 25, 20),
+       ('DriedStrawberry', 20, 20),
+       ('BlueberryJam', 15, 21),
+       ('FreshBlueberry', 10, 21),
+       ('DriedBlueberry', 8, 21),
+       ('RaspberryJam', 12, 22),
+       ('FreshRaspberry', 15, 22),
+       ('DriedRaspberry', 10, 22),
+       ('BlackberryJam', 10, 23),
+       ('FreshBlackberry', 8, 23),
+       ('DriedBlackberry', 6, 23),
+       ('NavelOrange', 20, 24),
+       ('BloodOrange', 15, 24),
+       ('MandarinOrange', 12, 24),
+       ('EurekaLemon', 25, 25),
+       ('MeyerLemon', 15, 25),
+       ('KeyLime', 10, 25),
+       ('PersianLime', 20, 26),
+       ('KaffirLime', 12, 26),
+       ('FingerLime', 8, 26),
+       ('HassAvocado', 15, 27),
+       ('FuerteAvocado', 10, 27),
+       ('BaconAvocado', 5, 27),
+       ('BroccoliFlorets', 20, 28),
+       ('BroccoliStems', 15, 28),
+       ('BroccoliCrown', 10, 28),
+       ('CarrotSticks', 25, 29),
+       ('BabyCarrots', 20, 29),
+       ('CarrotCubes', 15, 29),
+       ('CherryTomatoes', 30, 30),
+       ('RomaTomatoes', 25, 30),
+       ('HeirloomTomatoes', 20, 30),
+       ('세탁기 교환권', 20, 31),
+       ('가스레인지 교환권', 20, 31),
+       ('백화점 상품권', 20, 32),
+       ('마트 상품권', 20, 32),
+       ('빨간 립스틱', 20, 33),
+       ('파란 립스틱', 20, 33);
 
-INSERT INTO users (email, password, login_type)
-VALUES ('admin@email.com', 'password', 'DEFAULT');
+INSERT INTO users (email, password, name, point, role, login_type)
+VALUES ('admin@test.com', '1234', 'Peach', 5000, 'ADMIN', 'DEFAULT');
 
-INSERT INTO wish (user_id, gift_id, quantity)
+INSERT INTO wish (user_id, product_id, quantity)
 VALUES (1, 1, 1);
-INSERT INTO wish (user_id, gift_id, quantity)
+INSERT INTO wish (user_id, product_id, quantity)
 VALUES (1, 2, 1);
-INSERT INTO wish (user_id, gift_id, quantity)
+INSERT INTO wish (user_id, product_id, quantity)
 VALUES (1, 3, 1);
-INSERT INTO wish (user_id, gift_id, quantity)
+INSERT INTO wish (user_id, product_id, quantity)
 VALUES (1, 4, 1);
-INSERT INTO wish (user_id, gift_id, quantity)
+INSERT INTO wish (user_id, product_id, quantity)
 VALUES (1, 5, 1);
-INSERT INTO wish (user_id, gift_id, quantity)
+INSERT INTO wish (user_id, product_id, quantity)
 VALUES (1, 6, 1);
-INSERT INTO wish (user_id, gift_id, quantity)
+INSERT INTO wish (user_id, product_id, quantity)
 VALUES (1, 7, 1);
-INSERT INTO wish (user_id, gift_id, quantity)
+INSERT INTO wish (user_id, product_id, quantity)
 VALUES (1, 8, 1);
-INSERT INTO wish (user_id, gift_id, quantity)
+INSERT INTO wish (user_id, product_id, quantity)
 VALUES (1, 9, 1);
-INSERT INTO wish (user_id, gift_id, quantity)
+INSERT INTO wish (user_id, product_id, quantity)
 VALUES (1, 10, 1);
-INSERT INTO wish (user_id, gift_id, quantity)
+INSERT INTO wish (user_id, product_id, quantity)
 VALUES (1, 11, 1);
-INSERT INTO wish (user_id, gift_id, quantity)
+INSERT INTO wish (user_id, product_id, quantity)
 VALUES (1, 12, 1);
-INSERT INTO wish (user_id, gift_id, quantity)
+INSERT INTO wish (user_id, product_id, quantity)
 VALUES (1, 13, 1);
-INSERT INTO wish (user_id, gift_id, quantity)
+INSERT INTO wish (user_id, product_id, quantity)
 VALUES (1, 14, 1);
-INSERT INTO wish (user_id, gift_id, quantity)
+INSERT INTO wish (user_id, product_id, quantity)
 VALUES (1, 15, 1);
-INSERT INTO wish (user_id, gift_id, quantity)
+INSERT INTO wish (user_id, product_id, quantity)
 VALUES (1, 16, 1);
-INSERT INTO wish (user_id, gift_id, quantity)
+INSERT INTO wish (user_id, product_id, quantity)
 VALUES (1, 17, 1);
-INSERT INTO wish (user_id, gift_id, quantity)
+INSERT INTO wish (user_id, product_id, quantity)
 VALUES (1, 18, 1);
-INSERT INTO wish (user_id, gift_id, quantity)
+INSERT INTO wish (user_id, product_id, quantity)
 VALUES (1, 19, 1);
-INSERT INTO wish (user_id, gift_id, quantity)
+INSERT INTO wish (user_id, product_id, quantity)
 VALUES (1, 20, 1);
 
 

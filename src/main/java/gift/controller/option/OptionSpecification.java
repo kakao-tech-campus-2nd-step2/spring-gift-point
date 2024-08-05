@@ -11,8 +11,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Tag(name = "옵션 관리", description = "상품 옵션 관리를 위한 API")
 public interface OptionSpecification {
 
@@ -25,7 +23,7 @@ public interface OptionSpecification {
                             )
                     )
             })
-    ResponseEntity<List<OptionResponse>> getAllOptions();
+    ResponseEntity<OptionResponse.InfoList> getAllOptions();
 
     @Operation(summary = "상품의 모든 옵션 조회", description = "주어진 상품 ID에 해당하는 모든 옵션을 조회합니다.",
             responses = {
@@ -37,7 +35,7 @@ public interface OptionSpecification {
                     ),
                     @ApiResponse(responseCode = "404", description = "상품을 찾을 수 없음")
             })
-    ResponseEntity<List<OptionResponse>> getAllOptionsFromGift(@Parameter(description = "조회할 상품의 ID") @PathVariable Long id);
+    ResponseEntity<OptionResponse.InfoList> getAllOptionsFromGift(@Parameter(description = "조회할 상품의 ID") @PathVariable Long id);
 
     @Operation(summary = "상품에 옵션 추가", description = "주어진 상품 ID에 새로운 옵션을 추가합니다.",
             responses = {

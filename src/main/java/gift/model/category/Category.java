@@ -1,6 +1,6 @@
 package gift.model.category;
 
-import gift.model.gift.Gift;
+import gift.model.product.Product;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -11,26 +11,22 @@ import java.util.List;
 @Table(name = "category")
 public class Category {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(unique = true)
     @NotNull
     private String name;
-
     @NotNull
     private String color;
-
     @Column(name = "imageurl")
     @NotNull
     private String imageUrl;
-
     @NotNull
     private String description;
-
     @OneToMany(mappedBy = "category")
-    private final List<Gift> gifts = new ArrayList<>();
+    private final List<Product> products = new ArrayList<>();
 
     protected Category() {
     }
@@ -63,8 +59,8 @@ public class Category {
         return description;
     }
 
-    public List<Gift> getGifts() {
-        return gifts;
+    public List<Product> getGifts() {
+        return products;
     }
 
     public void modify(String name, String color, String imageUrl, String description) {

@@ -1,12 +1,13 @@
 package gift.model.option;
 
-import gift.model.gift.Gift;
+import gift.exception.OutOfStockException;
+import gift.model.product.Product;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
-@Table(name = "gift_option")
+@Table(name = "product_option")
 public class Option {
 
     @Id
@@ -21,8 +22,8 @@ public class Option {
     private int quantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "gift_id")
-    private Gift gift;
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     @Version
     @ColumnDefault("0")
@@ -54,12 +55,12 @@ public class Option {
         return quantity;
     }
 
-    public Gift getGift() {
-        return gift;
+    public Product getGift() {
+        return product;
     }
 
-    public void setGift(Gift gift) {
-        this.gift = gift;
+    public void setGift(Product product) {
+        this.product = product;
     }
 
     public void modify(String name, int quantity) {
@@ -77,7 +78,7 @@ public class Option {
 
     public void subtract(int quantity) {
         if (this.quantity < quantity) {
-            throw new IllegalArgumentException("차감할 수량이 현재 수량보다 많습니다.");
+            throw new OutOfStockException("재고가 부족합니다.");
         }
         this.quantity -= quantity;
     }

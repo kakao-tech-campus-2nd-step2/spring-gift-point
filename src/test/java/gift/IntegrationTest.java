@@ -34,18 +34,19 @@ public class IntegrationTest {
     void testAddGiftToCart() {
         String email = "abcd@naver.com";
         String password = "1234";
+        String name = "testName";
 
         // 회원가입
-        registerUser(email, password);
+        registerUser(email, password, name);
         // 로그인
-        String token = loginAndGetToken(email, password);
+        String token = loginAndGetToken(email, password, name);
         // 위시리스트에 상품 추가
         addGiftToWish(token, 1, 2);
     }
 
-    public void registerUser(String email, String password) {
+    public void registerUser(String email, String password, String name) {
         String registerUrl = baseUrl + REGISTER_URL;
-        UserRequest.Create registerRequest = new UserRequest.Create(email, password);
+        UserRequest.Create registerRequest = new UserRequest.Create(email, password, name);
 
         HttpEntity<UserRequest.Create> registerRequestEntity = new HttpEntity<>(registerRequest);
         ResponseEntity<String> registerResponse = restTemplate.postForEntity(registerUrl, registerRequestEntity, String.class);
@@ -54,9 +55,9 @@ public class IntegrationTest {
         assertThat(registerResponse.getBody()).isEqualTo("회원가입을 성공하였습니다!");
     }
 
-    public String loginAndGetToken(String email, String password) {
+    public String loginAndGetToken(String email, String password, String name) {
         String loginUrl = baseUrl + LOGIN_URL;
-        UserRequest.Create loginRequest = new UserRequest.Create(email, password);
+        UserRequest.Create loginRequest = new UserRequest.Create(email, password, name);
 
         HttpEntity<UserRequest.Create> loginRequestEntity = new HttpEntity<>(loginRequest);
         ResponseEntity<Map> loginResponse = restTemplate.postForEntity(loginUrl, loginRequestEntity, Map.class);

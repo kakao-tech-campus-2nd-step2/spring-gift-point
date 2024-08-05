@@ -2,9 +2,7 @@ package gift.controller.OAuth;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.*;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,7 +20,7 @@ public interface KakaoAuthSpecification {
                     @ApiResponse(responseCode = "302", description = "리다이렉트 성공"),
                     @ApiResponse(responseCode = "500", description = "서버 오류")
             })
-    void getAuthCode(HttpServletResponse response) throws IOException;
+    ResponseEntity<Void> getAuthCode(HttpServletResponse response, @RequestParam("redirect-url") String redirectUrl) throws IOException;
 
     @Operation(summary = "카카오 인증 코드로 액세스 토큰 가져오기", description = "카카오 인증 코드를 사용하여 액세스 토큰을 가져옵니다.",
             responses = {
@@ -36,5 +34,5 @@ public interface KakaoAuthSpecification {
                     @ApiResponse(responseCode = "400", description = "잘못된 요청"),
                     @ApiResponse(responseCode = "401", description = "인증 실패")
             })
-    ResponseEntity<Map<String, String>> getAccessToken(@Parameter(description = "카카오 인증 코드") @RequestParam String code);
+    ResponseEntity<Map<String, String>> getAccessToken(@Parameter(description = "카카오 인증 코드") @RequestParam String code, @RequestParam("redirect-url") String redirectUrl);
 }

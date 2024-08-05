@@ -2,13 +2,13 @@ package gift.service.OAuth;
 
 import gift.common.enums.LoginType;
 import gift.common.enums.TokenType;
-import gift.dto.OAuth.AuthTokenResponse;
+import gift.dto.OAuth.*;
 import gift.model.token.OAuthToken;
 import gift.model.user.User;
 import gift.repository.token.OAuthTokenRepository;
 import gift.repository.user.UserRepository;
-import gift.util.KakaoApiCaller;
 import gift.util.JwtUtil;
+import gift.util.KakaoApiCaller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,24 +28,24 @@ public class KakaoAuthService {
         this.OAuthTokenRepository = OAuthTokenRepository;
     }
 
-    public String createCodeUrl() {
-        return kakaoApiCaller.createGetCodeUrl();
+    public String createCodeUrl(String rediectUrl) {
+        return kakaoApiCaller.createGetCodeUrl(rediectUrl);
     }
 
-    public String register(String authCode) {
+    public LoginInfoResponse.Info register(String authCode, String redirectUrl) {
 
-        AuthTokenResponse tokenResponse = kakaoApiCaller.getAccessToken(authCode);
-        String email = kakaoApiCaller.extractUserEmail(tokenResponse.accessToken());
+        AuthTokenResponse tokenResponse = kakaoApiCaller.getAccessToken(authCode, redirectUrl);
 
-        User user = userRepository.findByEmail(email).orElseGet(
-                () -> userRepository.save(new User(email, "1234", LoginType.KAKAO))
+        UserInfoResponse.Info userInfo = kakaoApiCaller.extractUserInfo(tokenResponse.accessToken());
+
+        User user = userRepository.findByEmail(userInfo.email()).orElseGet(
+                () -> userRepository.save(new User(userInfo.email(), "1234", "testName", LoginType.KAKAO))
         );
 
         user.checkLoginType(LoginType.KAKAO);
 
         saveKakaoAccessToken(tokenResponse.accessToken(), tokenResponse.refreshToken(), user);
-
-        return jwtUtil.generateJWT(user);
+        return new LoginInfoResponse.Info(userInfo.name(), jwtUtil.generateJWT(user));
     }
 
     private void saveKakaoAccessToken(String accessToken, String refreshToken, User user) {

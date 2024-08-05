@@ -2,10 +2,11 @@ package gift.service.option;
 
 import gift.dto.option.OptionRequest;
 import gift.dto.option.OptionResponse;
-import gift.model.gift.Gift;
+import gift.exception.EntityNotFoundException;
 import gift.model.option.Option;
-import gift.repository.gift.GiftRepository;
+import gift.model.product.Product;
 import gift.repository.option.OptionRepository;
+import gift.repository.product.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.retry.annotation.Backoff;
@@ -14,60 +15,54 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class OptionService {
 
     private final OptionRepository optionRepository;
-    private final GiftRepository giftRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public OptionService(OptionRepository optionRepository, GiftRepository giftRepository) {
+    public OptionService(OptionRepository optionRepository, ProductRepository productRepository) {
         this.optionRepository = optionRepository;
-        this.giftRepository = giftRepository;
+        this.productRepository = productRepository;
     }
 
     @Transactional
     public void addOptionToGift(Long giftId, OptionRequest.Create optionRequest) {
-        Gift gift = giftRepository.findById(giftId)
-                .orElseThrow(() -> new NoSuchElementException("해당 상품을 찾을 수 없습니다 id :  " + giftId));
+        Product product = productRepository.findById(giftId)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 상품입니다."));
         Option option = optionRequest.toEntity();
 
-        checkDuplicateOptionName(gift, option.getName());
+        checkDuplicateOptionName(product, option.getName());
 
-        gift.addOption(option);
-        giftRepository.save(gift);
+        product.addOption(option);
+        productRepository.save(product);
     }
 
     @Transactional(readOnly = true)
-    public List<OptionResponse> getAllOptions() {
-        List<OptionResponse> options = optionRepository.findAll().stream()
-                .map(OptionResponse::from)
-                .toList();
-        return options;
+    public OptionResponse.InfoList getAllOptions() {
+        return OptionResponse.InfoList.fromEntity(optionRepository.findAll());
     }
 
     @Transactional(readOnly = true)
-    public List<OptionResponse> getOptionsByGiftId(Long giftId) {
-        Gift gift = giftRepository.findById(giftId)
-                .orElseThrow(() -> new NoSuchElementException("해당 상품을 찾을 수 없습니다 id :  " + giftId));
+    public OptionResponse.InfoList getOptionsByGiftId(Long giftId) {
+        Product product = productRepository.findById(giftId)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 상품입니다."));
 
-        return gift.getOptions().stream()
-                .map(OptionResponse::from)
-                .toList();
+        return OptionResponse.InfoList.fromEntity(product.getOptions());
     }
 
     @Transactional
     public void updateOptionToGift(Long giftId, Long optionId, OptionRequest.Update optionRequest) {
-        Gift gift = giftRepository.findById(giftId)
-                .orElseThrow(() -> new NoSuchElementException("해당 상품을 찾을 수 없습니다 id :  " + giftId));
+        Product product = productRepository.findById(giftId)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 상품입니다."));
         Option option = optionRepository.findById(optionId)
-                .orElseThrow(() -> new NoSuchElementException("해당 옵션을 찾을 수 없습니다 id :  " + optionId));
+                .orElseThrow(() -> new EntityNotFoundException("해당 옵션을 찾을 수 없습니다 id :  " + optionId));
 
-        checkOptionInGift(gift, optionId);
+        checkOptionInGift(product, optionId);
         if (optionRequest.name() != null) {
-            checkDuplicateOptionName(gift, optionRequest.name());
+            checkDuplicateOptionName(product, optionRequest.name());
             option.modify(optionRequest.name());
         }
         if (optionRequest.quantity() != null) {
@@ -82,39 +77,39 @@ public class OptionService {
             backoff = @Backoff(delay = 200)
     )
     public void subtractOptionToGift(Long giftId, Long optionId, int quantity) {
-        Gift gift = giftRepository.findById(giftId)
-                .orElseThrow(() -> new NoSuchElementException("해당 상품을 찾을 수 없습니다 id :  " + giftId));
+        Product product = productRepository.findById(giftId)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 상품입니다."));
         Option option = optionRepository.findById(optionId)
-                .orElseThrow(() -> new NoSuchElementException("해당 옵션을 찾을 수 없습니다 id :  " + optionId));
+                .orElseThrow(() -> new EntityNotFoundException("해당 옵션을 찾을 수 없습니다 id :  " + optionId));
 
-        checkOptionInGift(gift, optionId);
+        checkOptionInGift(product, optionId);
         option.subtract(quantity);
         optionRepository.save(option);
     }
 
     @Transactional
     public void deleteOptionFromGift(Long giftId, Long optionId) {
-        Gift gift = giftRepository.findById(giftId)
-                .orElseThrow(() -> new NoSuchElementException("해당 상품을 찾을 수 없습니다 id :  " + giftId));
+        Product product = productRepository.findById(giftId)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 상품입니다."));
         Option option = optionRepository.findById(optionId)
-                .orElseThrow(() -> new NoSuchElementException("해당 옵션을 찾을 수 없습니다 id :  " + optionId));
+                .orElseThrow(() -> new EntityNotFoundException("해당 옵션을 찾을 수 없습니다 id :  " + optionId));
 
-        checkOptionInGift(gift, optionId);
+        checkOptionInGift(product, optionId);
 
-        gift.removeOption(option);
-        giftRepository.save(gift);
+        product.removeOption(option);
+        productRepository.save(product);
         optionRepository.delete(option);
     }
 
-    public void checkOptionInGift(Gift gift, Long optionId) {
-        if (!gift.hasOption(optionId)) {
-            throw new NoSuchElementException("해당 상품에 해당 옵션이 없습니다!");
+    public void checkOptionInGift(Product product, Long optionId) {
+        if (!product.hasOption(optionId)) {
+            throw new EntityNotFoundException("해당 상품에 해당 옵션이 없습니다!");
         }
     }
 
 
-    public void checkDuplicateOptionName(Gift gift, String optionName) {
-        List<Option> options = gift.getOptions();
+    public void checkDuplicateOptionName(Product product, String optionName) {
+        List<Option> options = product.getOptions();
 
         boolean isDuplicate = options.stream()
                 .anyMatch(option -> option.getName().equals(optionName));

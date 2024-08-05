@@ -7,7 +7,7 @@
 <body>
 <div class="container mt-5">
     <h2>옵션 추가</h2>
-    <form method="post" th:action="@{|/admin/gift/${giftId}/option/create|}">
+    <form method="post" th:action="@{|/admin/product/${giftId}/option/create|}">
         <div class="form-group">
             <label for="name">옵션 이름</label>
             <input class="form-control" id="name" name="name" required type="text">
@@ -17,7 +17,7 @@
             <input class="form-control" id="quantity" name="quantity" required type="number">
         </div>
         <button class="btn btn-primary" type="submit">추가</button>
-        <a class="btn btn-secondary" th:href="@{|/admin/gift/detail/${giftId}|}">취소</a>
+        <a class="btn btn-secondary" th:href="@{|/admin/product/detail/${giftId}|}">취소</a>
     </form>
 </div>
 </body>

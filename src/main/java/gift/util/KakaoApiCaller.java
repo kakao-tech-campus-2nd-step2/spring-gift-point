@@ -1,13 +1,14 @@
 package gift.util;
 
 import gift.common.properties.KakaoProperties;
-import gift.dto.OAuth.AuthTokenInfoResponse;
-import gift.dto.OAuth.AuthTokenResponse;
+import gift.dto.OAuth.*;
+import gift.exception.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -26,29 +27,34 @@ public class KakaoApiCaller {
         this.restClient = restClient;
     }
 
-    public String createGetCodeUrl() {
+    public String createGetCodeUrl(String redirectUrl) {
         String authUrl = kakaoProperties.authUrl();
 
         String url = UriComponentsBuilder.fromHttpUrl(authUrl)
                 .queryParam("client_id", kakaoProperties.restAPiKey())
-                .queryParam("redirect_uri", kakaoProperties.redirectUri())
+                .queryParam("redirect_uri", redirectUrl)
                 .queryParam("response_type", "code")
                 .toUriString();
         return url;
     }
 
 
-    public AuthTokenResponse getAccessToken(String authCode) {
+    public AuthTokenResponse getAccessToken(String authCode, String redirectUrl) {
         String url = kakaoProperties.tokenUrl();
-        MultiValueMap<String, String> params = createParamsForAccessToken(authCode);
-        AuthTokenResponse resp = restClient.post()
-                .uri(URI.create(url))
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(params)
-                .retrieve()
-                .body(AuthTokenResponse.class);
+        MultiValueMap<String, String> params = createParamsForAccessToken(authCode, redirectUrl);
+        try{
+            AuthTokenResponse resp = restClient.post()
+                    .uri(URI.create(url))
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .body(params)
+                    .retrieve()
+                    .body(AuthTokenResponse.class);
 
-        return resp;
+            return resp;
+        }catch (HttpClientErrorException e) {
+            throw new AuthenticationException("유효하지 않은 인가코드입니다.");
+        }
+
     }
 
     public AuthTokenResponse refreshAccessToken(String refreshToken) {
@@ -64,7 +70,7 @@ public class KakaoApiCaller {
         return resp;
     }
 
-    public String extractUserEmail(String accessToken) {
+    public UserInfoResponse.Info extractUserInfo(String accessToken) {
         String url = kakaoProperties.userInfoUrl();
         Map resp = restClient.get()
                 .uri(URI.create(url))
@@ -72,7 +78,10 @@ public class KakaoApiCaller {
                 .retrieve()
                 .body(Map.class);
         Map<String, Object> accountMap = (Map<String, Object>) resp.get("kakao_account");
-        return (String) accountMap.get("email");
+        String email = (String) accountMap.get("email");
+        Map<String, Object> profileMap = (Map<String, Object>) accountMap.get("profile");
+        String nickname = (String) profileMap.get("nickname");
+        return new UserInfoResponse.Info(email,nickname);
     }
 
     public String sendMessage(String accessToken, String text) {
@@ -107,11 +116,11 @@ public class KakaoApiCaller {
         return resp;
     }
 
-    private MultiValueMap<String, String> createParamsForAccessToken(String authCode) {
+    private MultiValueMap<String, String> createParamsForAccessToken(String authCode, String redirectUrl) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", kakaoProperties.restAPiKey());
-        params.add("redirect_uri", kakaoProperties.redirectUri());
+        params.add("redirect_uri", redirectUrl);
         params.add("code", authCode);
         return params;
     }

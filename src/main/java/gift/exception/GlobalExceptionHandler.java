@@ -1,5 +1,6 @@
 package gift.exception;
 
+import io.jsonwebtoken.JwtException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.*;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,12 +16,10 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(error -> {
-            errors.put(error.getField(), error.getDefaultMessage());
-        });
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ProblemDetail> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problemDetail.setDetail("유효하지 않은 입력입니다.");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problemDetail);
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
@@ -32,19 +31,60 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(UserAlreadyExistException.class)
-    public ResponseEntity<ProblemDetail> handleUserAlreadyExistException(UserAlreadyExistException ex) {
+    @ExceptionHandler(AlreadyExistException.class)
+    public ResponseEntity<ProblemDetail> handleUserAlreadyExistException(AlreadyExistException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
         problemDetail.setDetail(ex.getMessage());
         return ResponseEntity.status(ex.getStatus()).body(problemDetail);
     }
 
-    @ExceptionHandler(InvalidUserException.class)
-    public ResponseEntity<ProblemDetail> handleInvalidUserException(InvalidUserException ex) {
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ProblemDetail> handleInvalidAuthCodeException(AuthenticationException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
         problemDetail.setDetail(ex.getMessage());
         return ResponseEntity.status(ex.getStatus()).body(problemDetail);
     }
+
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ProblemDetail> handleJwtException(JwtException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.UNAUTHORIZED);
+        problemDetail.setDetail(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(problemDetail);
+    }
+
+    @ExceptionHandler(WishInvalidAuthException.class)
+    public ResponseEntity<ProblemDetail> handleWishInvalidAuthException(WishInvalidAuthException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
+        problemDetail.setDetail(ex.getMessage());
+        return ResponseEntity.status(ex.getStatus()).body(problemDetail);
+    }
+    @ExceptionHandler(OutOfStockException.class)
+    public ResponseEntity<ProblemDetail> handleOutOfStockException(OutOfStockException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
+        problemDetail.setDetail(ex.getMessage());
+        return ResponseEntity.status(ex.getStatus()).body(problemDetail);
+    }
+    @ExceptionHandler(NotAdminException.class)
+    public ResponseEntity<ProblemDetail> handleNotAdminException(NotAdminException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
+        problemDetail.setDetail(ex.getMessage());
+        return ResponseEntity.status(ex.getStatus()).body(problemDetail);
+    }
+
+    @ExceptionHandler(LackPointException.class)
+    public ResponseEntity<ProblemDetail> handleLackPointException(LackPointException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
+        problemDetail.setDetail(ex.getMessage());
+        return ResponseEntity.status(ex.getStatus()).body(problemDetail);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ProblemDetail> handleEntityNotFoundException(EntityNotFoundException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
+        problemDetail.setDetail(ex.getMessage());
+        return ResponseEntity.status(ex.getStatus()).body(problemDetail);
+    }
+
 
     @ExceptionHandler(HttpClientErrorException.class)
     public ResponseEntity<Map<String, String>> handleHttpClientErrorException(HttpClientErrorException ex) {

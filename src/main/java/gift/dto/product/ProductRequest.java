@@ -1,4 +1,4 @@
-package gift.dto.gift;
+package gift.dto.product;
 
 import gift.dto.option.OptionRequest;
 import jakarta.validation.Valid;
@@ -6,14 +6,15 @@ import jakarta.validation.constraints.*;
 
 import java.util.List;
 
-public class GiftRequest {
+public class ProductRequest {
 
     public record Create(
             @Size(max = 15)
             @Pattern(regexp = "[\\s\\(\\)\\[\\]\\+\\-&/_a-zA-Z0-9\uAC00-\uD7AF]*", message = "특수문자 오류")
+            @NotBlank
             String name,
 
-            int price,
+            Integer price,
 
             String imageUrl,
 
