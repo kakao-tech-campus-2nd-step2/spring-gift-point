@@ -65,6 +65,7 @@ public class OrderService {
             () -> new IllegalArgumentException(
                 "Option not found with id " + requestOrderDto.getOptionId()));
 
+        member.decrementPoint(requestOrderDto.getPoint());
         option.decrementAmount(requestOrderDto.getQuantity());
 
         deleteWishWithOptionId(memberDto.getId(), option);
@@ -72,6 +73,8 @@ public class OrderService {
         Order order = orderRepository.save(
             new Order(member, option, requestOrderDto.getQuantity(),
                 requestOrderDto.getMessage()));
+
+        member.earnPoint(option.getProduct().getPrice(), requestOrderDto.getQuantity());
 
 //        sendKaKaoMessage(requestOrderDto, token);
 
