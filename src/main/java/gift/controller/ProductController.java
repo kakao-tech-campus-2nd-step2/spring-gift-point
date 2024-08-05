@@ -2,15 +2,13 @@ package gift.controller;
 
 import gift.domain.Option;
 import gift.domain.Product;
-import gift.dto.ProductDTO;
+import gift.dto.ProductResponse;
 import gift.service.CategoryService;
 import gift.service.OptionService;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -42,10 +40,10 @@ public class ProductController {
 
     @GetMapping
     @Operation(summary = "상품 목록 조회", description = "모든 상품의 목록을 조회합니다.")
-    public ResponseEntity<Page<ProductDTO>> getProducts(@RequestParam(defaultValue = "0") int page,
-                                                     @RequestParam(defaultValue = "10") int size,
-                                                     @RequestParam(defaultValue = "id,asc") String[] sort,
-                                                     @RequestParam(required = false) Long categoryId) {
+    public ResponseEntity<Page<ProductResponse>> getProducts(@RequestParam(defaultValue = "0") int page,
+                                                             @RequestParam(defaultValue = "10") int size,
+                                                             @RequestParam(defaultValue = "id,asc") String[] sort,
+                                                             @RequestParam(required = false) Long categoryId) {
         Sort.Direction direction = Sort.Direction.fromString(sort[1]);
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, sort[0]));
 
@@ -56,20 +54,20 @@ public class ProductController {
             productPage = productService.getAllProducts(pageRequest);
         }
 
-        Page<ProductDTO> dtoPage = productPage.map(ProductDTO::convertToDto);
+        Page<ProductResponse> dtoPage = productPage.map(ProductResponse::convertToDto);
 
         return ResponseEntity.ok(dtoPage);
     }
 
     @GetMapping("/{productId}")
     @Operation(summary = "상품 개별 조회", description = "개별적인 상품을 조회합니다.")
-    public ResponseEntity<ProductDTO> getProduct(@PathVariable("productId") Long id) {
+    public ResponseEntity<ProductResponse> getProduct(@PathVariable("productId") Long id) {
         Product product = productService.getProductById(id);
         if (product == null) {
             return ResponseEntity.notFound().build();
         }
 
-        ProductDTO productDTO = ProductDTO.convertToDto(product);
+        ProductResponse productDTO = ProductResponse.convertToDto(product);
 
         return ResponseEntity.ok(productDTO);
     }
