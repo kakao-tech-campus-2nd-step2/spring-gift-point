@@ -8,18 +8,27 @@ public record PaymentInfo(
     Integer quantity,
     String message,
     Integer price,
+    Integer totalPrice,
     Boolean usePoint,
-    Integer usedPoint
+    Integer usedPoint,
+    Integer discountedPrice,
+    Integer payedPrice,
+    Integer accumulatedPrice
 ) {
 
-    public static PaymentInfo of(Option option, OrderRequest orderRequest) {
+    public static PaymentInfo of(Option option, OrderRequest request, Integer totalPrice,
+        Integer discountedPrice, Integer payedPrice, Integer accumulatedPrice) {
         return new PaymentInfo(
             option.getId(),
-            orderRequest.quantity(),
-            orderRequest.message(),
+            request.quantity(),
+            request.message(),
             option.getPrice(),
-            orderRequest.usePoint(),
-            orderRequest.point()
+            totalPrice,
+            request.usePoint(),
+            request.point(),
+            discountedPrice,
+            payedPrice,
+            accumulatedPrice
         );
     }
 

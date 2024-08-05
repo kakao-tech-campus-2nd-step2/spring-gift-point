@@ -9,6 +9,7 @@ import gift.order.dto.request.OrderRequest;
 import gift.order.dto.response.OrderResponse;
 import gift.order.entity.Order;
 import gift.order.repository.OrderJpaRepository;
+import gift.product.option.entity.Option;
 import gift.product.option.service.OptionService;
 import gift.user.entity.User;
 import gift.wish.repository.WishRepository;
@@ -52,12 +53,31 @@ public class OrderService {
         var kakaoMessageRequest = new KakaoMessageRequestBody(kakaoProperties.templateId(),
             templateArgs);
 
-        Order savedOrder = orderRepository.save(
-            new Order(PaymentInfo.of(option, request)));
+        Order savedOrder = orderRepository.save(new Order(pay(user, option, request)));
 
         kakaoApiClient.sendMessage(user.getAccessToken(), kakaoMessageRequest);
 
         return OrderResponse.from(savedOrder);
+    }
+
+    private PaymentInfo pay(User user, Option option, OrderRequest request) {
+        var totalPrice = option.getPrice() * request.quantity();
+
+        // 포인트 사용
+        var discountedPrice = 0;
+        if (request.usePoint()) {
+            user.usePoint(request.point());
+            discountedPrice = request.point();
+        }
+        var payedPrice = totalPrice - discountedPrice;
+        int accumulatedPoint = payedPrice / 10;
+
+        // 결제 로직(생략)
+
+        user.chargePoint(accumulatedPoint);
+
+        return PaymentInfo.of(option, request, totalPrice, discountedPrice, payedPrice,
+            accumulatedPoint);
     }
 
 }
