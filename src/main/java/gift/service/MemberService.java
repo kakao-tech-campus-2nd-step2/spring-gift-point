@@ -50,7 +50,8 @@ public class MemberService {
 
     @Transactional
     public void updateMemberPoint(Long memberId, int newPoint) {
-        memberRepository.getReferenceById(memberId)
+        memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new)
                 .updatePoint(newPoint);
     }
 
