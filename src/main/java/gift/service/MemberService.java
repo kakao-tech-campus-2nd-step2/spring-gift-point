@@ -45,4 +45,17 @@ public class MemberService {
 
         return jwtUtil.generateToken(member.getId(), member.getNickname(), "USER");
     }
+
+    public int getMemberPoints(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+        return member.getPoints();
+    }
+
+    public void addPointsToMember(Long memberId, int points) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+        member.addPoints(points);
+        memberRepository.save(member);
+    }
 }

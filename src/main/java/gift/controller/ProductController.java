@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,7 +55,7 @@ public class ProductController {
             ProductResponse product = productService.findById(id);
             return ResponseEntity.ok(product);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -64,7 +65,7 @@ public class ProductController {
             productService.save(productRequest);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
@@ -74,7 +75,7 @@ public class ProductController {
             productService.update(id, productRequest);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -84,17 +85,17 @@ public class ProductController {
             productService.delete(id);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
-    @PostMapping("/delete-batch")
-    public ResponseEntity<?> deleteBatch(@RequestBody Map<String, List<Long>> request) {
+    @DeleteMapping("/delete-batch")
+    public ResponseEntity<?> deleteBatch(@RequestBody List<Long> ids) {
         try {
-            productService.deleteBatch(request.get("ids"));
-            return ResponseEntity.ok("Success");
+            productService.deleteBatch(ids);
+            return ResponseEntity.ok("Batch delete successful");
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 }

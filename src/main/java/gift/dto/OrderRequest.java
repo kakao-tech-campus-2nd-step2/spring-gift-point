@@ -8,7 +8,8 @@ import java.util.Objects;
 public record OrderRequest(
         @NotNull @Min(1) Long optionId,
         @NotNull @Min(1) int quantity,
-        String message
+        String message,
+        int usingPoint
 ) {
     public OrderRequest {
         Objects.requireNonNull(optionId, "optionId cannot be null");

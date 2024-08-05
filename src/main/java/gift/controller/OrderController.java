@@ -5,9 +5,11 @@ import gift.service.OrderService;
 import gift.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -23,17 +25,17 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createOrder(@RequestBody OrderRequest orderRequest, @RequestHeader("Authorization") String token) {
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7);
-        } else {
-            return ResponseEntity.status(401).body("Missing or invalid Authorization header");
+    public ResponseEntity<?> createOrder(@RequestBody OrderRequest orderRequest, HttpServletRequest request) {
+        Claims claims = (Claims) request.getAttribute("claims");
+        Long memberId = (Long) request.getAttribute("memberId");
+
+        try {
+            orderService.createOrder(orderRequest, memberId);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred");
         }
-
-        Claims claims = jwtUtil.extractClaims(token);
-        Long memberId = Long.parseLong(claims.getSubject());
-
-        orderService.createOrder(orderRequest, memberId);
-        return ResponseEntity.ok().build();
     }
 }
