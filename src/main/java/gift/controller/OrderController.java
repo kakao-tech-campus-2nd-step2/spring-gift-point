@@ -27,4 +27,11 @@ public class OrderController {
         OrderDTO orderDTO = orderService.createOrder(member.getId(), orderRequest.getOptionId(), orderRequest.getQuantity(), orderRequest.getMessage());
         return ResponseEntity.status(201).body(orderDTO);
     }
+
+    @Operation(summary = "포인트를 사용한 주문 생성", description = "포인트를 사용하여 새로운 주문을 생성합니다.")
+    @PostMapping("/points")
+    public ResponseEntity<OrderDTO> createOrderUsingPoints(@LoginMember Member member, @RequestBody OrderRequest orderRequest) {
+        OrderDTO orderDTO = orderService.createOrderUsingPoints(member.getId(), orderRequest.getOptionId(), orderRequest.getQuantity(), orderRequest.getMessage());
+        return ResponseEntity.status(201).body(orderDTO);
+    }
 }
