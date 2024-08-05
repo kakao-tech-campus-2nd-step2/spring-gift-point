@@ -14,6 +14,9 @@ public interface ProductOptionRepository extends JpaRepository<ProductOption, Lo
     List<ProductOption> findByProductId(Long productId);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("select po from ProductOption po where po.product.id = :productId and po.id = :id")
+    @Query("select po from ProductOption po join fetch po.product where po.product.id = :productId and po.id = :id")
     Optional<ProductOption> findByProductIdAndIdForUpdate(Long productId, Long id);
+
+    @Query("select po from ProductOption po join fetch po.product where po.id = :id")
+    Optional<ProductOption> findByIdWithProduct(Long id);
 }

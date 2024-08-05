@@ -2,6 +2,7 @@ package gift.member.domain;
 
 import gift.common.domain.BaseEntity;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -25,6 +26,9 @@ public class Member extends BaseEntity {
 
     private boolean isOauthAccount;
 
+    @Embedded
+    private Point point;
+
     @Enumerated(EnumType.STRING)
     @NotNull
     private Role role;
@@ -37,6 +41,7 @@ public class Member extends BaseEntity {
         this.password = password;
         this.isOauthAccount = oAuthAccount;
         this.role = Role.USER;
+        this.point = Point.of(0);
     }
 
     public Long getId() {
@@ -61,5 +66,17 @@ public class Member extends BaseEntity {
 
     public boolean isNotOAuthAccount() {
         return !isOauthAccount();
+    }
+
+    public void usePoint(Integer value) {
+        point.use(value);
+    }
+
+    public Integer accumulatePoint(Integer price) {
+        return point.accumulate(price);
+    }
+
+    public Integer getPoint() {
+        return point.getValue();
     }
 }
