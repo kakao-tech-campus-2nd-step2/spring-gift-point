@@ -29,13 +29,13 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
         NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String authorizationHeader = webRequest.getHeader("Authorization");
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            throw new UnauthorizedException("Missing or invalid Authorization header");
+            throw new UnauthorizedException("토큰이 없거나, 헤더 형식에 맞지 않습니다.");
         }
 
         String token = authorizationHeader.substring(7);
         User user = userService.getUserByToken(token);
         if (user == null) {
-            throw new UnauthorizedException("Invalid token");
+            throw new UnauthorizedException("잘못된 토큰입니다.");
         }
 
         return user;

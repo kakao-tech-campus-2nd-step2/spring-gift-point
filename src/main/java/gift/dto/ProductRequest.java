@@ -14,7 +14,7 @@ public class ProductRequest {
     @Schema(description = "Name of the product", example = "운동용 반팔")
     private String name;
     @Schema(description = "Price of the product", example = "13000")
-    private Integer price;
+    private int price;
     @Schema(description = "Image URL of the product", example = "testimage.jpg")
     private String imageUrl;
     @Schema(description = "ID of the category", example = "7")
@@ -39,7 +39,7 @@ public class ProductRequest {
         this.name = name;
     }
 
-    public Integer getPrice() {
+    public int getPrice() {
         return price;
     }
 

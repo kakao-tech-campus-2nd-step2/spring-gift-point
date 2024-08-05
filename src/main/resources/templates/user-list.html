@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>User List</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<h1>유저 리스트 페이지</h1>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Email</th>
+    <th>Points</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="user : ${userPage.content}">
+    <td th:text="${user.id}">ID</td>
+    <td th:text="${user.email}">Email</td>
+    <td th:text="${user.point}">Points</td>
+    <td>
+      <a th:href="@{'/admin/users/edit/' + ${user.id}}">포인트 관리</a>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<div class="pagination">
+  <a th:href="@{'/admin/users?page=' + (${userPage.number} - 1) + '&size=' + ${userPage.size}}"
+     th:if="${userPage.hasPrevious()}">이전</a>
+  <a th:href="@{'/admin/users?page=' + (${userPage.number} + 1) + '&size=' + ${userPage.size}}"
+     th:if="${userPage.hasNext()}">다음</a>
+</div>
+<a th:href="@{'/admin/products'}">상품 리스트로 돌아가기</a>
+</body>
+</html>

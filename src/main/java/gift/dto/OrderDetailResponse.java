@@ -14,7 +14,7 @@ public record OrderDetailResponse(
     @Schema(description = "User details")
     User user,
     @Schema(description = "Quantity ordered", example = "2")
-    Integer quantity,
+    int quantity,
     @Schema(description = "Order date and time", example = "2024-07-28T17:04:18.834374")
     LocalDateTime localDateTime,
     @Schema(description = "Order message", example = "Please deliver between 9 AM to 5 PM")

@@ -10,7 +10,7 @@ public class KakaoProperties {
     private String clientId;
     private String redirectUri;
     private String defaultPassword;
-    private String accessToken;
+    private String frontRedirectUri;
 
     public String getClientId() {
         return clientId;
@@ -36,15 +36,11 @@ public class KakaoProperties {
         this.defaultPassword = defaultPassword;
     }
 
-    public String getAccessToken() {
-        return accessToken;
+    public String getFrontRedirectUri() {
+        return frontRedirectUri;
     }
 
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    public boolean isKakaoLoginCompleted() {
-        return !this.accessToken.equals("demoToken"); //Token의 default값 = "demoToken"
+    public void setFrontRedirectUri(String frontRedirectUri) {
+        this.frontRedirectUri = frontRedirectUri;
     }
 }

@@ -3,7 +3,6 @@ package gift.e2e;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -68,7 +67,7 @@ class WishE2ETest {
         User savedUser = userRepository.save(new User("test@test.com", "123456"));
         Product savedProduct = productRepository.save(
             new Product("test", 1000, "test.jpg", category));
-        Wish savedWish = wishRepository.save(new Wish(savedUser, savedProduct, 10));
+        Wish savedWish = wishRepository.save(new Wish(savedUser, savedProduct));
 
         productId = savedProduct.getId();
         wishId = savedWish.getId();
@@ -78,14 +77,13 @@ class WishE2ETest {
     @Test
     @DisplayName("save test")
     void addWishTest() throws Exception {
-        WishRequest wishRequest = new WishRequest(productId, 5);
+        WishRequest wishRequest = new WishRequest(productId);
 
         mockMvc.perform(post("/api/wishes")
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(wishRequest)))
-            .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.number").value(5));
+            .andExpect(status().isCreated());
     }
 
     @Test
@@ -94,26 +92,7 @@ class WishE2ETest {
         mockMvc.perform(get("/api/wishes")
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.content[0].number").value(10));
-    }
-
-    @Test
-    @DisplayName("update test")
-    void updateWishTest() throws Exception {
-        WishRequest wishRequest = new WishRequest(productId, 15);
-
-        mockMvc.perform(put("/api/wishes/" + wishId)
-                .header("Authorization", token)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(wishRequest)))
             .andExpect(status().isOk());
-
-        mockMvc.perform(get("/api/wishes/" + wishId)
-                .header("Authorization", token)
-                .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.number").value(15));
     }
 
     @Test

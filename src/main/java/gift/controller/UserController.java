@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/members")
+@RequestMapping("/api")
 @Tag(name = "User Management", description = "APIs for managing users")
 public class UserController {
 
@@ -27,7 +27,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/login")
+    @PostMapping("/members/login")
     @Operation(summary = "사용자 로그인", description = "사용자가 로그인을 시도합니다.",
         responses = @ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class))))
     public ResponseEntity<UserResponse> login(@RequestBody UserRequest userRequest) {
@@ -37,7 +37,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/register")
+    @PostMapping("/members/register")
     @Operation(summary = "사용자 등록", description = "새로운 사용자를 등록합니다.",
         responses = @ApiResponse(responseCode = "200", description = "등록 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class))))
     public ResponseEntity<UserResponse> register(@RequestBody UserRequest userRequest) {
@@ -47,4 +47,5 @@ public class UserController {
         UserResponse response = new UserResponse(token);
         return ResponseEntity.ok(response);
     }
+
 }

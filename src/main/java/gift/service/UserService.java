@@ -1,10 +1,14 @@
 package gift.service;
 
+import gift.config.KakaoProperties;
 import gift.entity.User;
 import gift.exception.EmailAlreadyExistsException;
 import gift.exception.UserAuthException;
 import gift.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,11 +16,14 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final TokenService tokenService;
+    private final KakaoProperties kakaoProperties;
 
     @Autowired
-    public UserService(UserRepository userRepository, TokenService tokenService) {
+    public UserService(UserRepository userRepository, TokenService tokenService,
+        KakaoProperties kakaoProperties) {
         this.userRepository = userRepository;
         this.tokenService = tokenService;
+        this.kakaoProperties = kakaoProperties;
     }
 
     public User getUserByToken(String token) {
@@ -50,5 +57,33 @@ public class UserService {
             User newUser = new User(email, password);
             userRepository.save(newUser);
         }
+    }
+
+    public Page<User> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
+
+    public User getUserById(Long id) {
+        return userRepository.findById(id)
+            .orElseThrow(() -> new UserAuthException(id + "에 해당하는 유저가 없습니다."));
+    }
+
+    @Transactional
+    public void setAccessToken(String accessToken, String email) {
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new UserAuthException("유저가 가입되지 않았습니다."));
+        user.setAccessToken(accessToken);
+    }
+
+    @Transactional
+    public void updateUserPoint(Long userId, Integer newPoints, String password) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new UserAuthException("유저를 찾을 수 없습니다."));
+
+        if (!kakaoProperties.getDefaultPassword().equals(password)) {
+            throw new UserAuthException("잘못된 비밀번호입니다.");
+        }
+
+        user.updatePoint(newPoints);
     }
 }
