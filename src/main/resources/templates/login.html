@@ -7,14 +7,14 @@
 </head>
 <body>
 <h1>Login</h1>
-<form id="loginForm" th:action="@{/members/login}" method="post">
+<form id="loginForm" th:action="@{/members/v2/login}" method="post">
     <label for="email">Email:</label><br>
     <input type="email" id="email" name="email"><br>
     <label for="password">Password:</label><br>
     <input type="password" id="password" name="password"><br>
     <button id="loginBtn" type="submit">Login</button>
 </form>
-<a href="/register">Register</a>
+<a href="/view/v2/members/register">Register</a>
 
 <script type="text/javascript">
     document.getElementById('loginForm').addEventListener('submit', function(event) {
@@ -22,7 +22,7 @@
 
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
-        fetch('/members/login', {
+        fetch('/members/v2/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -32,24 +32,33 @@
                 'password': password
             })
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(errorData => {
+                    throw new Error(errorData.message || 'An unexpected error occurred');
+                });
+            }
+            return response.json();
+        })
         .then(data => {
-            if (data.token) {
+            console.log(data); // data 확인용 로그
+            if (!data) {
+                alert('Invalid email or password');
+            } else if (data.token && data.role) {
                 console.log('Token saved to local storage:', data.token);
                 authSetup.storeToken(data.token);
-
                 if (data.role === 'ADMIN') {
-                    location.href = "/admin";
+                    location.href = "/admin/v2";
                 } else if (data.role === 'USER') {
-                    location.href = "/view/home";
+                    location.href = "/view/v2/home";
+                } else {
+                    alert('Please try logging in again');
                 }
-
-            } else {
-                alert('Invalid email or password');
             }
         })
         .catch((error) => {
             console.error('Error:', error);
+            alert("invalid id or password try again");
         });
     });
 </script>

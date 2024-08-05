@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/api/products")
+@RequestMapping("/api/v2/products")
 @Tag(name = "Product API", description = "상품 관련 API")
 public class ProductController {
 
     private final CategoryService categoryService;
     private final ProductService productService;
-    private OptionService optionService;
+    private final OptionService optionService;
 
 
     @Autowired
@@ -42,7 +42,7 @@ public class ProductController {
             return "add-product";
         }
         productService.addProduct(productDto);
-        return "redirect:/view/products";
+        return "redirect:/view/v2/products";
     }
 
     @PostMapping("/edit/{id}")
@@ -62,7 +62,7 @@ public class ProductController {
             return "edit-product";
         }
         productService.updateProduct(id, productDto);
-        return "redirect:/view/products";
+        return "redirect:/view/v2/products";
     }
 
 }

@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
@@ -27,13 +28,11 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
 
-    private final OptionService optionService;
 
     @Autowired
-    public  ProductService(ProductRepository productRepository, CategoryService categoryService, OptionService optionService){
+    public ProductService(ProductRepository productRepository, CategoryService categoryService) {
         this.productRepository = productRepository;
         this.categoryService = categoryService;
-        this.optionService = optionService;
 
     }
 
@@ -46,6 +45,7 @@ public class ProductService {
                 .orElseThrow(() -> new RuntimeException("Product not found"));
     }
 
+    @Transactional
     public void addProduct(ProductDto productDto) {
         Category category = categoryService.getCategory(productDto.getCategoryId());
         Product product = new Product(productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
@@ -62,6 +62,7 @@ public class ProductService {
         }
     }
 
+    @Transactional
     public void updateProduct(Long id, ProductDto productDto) {
         Category category = categoryService.getCategory(productDto.getCategoryId());
         Product product = productRepository.findById(id)
@@ -78,7 +79,7 @@ public class ProductService {
         productRepository.save(product);
     }
 
-
+    @Transactional
     public void deleteProduct(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> ProductNotFoundException.of(id));

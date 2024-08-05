@@ -23,7 +23,8 @@
 <a href="/view/home">Back to Home</a>
 
 <!-- Modal -->
-<div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="true">
+<div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -72,7 +73,7 @@
 
         function fetchProducts(page, size) {
             $.ajax({
-                url: `/view/products/data?page=${page - 1}&size=${size}`, // Spring Data JPA는 페이지 번호가 0부터 시작
+                url: `/view/v2/products/data?page=${page - 1}&size=${size}`, // Spring Data JPA는 페이지 번호가 0부터 시작
                 method: 'GET',
                 success: function(response) {
                     const products = response.content;
@@ -126,7 +127,7 @@
                         if (!email) return;
 
                         $.ajax({
-                            url: `/api/wishlist/${productId}`,
+                            url: `/api/v2/wishlist/${productId}`,
                             method: 'POST',
                             data: {
                                 email: email
@@ -164,7 +165,7 @@
                         if (!email) return;
 
                         $.ajax({
-                            url: `/api/products/order/${productId}`,
+                            url: `/api/v2/order/${productId}`,
                             method: 'POST',
                             data: {
                                 email: email,

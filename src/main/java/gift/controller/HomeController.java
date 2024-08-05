@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("/view")
+@RequestMapping("/view/v2")
 @Tag(name = "View API", description = "뷰 컨트롤러")
 public class HomeController {
 
@@ -34,7 +34,7 @@ public class HomeController {
         this.productService = productService;
         this.categoryService = categoryService;
         this.optionService = optionService;
-        this.wishlistService= wishlistService;
+        this.wishlistService = wishlistService;
     }
 
     @GetMapping("/home")
@@ -86,7 +86,6 @@ public class HomeController {
 
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("options", optionService.getAllOptions());
-
         model.addAttribute("product", new ProductDto(product));
         return "edit-product";
     }
