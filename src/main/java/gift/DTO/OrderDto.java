@@ -11,7 +11,7 @@ public class OrderDto {
   private final int usedPoint;
 
   public OrderDto(Long id, OptionDto optionDto, int quantity, String orderDateTime,
-    String message, int usedPoint) {
+      String message, int usedPoint) {
     this.id = id;
     this.optionDto = optionDto;
     this.quantity = quantity;

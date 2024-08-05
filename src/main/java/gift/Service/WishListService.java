@@ -20,7 +20,7 @@ public class WishListService {
   private final ProductRepository productRepository;
 
   public WishListService(WishListRepository wishListRepository, ProductRepository productRepository,
-    MemberRepository memberRepository) {
+      MemberRepository memberRepository) {
     this.wishListRepository = wishListRepository;
     this.memberRepository = memberRepository;
     this.productRepository = productRepository;
@@ -28,7 +28,7 @@ public class WishListService {
 
   public void addProductToWishList(Long productId) {
     Product product = productRepository.findById(productId)
-      .orElseThrow(() -> new EmptyResultDataAccessException("해당 데이터가 없습니다", 1));
+        .orElseThrow(() -> new EmptyResultDataAccessException("해당 데이터가 없습니다", 1));
 
     WishList wishList = new WishList(product);
     wishListRepository.save(wishList);
@@ -44,7 +44,7 @@ public class WishListService {
 
   public void deleteProductToWishList(Long id) {
     WishList wishList = wishListRepository.findById(id)
-      .orElseThrow(() -> new EmptyResultDataAccessException("해당 데이터가 없습니다", 1));
+        .orElseThrow(() -> new EmptyResultDataAccessException("해당 데이터가 없습니다", 1));
     wishListRepository.deleteById(id);
   }
 }

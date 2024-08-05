@@ -27,8 +27,8 @@ public class OrderService {
   private final MemberRepository memberRepository;
 
   public OrderService(OptionService optionService, ProductRepository productRepository,
-    WishListService wishListService, MemberRepository memberRepository,
-    OptionRepository optionRepository, OrderRepository orderRepository) {
+      WishListService wishListService, MemberRepository memberRepository,
+      OptionRepository optionRepository, OrderRepository orderRepository) {
     this.optionService = optionService;
     this.productRepository = productRepository;
     this.wishListService = wishListService;
@@ -39,24 +39,24 @@ public class OrderService {
 
   @Transactional
   public ResponseOrderDto orderOption(RequestOrderDto requestOrderDto, MemberDto memberDto)
-    throws IllegalAccessException {
+      throws IllegalAccessException {
 
     Option option = optionRepository.findById(requestOrderDto.getOptionId())
-      .orElseThrow(() -> new EmptyResultDataAccessException("해당 상품이 없습니다", 1));
+        .orElseThrow(() -> new EmptyResultDataAccessException("해당 상품이 없습니다", 1));
 
     optionService.optionQuantitySubtract(option.getId(), requestOrderDto.getQuantity());
 
     Orders order = new Orders(option, requestOrderDto.getQuantity(), requestOrderDto.getMessage(),
-      requestOrderDto.getUsedPoint());
+        requestOrderDto.getUsedPoint());
 
     Long memberId = memberDto.getId();
     Member member = memberRepository.findById(memberId)
-      .orElseThrow(() -> new EmptyResultDataAccessException("해당 고객이 없습니다.", 1));
+        .orElseThrow(() -> new EmptyResultDataAccessException("해당 고객이 없습니다.", 1));
     member.subtractPoint(requestOrderDto.getUsedPoint());
     Orders savedOrder = orderRepository.save(order);
     ResponseOrderDto responseOrderDto = new ResponseOrderDto(savedOrder.getId(),
-      requestOrderDto.getOptionId(), requestOrderDto.getQuantity(),
-      savedOrder.getOrderDateTime(), requestOrderDto.getMessage());
+        requestOrderDto.getOptionId(), requestOrderDto.getQuantity(),
+        savedOrder.getOrderDateTime(), requestOrderDto.getMessage());
     return responseOrderDto;
   }
 }

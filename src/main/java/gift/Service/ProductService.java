@@ -20,7 +20,7 @@ public class ProductService {
   private final CategoryRepository categoryRepository;
 
   public ProductService(ProductRepository productRepository,
-    CategoryRepository categoryRepository) {
+      CategoryRepository categoryRepository) {
     this.productRepository = productRepository;
     this.categoryRepository = categoryRepository;
   }
@@ -32,10 +32,9 @@ public class ProductService {
     return productDtos;
   }
 
-
   public ProductDto getProductById(Long id) {
     Product product = (productRepository.findById(id)
-      .orElseThrow(() -> new EmptyResultDataAccessException("해당 상품이 없습니다.", 1)));
+        .orElseThrow(() -> new EmptyResultDataAccessException("해당 상품이 없습니다.", 1)));
 
     return ConverterToDto.convertToProductDto(product);
   }
@@ -43,10 +42,10 @@ public class ProductService {
   public ProductDto addProduct(ProductDto productDto) {
     CategoryDto categoryDto = productDto.getCategoryDto();
     Category category = new Category(categoryDto.getId(), categoryDto.getName(),
-      categoryDto.getColor(), categoryDto.getImageUrl(), categoryDto.getDescription());
+        categoryDto.getColor(), categoryDto.getImageUrl(), categoryDto.getDescription());
 
     Product product = new Product(productDto.getName(),
-      productDto.getPrice(), productDto.getImageUrl(), category);
+        productDto.getPrice(), productDto.getImageUrl(), category);
 
     productRepository.save(product);
 
@@ -55,15 +54,15 @@ public class ProductService {
 
   public ProductDto updateProduct(Long id, ProductDto updatedProductDto) {
     Product existingProduct = productRepository.findById(id)
-      .orElseThrow(() -> new EmptyResultDataAccessException("해당 상품이 없습니다.", 1));
+        .orElseThrow(() -> new EmptyResultDataAccessException("해당 상품이 없습니다.", 1));
 
     CategoryDto updateCategoryDto = updatedProductDto.getCategoryDto();
     Category updateCategory = new Category(updatedProductDto.getId(), updatedProductDto.getName(),
-      updateCategoryDto.getColor(), updatedProductDto.getImageUrl(),
-      updateCategoryDto.getDescription());
+        updateCategoryDto.getColor(), updatedProductDto.getImageUrl(),
+        updateCategoryDto.getDescription());
 
     Product newProduct = new Product(id, updatedProductDto.getName(), updatedProductDto.getPrice(),
-      updatedProductDto.getImageUrl(), updateCategory);
+        updatedProductDto.getImageUrl(), updateCategory);
 
     productRepository.save(newProduct);
 
@@ -72,7 +71,7 @@ public class ProductService {
 
   public ProductDto deleteProduct(@PathVariable Long id) {
     Product existingProduct = productRepository.findById(id)
-      .orElseThrow(() -> new EmptyResultDataAccessException("해당 데이터가 없습니다", 1));
+        .orElseThrow(() -> new EmptyResultDataAccessException("해당 데이터가 없습니다", 1));
     productRepository.deleteById(id);
 
     return ConverterToDto.convertToProductDto(existingProduct);

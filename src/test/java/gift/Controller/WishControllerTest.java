@@ -1,6 +1,5 @@
 package gift.Controller;
 
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import gift.DTO.CategoryDto;
@@ -26,10 +25,9 @@ class WishControllerTest {
   MemberController memberController;
   CategoryController categoryController;
 
-
   @Autowired
   public WishControllerTest(WishController wishController, ProductController productController,
-    MemberController memberController, CategoryController categoryController) {
+      MemberController memberController, CategoryController categoryController) {
     this.wishController = wishController;
     this.productController = productController;
     this.memberController = memberController;
@@ -56,22 +54,22 @@ class WishControllerTest {
     Page<WishListDto> wishListDtos = wishListDto.getBody();
 
     assertThat(wishListDtos.getContent().get(0).getProductDto().getId()).isEqualTo(
-      productDto1.getId());
+        productDto1.getId());
     assertThat(wishListDtos.getContent().get(0).getProductDto().getName()).isEqualTo(
-      productDto1.getName());
+        productDto1.getName());
     assertThat(wishListDtos.getContent().get(0).getProductDto().getPrice()).isEqualTo(
-      productDto1.getPrice());
+        productDto1.getPrice());
     assertThat(wishListDtos.getContent().get(0).getProductDto().getImageUrl()).isEqualTo(
-      productDto1.getImageUrl());
+        productDto1.getImageUrl());
 
     assertThat(wishListDtos.getContent().get(1).getProductDto().getId()).isEqualTo(
-      productDto2.getId());
+        productDto2.getId());
     assertThat(wishListDtos.getContent().get(1).getProductDto().getName()).isEqualTo(
-      productDto2.getName());
+        productDto2.getName());
     assertThat(wishListDtos.getContent().get(1).getProductDto().getPrice()).isEqualTo(
-      productDto2.getPrice());
+        productDto2.getPrice());
     assertThat(wishListDtos.getContent().get(1).getProductDto().getImageUrl()).isEqualTo(
-      productDto2.getImageUrl());
+        productDto2.getImageUrl());
 
   }
 
@@ -86,8 +84,7 @@ class WishControllerTest {
     WishListDto wishListDto1 = new WishListDto(1L, productDto1);
 
     assertThat(wishController.addProductToWishList(1L, null).getStatusCode()).isEqualTo(
-      HttpStatus.CREATED);
-
+        HttpStatus.CREATED);
 
   }
 

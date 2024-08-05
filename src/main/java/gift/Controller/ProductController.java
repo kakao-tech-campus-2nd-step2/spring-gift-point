@@ -37,84 +37,75 @@ public class ProductController {
   }
 
   @Operation(summary = "모든 상품 가져오기", description = "데이터 베이스에 저장되어 있는 모든 상품을 가져온다.")
-  @ApiResponse(responseCode = "200", description = "모든 상품 정보 가져오기 성공",
-    content = @Content(mediaType = "application/json",
-      schema = @Schema(implementation = Page.class),
-      examples = @ExampleObject(
-        value = """
-              {
-                  "content": [
-                      {
+  @ApiResponse(responseCode = "200", description = "모든 상품 정보 가져오기 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Page.class), examples = @ExampleObject(value = """
+          {
+              "content": [
+                  {
+                      "id": 1,
+                      "name": "아이스 아메리카노",
+                      "price": 4500,
+                      "imageUrl": "https://example.com/image1.jpg",
+                      "categoryDto": {
                           "id": 1,
-                          "name": "아이스 아메리카노",
-                          "price": 4500,
-                          "imageUrl": "https://example.com/image1.jpg",
-                          "categoryDto": {
-                              "id": 1,
-                              "name": "카페인"
-                          }
-                      },
-                      {
-                          "id": 2,
-                          "name": "아이스 라떼",
-                          "price": 5000,
-                          "imageUrl": "https://example.com/image2.jpg",
-                          "categoryDto": {
-                              "id": 1,
-                              "name": "카페인"
-                          }
+                          "name": "카페인"
                       }
-                  ],
-                  "pageable": {
-                      "sort": {
-                          "sorted": true,
-                          "unsorted": false,
-                          "empty": false
-                      },
-                      "pageNumber": 0,
-                      "pageSize": 20,
-                      "offset": 0,
-                      "paged": true,
-                      "unpaged": false
                   },
-                  "last": true,
-                  "totalPages": 1,
-                  "totalElements": 2,
-                  "size": 20,
-                  "number": 0,
+                  {
+                      "id": 2,
+                      "name": "아이스 라떼",
+                      "price": 5000,
+                      "imageUrl": "https://example.com/image2.jpg",
+                      "categoryDto": {
+                          "id": 1,
+                          "name": "카페인"
+                      }
+                  }
+              ],
+              "pageable": {
                   "sort": {
                       "sorted": true,
                       "unsorted": false,
                       "empty": false
                   },
-                  "first": true,
-                  "numberOfElements": 2,
+                  "pageNumber": 0,
+                  "pageSize": 20,
+                  "offset": 0,
+                  "paged": true,
+                  "unpaged": false
+              },
+              "last": true,
+              "totalPages": 1,
+              "totalElements": 2,
+              "size": 20,
+              "number": 0,
+              "sort": {
+                  "sorted": true,
+                  "unsorted": false,
                   "empty": false
-              }
-          """)
-    ))
-  @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근",
-    content = @Content(schema = @Schema(implementation = ResponseResourceErrorDto.class)))
+              },
+              "first": true,
+              "numberOfElements": 2,
+              "empty": false
+          }
+      """)))
+  @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseResourceErrorDto.class)))
   @GetMapping("/all")
   public ResponseEntity<Page<ProductDto>> getAllProducts(Pageable pageable) {
 
     return ResponseEntity.ok(productService.getAllProducts(pageable));
   }
 
-
   @GetMapping()
   public ResponseEntity<Page<ProductDto>> getAllProductsByCategory(
-    @PageableDefault(size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
-    @RequestParam Long categoryId) {
+      @PageableDefault(size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
+      @RequestParam Long categoryId) {
 
     return ResponseEntity.ok(productService.getAllProductsByCategory(pageable, categoryId));
   }
 
   @Operation(summary = "특정 상품 가져오기", description = "데이터 베이스에 저장되어 있는 특정 상품을 가져온다.")
-  @ApiResponse(responseCode = "200", description = "특정 상품 정보 가져오기 성공",
-    content = @Content(schema = @Schema(implementation = ProductDto.class)))
-  @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근",
-    content = @Content(schema = @Schema(implementation = ResponseResourceErrorDto.class)))
+  @ApiResponse(responseCode = "200", description = "특정 상품 정보 가져오기 성공", content = @Content(schema = @Schema(implementation = ProductDto.class)))
+  @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseResourceErrorDto.class)))
   @GetMapping("/{id}")
   public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
     ProductDto productDTO = productService.getProductById(id);
@@ -123,10 +114,8 @@ public class ProductController {
   }
 
   @Operation(summary = "상품 등록하기", description = "데이터 베이스에 특정 상품을 저장한다.")
-  @ApiResponse(responseCode = "201", description = "특정 상품 정보 저장 성공",
-    content = @Content(schema = @Schema(implementation = ProductDto.class)))
-  @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근",
-    content = @Content(schema = @Schema(implementation = ResponseResourceErrorDto.class)))
+  @ApiResponse(responseCode = "201", description = "특정 상품 정보 저장 성공", content = @Content(schema = @Schema(implementation = ProductDto.class)))
+  @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseResourceErrorDto.class)))
   @PostMapping
   public ProductDto addProduct(@Valid @RequestBody ProductDto productDto) {
 
@@ -134,25 +123,21 @@ public class ProductController {
   }
 
   @Operation(summary = "상품 업데이트 하기", description = "데이터 베이스에 있는 특정 상품을 정보를 업데이트한다.")
-  @ApiResponse(responseCode = "200", description = "특정 상품 정보 업데이트 성공",
-    content = @Content(schema = @Schema(implementation = ProductDto.class)))
-  @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근",
-    content = @Content(schema = @Schema(implementation = ResponseResourceErrorDto.class)))
+  @ApiResponse(responseCode = "200", description = "특정 상품 정보 업데이트 성공", content = @Content(schema = @Schema(implementation = ProductDto.class)))
+  @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseResourceErrorDto.class)))
   @PutMapping("/{id}")
   public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id,
-    @RequestBody ProductDto updatedProductDto) {
+      @RequestBody ProductDto updatedProductDto) {
     ProductDto existingProductDto = productService.updateProduct(id,
-      updatedProductDto);
+        updatedProductDto);
 
     return ResponseEntity.ok(updatedProductDto);
 
   }
 
   @Operation(summary = "상품 삭제하기", description = "데이터 베이스에 있는 특정 상품을 삭제 한다.")
-  @ApiResponse(responseCode = "204", description = "특정 상품 삭제 성공",
-    content = @Content(schema = @Schema(implementation = ProductDto.class)))
-  @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근",
-    content = @Content(schema = @Schema(implementation = ResponseResourceErrorDto.class)))
+  @ApiResponse(responseCode = "204", description = "특정 상품 삭제 성공", content = @Content(schema = @Schema(implementation = ProductDto.class)))
+  @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseResourceErrorDto.class)))
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
     ProductDto existingProductDto = productService.deleteProduct(id);

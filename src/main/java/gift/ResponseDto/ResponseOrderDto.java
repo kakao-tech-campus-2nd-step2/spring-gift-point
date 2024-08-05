@@ -3,16 +3,14 @@ package gift.ResponseDto;
 import java.time.LocalDateTime;
 
 public class ResponseOrderDto {
-
   private final Long id;
   private final Long optionId;
   private final int quantity;
   private final LocalDateTime orderDateTime;
   private final String message;
 
-
   public ResponseOrderDto(Long id, Long optionId, int quantity, LocalDateTime orderDateTime,
-    String message) {
+      String message) {
     this.id = id;
     this.optionId = optionId;
     this.quantity = quantity;
