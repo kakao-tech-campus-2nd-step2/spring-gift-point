@@ -2,23 +2,20 @@ package gift.order.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.anyInt;
 import static org.mockito.BDDMockito.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.verify;
 import static org.mockito.BDDMockito.willAnswer;
-import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.mock;
 
-import gift.auth.client.KakaoApiClient;
 import gift.member.MemberFixture;
 import gift.member.dto.MemberResDto;
 import gift.member.entity.Member;
-import gift.member.exception.MemberErrorCode;
-import gift.member.exception.MemberNotFoundByIdException;
-import gift.member.repository.MemberRepository;
+import gift.member.points.PercentageBasedPointsStrategy;
+import gift.member.points.PointsStrategy;
+import gift.member.service.MemberService;
 import gift.option.OptionFixture;
 import gift.option.entity.Option;
 import gift.option.service.OptionService;
@@ -47,16 +44,13 @@ import org.springframework.data.domain.Pageable;
 class OrderServiceTest {
 
     @Mock
-    private MemberRepository memberRepository;
+    private MemberService memberService;
 
     @Mock
     private OptionService optionService;
 
     @Mock
     private OrderRepository orderRepository;
-
-    @Mock
-    private KakaoApiClient kakaoApiClient;
 
     @InjectMocks
     private OrderService orderService;
@@ -66,9 +60,7 @@ class OrderServiceTest {
     void getOrders_success() {
         //given
         Member member = MemberFixture.createMember();
-        given(memberRepository.findById(any())).willReturn(
-                Optional.of(member)
-        );
+        given(memberService.findMemberByIdOrThrow(any())).willReturn(member);
 
         List<Option> options = List.of(
                 OptionFixture.createOption("옵션1", 10),
@@ -102,19 +94,6 @@ class OrderServiceTest {
     }
 
     @Test
-    @DisplayName("주문 조회 실패 - 회원을 찾을 수 없음")
-    void getOrders_fail_memberNotFound() {
-        //given
-        Member member = MemberFixture.createMember();
-        given(memberRepository.findById(any())).willReturn(Optional.empty());
-
-        //then
-        assertThatThrownBy(() -> orderService.getOrders(new MemberResDto(member), Pageable.ofSize(2)))
-                .isInstanceOf(MemberNotFoundByIdException.class)
-                .hasMessage(MemberErrorCode.MEMBER_NOT_FOUND_BY_ID.getMessage());
-    }
-
-    @Test
     @DisplayName("주문 생성 성공")
     void createOrder_success() {
         //given
@@ -123,15 +102,20 @@ class OrderServiceTest {
         given(option.getName()).willReturn("옵션");
         given(option.getQuantity()).willReturn(10);
 
-        Product product = ProductFixture.createProduct();
+        Product product = ProductFixture.createProduct("상품", 10000);
         product.getOptions().add(option);
 
+        given(option.getProduct()).willReturn(product);
+
         Member member = MemberFixture.createMember();
+        Integer beforePoints = member.getPoints();
         member.getWishLists().add(WishListFixture.createWishList(member, product));
+
+        PointsStrategy pointsStrategy = new PercentageBasedPointsStrategy();
 
         given(optionService.findByIdOrThrow(any())).willReturn(option);
 
-        given(memberRepository.findById(any())).willReturn(Optional.of(member));
+        given(memberService.findMemberByIdOrThrow(any())).willReturn(member);
 
         willAnswer(invocationOnMock -> {
             Option givenOption = invocationOnMock.getArgument(0);
@@ -145,12 +129,25 @@ class OrderServiceTest {
             return null;
         }).given(optionService).subtractQuantity(any(), anyInt());
 
-        willDoNothing().given(kakaoApiClient).messageToMe(any(), any(), any(), any());
+        willAnswer(invocationOnMock -> {
+            Member givenMember = invocationOnMock.getArgument(0);
+            int givenPoints = invocationOnMock.getArgument(1);
+            int givenPrice = invocationOnMock.getArgument(2);
+
+            assertThat(givenMember).isEqualTo(member);
+            assertThat(givenPoints).isEqualTo(1000);
+            assertThat(givenPrice).isEqualTo(50000);
+
+            givenMember.usePoints(givenPoints);
+            givenMember.addPoints(pointsStrategy.calculatePointsToAdd(givenPrice));
+            return null;
+        }).given(memberService).processOrderPoints(any(), anyInt(), anyInt());
 
         Order order = OrderFixture.createOrder(member, option, 5, "메시지");
         given(orderRepository.save(any())).willReturn(order);
 
-        OrderReqDto orderReqDto = OrderFixture.createOrderReqDto(1L, 5, "메시지");
+        Integer pointsToUse = 1000;
+        OrderReqDto orderReqDto = OrderFixture.createOrderReqDto(1L, 5, pointsToUse, "메시지");
 
         //when
         OrderResDto orderResDto = orderService.createOrder(new MemberResDto(member), orderReqDto);
@@ -162,6 +159,11 @@ class OrderServiceTest {
 
         // 위시리스트에서 삭제되었는지 확인
         assertThat(member.getWishLists()).isEmpty();
+
+        // 주문 포인트 차감 확인
+        assertThat(member.getPoints()).isEqualTo(
+                beforePoints - pointsToUse + pointsStrategy.calculatePointsToAdd(product.getPrice() * orderReqDto.quantity())
+        );
 
         verify(optionService).subtractQuantity(option, 5);
         verify(option).subtractQuantity(5);
