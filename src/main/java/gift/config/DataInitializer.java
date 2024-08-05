@@ -78,9 +78,12 @@ public class DataInitializer {
                     );
                     try {
                         optionRepository.save(option);
-                        System.out.println("Saved option for product " + product.getId() + ": " + option.getName());
+                        System.out.println("Saved option for product " + product.getId() + ": "
+                            + option.getName());
                     } catch (Exception e) {
-                        System.err.println("Error saving option for product " + product.getId() + ": " + e.getMessage());
+                        System.err.println(
+                            "Error saving option for product " + product.getId() + ": "
+                                + e.getMessage());
                     }
                 }
             }

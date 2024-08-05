@@ -14,6 +14,8 @@ public class OrderAddRequestDto {
     @Size(max = 200, message = "메시지는 200자를 초과할 수 없습니다.")
     private String message;
 
+    private Integer point;
+
     public OrderAddRequestDto() {
     }
 
@@ -27,5 +29,9 @@ public class OrderAddRequestDto {
 
     public String getMessage() {
         return message;
+    }
+
+    public Integer getPoint() {
+        return point;
     }
 }
