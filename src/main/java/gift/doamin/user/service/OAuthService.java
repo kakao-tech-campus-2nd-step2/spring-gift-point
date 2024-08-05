@@ -1,147 +1,65 @@
 package gift.doamin.user.service;
 
-import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
-
 import gift.doamin.user.dto.KakaoOAuthTokenResponse;
 import gift.doamin.user.dto.KakaoOAuthUserInfoResponse;
 import gift.doamin.user.entity.KakaoOAuthToken;
-import gift.doamin.user.entity.RefreshToken;
 import gift.doamin.user.entity.User;
 import gift.doamin.user.entity.UserRole;
-import gift.doamin.user.properties.KakaoClientProperties;
-import gift.doamin.user.properties.KakaoProviderProperties;
 import gift.doamin.user.repository.KakaoOAuthTokenRepository;
-import gift.doamin.user.repository.RefreshTokenRepository;
 import gift.doamin.user.repository.UserRepository;
-import gift.doamin.user.util.AuthorizationOAuthUriBuilder;
 import gift.global.util.JwtDto;
-import gift.global.util.JwtProvider;
-import java.time.LocalDateTime;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestClient;
 
 @Service
 public class OAuthService {
 
-    private final KakaoClientProperties clientProperties;
-    private final KakaoProviderProperties providerProperties;
     private final UserRepository userRepository;
-    private final JwtProvider jwtProvider;
-    private final RefreshTokenRepository refreshTokenRepository;
     private final KakaoOAuthTokenRepository kakaoOAuthTokenRepository;
-    private final RestClient restClient = RestClient.builder().build();
+    private final OAuthRequestService oAuthRequestService;
+    private final AuthTokenService authTokenService;
 
-    public OAuthService(KakaoClientProperties clientProperties,
-        KakaoProviderProperties providerProperties, UserRepository userRepository,
-        JwtProvider jwtProvider, RefreshTokenRepository refreshTokenRepository,
-        KakaoOAuthTokenRepository kakaoOAuthTokenRepository) {
-        this.clientProperties = clientProperties;
-        this.providerProperties = providerProperties;
+    public OAuthService(UserRepository userRepository,
+        KakaoOAuthTokenRepository kakaoOAuthTokenRepository,
+        OAuthRequestService oAuthRequestService,
+        AuthTokenService authTokenService) {
         this.userRepository = userRepository;
-        this.jwtProvider = jwtProvider;
-        this.refreshTokenRepository = refreshTokenRepository;
         this.kakaoOAuthTokenRepository = kakaoOAuthTokenRepository;
-    }
-
-    public String getAuthUrl() {
-        return new AuthorizationOAuthUriBuilder()
-            .clientProperties(clientProperties)
-            .providerProperties(providerProperties)
-            .build();
-    }
-
-    public KakaoOAuthTokenResponse requestToken(String authorizeCode) {
-
-        String tokenUri = providerProperties.tokenUri();
-
-        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("grant_type", "authorization_code");
-        body.add("code", authorizeCode);
-        body.add("redirect_uri", clientProperties.redirectUri());
-        body.add("client_id", clientProperties.clientId());
-        body.add("client_secret", clientProperties.clientSecret());
-
-        ResponseEntity<KakaoOAuthTokenResponse> entity = restClient.post()
-            .uri(tokenUri)
-            .contentType(APPLICATION_FORM_URLENCODED)
-            .body(body)
-            .retrieve()
-            .toEntity(KakaoOAuthTokenResponse.class);
-
-        return entity.getBody();
+        this.oAuthRequestService = oAuthRequestService;
+        this.authTokenService = authTokenService;
     }
 
     @Transactional
-    public JwtDto authenticate(KakaoOAuthTokenResponse tokenResponse) {
+    public JwtDto login(KakaoOAuthTokenResponse tokenResponse,
+        KakaoOAuthUserInfoResponse userInfo) {
 
-        ResponseEntity<KakaoOAuthUserInfoResponse> entity = restClient.get()
-            .uri(providerProperties.userInfoUri())
-            .header("Authorization", "Bearer " + tokenResponse.getAccessToken())
-            .header("Content-Type", "application/x-www-form-urlencoded")
-            .retrieve()
-            .toEntity(KakaoOAuthUserInfoResponse.class);
-
-        Long id = entity.getBody().getId();
-        String nickname = entity.getBody().getProperties().get("nickname");
+        // 우리 서비스에서 사용할 email 및 nickname 생성
+        Long id = userInfo.getId();
+        String nickname = userInfo.getProperties().get("nickname");
         String email = id + "@kakao.oauth";
 
+        // 유저 정보를 찾아오고, 등록되지 않은 유저면 새로 등록함
         User user = userRepository.findByEmail(email)
             .orElseGet(
                 () -> userRepository.save(new User(email, id.toString(), nickname, UserRole.USER))
             );
 
-        saveToken(user, tokenResponse);
-
-        JwtDto tokens = jwtProvider.generateToken(user.getId(), user.getRole());
-        RefreshToken refreshToken = refreshTokenRepository.findByUser(user)
-            .orElseGet(() -> new RefreshToken(tokens.getRefreshToken(), user));
-        refreshToken.setToken(tokens.getRefreshToken());
-        refreshTokenRepository.save(refreshToken);
-
-        return tokens;
-    }
-
-    @Transactional
-    public void saveToken(User user, KakaoOAuthTokenResponse tokenData) {
-        LocalDateTime now = LocalDateTime.now().minusMinutes(10);
-        LocalDateTime access_token_expires_at = now.plusSeconds(
-            Long.parseLong(tokenData.getExpiresIn()));
-
-        LocalDateTime refresh_token_expires_at = null;
-        if (tokenData.getRefreshTokenExpiresIn() != null) {
-            refresh_token_expires_at = now.plusSeconds(
-                Long.parseLong(tokenData.getRefreshTokenExpiresIn()));
-        }
-
+        // 카카오 OAuth 토큰 저장
         KakaoOAuthToken kakaoOAuthToken = kakaoOAuthTokenRepository.findByUser(user)
             .orElseGet(() -> new KakaoOAuthToken(user));
+        kakaoOAuthToken.update(tokenResponse);
 
-        kakaoOAuthToken.update(tokenData.getAccessToken(), access_token_expires_at,
-            tokenData.getRefreshToken(), refresh_token_expires_at);
-
-        kakaoOAuthTokenRepository.save(kakaoOAuthToken);
+        // 우리 서비스의 jwt 토큰 생성해서 반환
+        return authTokenService.genrateToken(user);
     }
 
     @Transactional
     public void renewOAuthTokens(KakaoOAuthToken kakaoOAuthToken) {
 
-        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("grant_type", "refresh_token");
-        body.add("client_id", clientProperties.clientId());
-        body.add("client_secret", clientProperties.clientSecret());
-        body.add("refresh_token", kakaoOAuthToken.getRefreshToken());
+        KakaoOAuthTokenResponse tokenResponse = oAuthRequestService.requestRenewTokens(
+            kakaoOAuthToken);
 
-        ResponseEntity<KakaoOAuthTokenResponse> entity = restClient.post()
-            .uri("https://kauth.kakao.com/oauth/token")
-            .contentType(APPLICATION_FORM_URLENCODED)
-            .body(body)
-            .retrieve()
-            .toEntity(KakaoOAuthTokenResponse.class);
-
-        saveToken(kakaoOAuthToken.getUser(), entity.getBody());
+        kakaoOAuthToken.update(tokenResponse);
     }
+
 }

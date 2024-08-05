@@ -3,6 +3,7 @@ package gift.doamin.user.controller;
 import gift.doamin.user.dto.LoginRequest;
 import gift.doamin.user.dto.SignUpRequest;
 import gift.doamin.user.service.AuthService;
+import gift.doamin.user.service.AuthTokenService;
 import gift.global.util.JwtDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,9 +26,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
+    private final AuthTokenService authTokenService;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, AuthTokenService authTokenService) {
         this.authService = authService;
+        this.authTokenService = authTokenService;
     }
 
     @Operation(summary = "회원가입", description = "이메일과 비밀번호를 입력하여 새로운 회원으로 등록합니다.")
@@ -56,7 +59,7 @@ public class AuthController {
     @Operation(summary = "접근 토큰 갱신", description = "접근 토큰을 갱신합니다. Authorization")
     @GetMapping("/accessToken")
     public ResponseEntity<Void> refreshToken(@CookieValue String refreshToken) {
-        String accessToken = authService.makeNewAccessToken(refreshToken);
+        String accessToken = authTokenService.makeNewAccessToken(refreshToken);
         return ResponseEntity.ok()
             .header(HttpHeaders.AUTHORIZATION, accessToken)
             .build();

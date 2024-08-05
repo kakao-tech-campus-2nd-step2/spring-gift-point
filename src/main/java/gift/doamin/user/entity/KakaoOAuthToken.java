@@ -1,5 +1,6 @@
 package gift.doamin.user.entity;
 
+import gift.doamin.user.dto.KakaoOAuthTokenResponse;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -49,10 +50,22 @@ public class KakaoOAuthToken {
         return refreshToken;
     }
 
-    public void update(String accessToken, LocalDateTime expires_at,
-        String refreshToken, LocalDateTime refresh_token_expires_at) {
-        this.accessToken = accessToken;
-        this.expires_at = expires_at;
+    public void update(KakaoOAuthTokenResponse tokenResponse) {
+        // 지연 등을 고려해 만료시간을 10분 당겨서 저장하도록 현재시간-10분 수행
+        LocalDateTime now = LocalDateTime.now().minusMinutes(10);
+        LocalDateTime access_token_expires_at = now.plusSeconds(
+            Long.parseLong(tokenResponse.getExpiresIn()));
+
+        LocalDateTime refresh_token_expires_at = null;
+        if (tokenResponse.getRefreshTokenExpiresIn() != null) {
+            refresh_token_expires_at = now.plusSeconds(
+                Long.parseLong(tokenResponse.getRefreshTokenExpiresIn()));
+        }
+
+        this.accessToken = tokenResponse.getAccessToken();
+        this.expires_at = access_token_expires_at;
+
+        String refreshToken = tokenResponse.getRefreshToken();
         if (refreshToken != null && refresh_token_expires_at != null) {
             this.refreshToken = refreshToken;
             this.refresh_token_expires_at = refresh_token_expires_at;
