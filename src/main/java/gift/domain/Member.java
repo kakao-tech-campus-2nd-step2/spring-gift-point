@@ -1,6 +1,7 @@
 package gift.domain;
 
 
+import gift.classes.Exceptions.OptionException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -28,6 +29,9 @@ public class Member {
     @Column(nullable = false)
     private Role role;
 
+    @Column(name = "point")
+    private int point;
+
     protected Member() {
     }
 
@@ -36,6 +40,14 @@ public class Member {
         this.email = email;
         this.password = password;
         this.role = role;
+    }
+
+    public Member(Long id, String email, String password, Role role, int point) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.point = point;
     }
 
     public Long getId() {
