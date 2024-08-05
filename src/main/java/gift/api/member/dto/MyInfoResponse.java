@@ -6,11 +6,12 @@ import gift.api.member.domain.Member;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record MyInfoResponse(
+    Long id,
     String email,
     Integer point
 ) {
 
     public static MyInfoResponse of(Member member) {
-        return new MyInfoResponse(member.getEmail(), member.getPoint());
+        return new MyInfoResponse(member.getId(), member.getEmail(), member.getPoint());
     }
 }
