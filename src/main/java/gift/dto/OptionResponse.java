@@ -12,7 +12,15 @@ public class OptionResponse {
 		this.quantity = quantity;
 	}
 
+	public Long getId() {
+		return id;
+	}
+	
 	public String getName() {
 		return name;
+	}
+	
+	public int getQuantity() {
+		return quantity;
 	}
 }

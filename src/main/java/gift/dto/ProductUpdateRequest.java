@@ -47,12 +47,14 @@ public class ProductUpdateRequest {
 		this.imageUrl = imageUrl;
 	}
 	
+	public ProductUpdateRequest() {}
+	
 	public ProductUpdateRequest(String name, int price, String imageUrl) {
 		this.setName(name);
 		this.price = price;
 		this.imageUrl = imageUrl;
 	}
-	
+
 	public void updateEntity(Product product) {
 		product.setName(this.name);
 		product.setPrice(this.price);

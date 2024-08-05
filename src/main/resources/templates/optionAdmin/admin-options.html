@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>옵션 관리</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h2>옵션 목록</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>이름</th>
+                    <th>수량</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="option : ${options}">
+                    <td th:text="${option.id}"></td>
+                    <td th:text="${option.name}"></td>
+                    <td th:text="${option.quantity}"></td>
+                </tr>
+            </tbody>
+        </table>
+        <a th:href="@{/admin/products/{productId}/options/create(productId=${productId})}" class="btn btn-primary">옵션 추가</a>
+    </div>
+</body>
+
+</html>

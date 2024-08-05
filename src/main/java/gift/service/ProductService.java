@@ -11,6 +11,10 @@ import gift.exception.InvalidProductException;
 import gift.exception.InvalidUserException;
 import gift.repository.CategoryRepository;
 import gift.repository.ProductRepository;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -27,6 +31,12 @@ public class ProductService {
 		this.productRepository = productRepository;
 		this.categoryRepository = categoryRepository;
 	}
+	
+	public List<ProductResponse> getAllProducts() {
+        return productRepository.findAll().stream()
+            .map(Product::toDto)
+            .collect(Collectors.toList());
+    }
 	
     public Page<ProductResponse> getProducts(Long categoryId, Pageable pageable) {
     	findCategoryById(categoryId);

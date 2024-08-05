@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 
 import gift.service.KakaoAuthService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,9 +28,15 @@ public class KakaoAuthController {
 	
 	@Operation(summary = "카카오 인증 리다이렉트", description = "카카오 인증 후 리다이렉트 URL을 처리합니다.")
     @ApiResponse(responseCode = "200", description = "카카오 인증 성공")
-	@GetMapping("/login")
+	@GetMapping("/callback")
 	public ResponseEntity<Map<String, String>> kakaoRedirect(@RequestParam("code") String authorizationCode) {
 		Map<String, String> accessToken = kakaoAuthService.getAccessToken(authorizationCode);
 		return ResponseEntity.status(HttpStatus.OK).body(accessToken);
 	}
+	
+	@GetMapping("/login")
+	public RedirectView kakaoLogin() {
+        String url = "https://kauth.kakao.com/oauth/authorize?scope=talk_message&response_type=code&redirect_uri=" + kakaoAuthService.redirectUri + "&client_id=" + kakaoAuthService.clientId;
+        return new RedirectView(url);
+    }
 }
