@@ -21,7 +21,7 @@ public class WebConfig implements WebMvcConfigurer {
     registry.addMapping("/**")
       .allowedOrigins("http://localhost:3000")
       .allowedMethods("*")
-      .allowedOriginPatterns("*") //추가한 부분
+      .allowedOriginPatterns("*")
       .exposedHeaders("*");
   }
 
