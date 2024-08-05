@@ -11,12 +11,12 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "회원 API", description = "회원 관련된 API")
@@ -76,5 +76,24 @@ public class MemberController {
             throw new IllegalArgumentException("Member not found or unauthorized");
         }
         return ResponseEntity.ok(member);
+    }
+
+    @Operation(summary = "회원 포인트 조회", description = "회원의 보유 포인트를 조회합니다.")
+    @GetMapping("/points")
+    public ResponseEntity<Map<String, Integer>> getPoints(@LoginMember Member member) {
+        if (member == null) {
+            throw new IllegalArgumentException("Member not found or unauthorized");
+        }
+        int points = memberService.getMemberPoints(member.getId());
+        Map<String, Integer> response = new HashMap<>();
+        response.put("points", points);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "회원 포인트 충전", description = "관리자가 회원의 포인트를 충전합니다.")
+    @PostMapping("/points")
+    public ResponseEntity<Void> addPoints(@RequestParam Long memberId, @RequestParam int points) {
+        memberService.addPoints(memberId, points);
+        return ResponseEntity.ok().build();
     }
 }

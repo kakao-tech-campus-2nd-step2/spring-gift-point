@@ -18,6 +18,9 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private int points;
+
     @JsonIgnore
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wish> wishes;
@@ -29,6 +32,7 @@ public class Member {
         this.id = builder.id;
         this.email = builder.email;
         this.password = builder.password;
+        this.points = builder.points;
         this.wishes = builder.wishes;
     }
 
@@ -44,14 +48,29 @@ public class Member {
         return password;
     }
 
+    public int getPoints() {
+        return points;
+    }
+
     public List<Wish> getWishes() {
         return wishes;
+    }
+
+    public Member updatePoints(int points) {
+        return new MemberBuilder()
+            .id(this.id)
+            .email(this.email)
+            .password(this.password)
+            .points(points)
+            .wishes(this.wishes)
+            .build();
     }
 
     public static class MemberBuilder {
         private Long id;
         private String email;
         private String password;
+        private int points;
         private List<Wish> wishes;
 
         public MemberBuilder id(Long id) {
@@ -66,6 +85,11 @@ public class Member {
 
         public MemberBuilder password(String password) {
             this.password = password;
+            return this;
+        }
+
+        public MemberBuilder points(int points) {
+            this.points = points;
             return this;
         }
 
