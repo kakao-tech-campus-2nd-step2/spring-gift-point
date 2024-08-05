@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.common.auth.JwtTokenProvider;
+import gift.common.enums.Role;
 import gift.common.enums.SocialType;
 import gift.common.exception.ErrorCode;
 import gift.common.exception.OAuthException;
@@ -29,8 +30,8 @@ public class OAuthService {
         this.kakaoUtil = kakaoUtil;
     }
 
-    public UserDto register(String code) {
-        TokenInfoResponse response = kakaoUtil.getToken(code);
+    public UserDto register(String code, String redirectUrl) {
+        TokenInfoResponse response = kakaoUtil.getToken(code, redirectUrl);
         String accessToken = response.access_token();
         String refreshToken = response.refresh_token();
         Long expiresIn = response.expires_in();
@@ -47,6 +48,6 @@ public class OAuthService {
 
         String token = jwtTokenProvider.createToken(user.getEmail());
 
-        return UserDto.from(token, user.getName());
+        return UserDto.from(token, user.getName(), user.getRole());
     }
 }

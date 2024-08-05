@@ -3,6 +3,7 @@ package gift.controller.user.dto;
 import gift.common.enums.SocialType;
 import gift.model.User;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
 public class UserRequest {
@@ -26,5 +27,11 @@ public class UserRequest {
         String password,
         @Email
         String email) {
+    }
+
+    public record Point(
+        @Min(0)
+        int depositPoint
+    ) {
     }
 }

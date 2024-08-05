@@ -59,14 +59,20 @@ public class OrderService {
         Option option = optionRepository.findById(orderRequest.optionId())
             .orElseThrow(() -> new OptionException(ErrorCode.OPTION_NOT_FOUND));
 
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
+
+        user.subtractPoint(orderRequest.point());
+
         Order order = orderRepository.save(orderRequest.toEntity(option, product, userId));
+
         option.subtractQuantity(orderRequest.quantity());
 
         if (wishRepository.existsByProductIdAndUserId(option.getProduct().getId(), userId)) {
             wishRepository.deleteByProductIdAndUserId(option.getProduct().getId(), userId);
         }
 
-        sendMessage(userId, orderRequest);
+        sendMessage(user.getId(), orderRequest);
 
         return OrderResponse.Info.from(order);
     }
