@@ -1,8 +1,8 @@
 package gift.controller;
 
-import gift.dto.SuccessResponse;
 import gift.dto.CategoryRequestDto;
 import gift.dto.CategoryResponseDto;
+import gift.dto.SuccessResponse;
 import gift.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

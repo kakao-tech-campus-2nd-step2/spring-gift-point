@@ -47,7 +47,7 @@ public class ProductService {
     public Page<ProductResponseDto> findAll(Pageable pageable, Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CustomException(INVALID_CATEGORY));
-        return productRepository.findAllByCategory(pageable,category)
+        return productRepository.findAllByCategory(pageable, category)
                 .map(ProductResponseDto::new);
     }
 

@@ -1,8 +1,8 @@
 package gift.controller;
 
 import gift.config.KakaoProperties;
-import gift.dto.SuccessResponse;
 import gift.dto.KakaoToken;
+import gift.dto.SuccessResponse;
 import gift.service.KakaoOAuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpHeaders;
