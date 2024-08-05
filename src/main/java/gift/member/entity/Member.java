@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 public class Member {
@@ -26,6 +27,10 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private Integer points;
+
     @Column
     private String kakaoAccessToken;
 
@@ -35,6 +40,7 @@ public class Member {
     public Member(String email, String password) {
         this.email = email;
         this.password = password;
+        this.points = 0;
     }
 
     protected Member() {
@@ -50,6 +56,18 @@ public class Member {
 
     public String getPassword() {
         return password;
+    }
+
+    public Integer getPoints() {
+        return points;
+    }
+
+    public void addPoints(Integer points) {
+        this.points += points;
+    }
+
+    public void usePoints(Integer points) {
+        this.points -= points;
     }
 
     public List<WishList> getWishLists() {
