@@ -28,68 +28,54 @@ class AcceptanceTest {
 
     @Test
     void corsGetProduct() throws Exception {
-        mockMvc.perform(
-                options("/api/products?page=0&size=10&sort=name,asc&categoryId=1")
-                    .header(HttpHeaders.ORIGIN, "http://localhost:8080")
-                    .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "GET")
-            )
-            .andExpect(status().isOk())
-            .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*"))
-            .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, ALLOWED_METHOD_NAMES))
+        mockMvc.perform(options("/api/products?page=0&size=10&sort=name,asc&categoryId=1").header(
+                    HttpHeaders.ORIGIN, "http://localhost:8080")
+                .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "GET")).andExpect(status().isOk())
+            .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")).andExpect(
+                header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, ALLOWED_METHOD_NAMES))
             .andDo(print());
     }
 
     @Test
     void corsGetWishes() throws Exception {
-        mockMvc.perform(
-                options("/api/wishes")
-                    .header(HttpHeaders.ORIGIN, "http://localhost:8080")
-                    .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "GET")
-            )
-            .andExpect(status().isOk())
-            .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*"))
-            .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, ALLOWED_METHOD_NAMES))
+        mockMvc.perform(options("/api/wishes").header(HttpHeaders.ORIGIN, "http://localhost:8080")
+                .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "GET")).andExpect(status().isOk())
+            .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")).andExpect(
+                header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, ALLOWED_METHOD_NAMES))
             .andDo(print());
     }
 
     @Test
     void corsPostWishes() throws Exception {
-        mockMvc.perform(
-                options("/api/wishes")
-                    .header(HttpHeaders.ORIGIN, "http://localhost:8080")
-                    .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "POST")
-                    .content(objectMapper.writeValueAsString(new CreateWishRequest(1L)))
-            )
+        mockMvc.perform(options("/api/wishes").header(HttpHeaders.ORIGIN, "http://localhost:8080")
+                .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "POST")
+                .content(objectMapper.writeValueAsString(new CreateWishRequest(1L))))
             .andExpect(status().isOk())
-            .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*"))
-            .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, ALLOWED_METHOD_NAMES))
+            .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")).andExpect(
+                header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, ALLOWED_METHOD_NAMES))
             .andDo(print());
     }
 
     @Test
     void corsGetOptions() throws Exception {
         mockMvc.perform(
-                options("/api/products/1/options")
-                    .header(HttpHeaders.ORIGIN, "http://localhost:8080")
-                    .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "POST")
-            )
+                options("/api/products/1/options").header(HttpHeaders.ORIGIN, "http://localhost:8080")
+                    .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "POST"))
             .andExpect(status().isOk())
-            .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*"))
-            .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, ALLOWED_METHOD_NAMES))
+            .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")).andExpect(
+                header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, ALLOWED_METHOD_NAMES))
             .andDo(print());
     }
 
     @Test
     void corsPostOrder() throws Exception {
-        mockMvc.perform(
-                options("/api/orders")
-                    .header(HttpHeaders.ORIGIN, "http://localhost:8080")
-                    .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "POST")
-                    .content(objectMapper.writeValueAsString(new OrderRequest(1L, 2, "Please handle this order with care.")))
-            )
+        mockMvc.perform(options("/api/orders").header(HttpHeaders.ORIGIN, "http://localhost:8080")
+                .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "POST").content(
+                    objectMapper.writeValueAsString(
+                        new OrderRequest(1L, 2, "Please handle this order with care.", true, 1000))))
             .andExpect(status().isOk())
-            .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*"))
-            .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, ALLOWED_METHOD_NAMES))
+            .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")).andExpect(
+                header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, ALLOWED_METHOD_NAMES))
             .andDo(print());
     }
 }

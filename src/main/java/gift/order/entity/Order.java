@@ -1,6 +1,7 @@
 package gift.order.entity;
 
 import gift.common.entity.BaseEntity;
+import gift.order.dto.PaymentInfo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,10 +26,34 @@ public class Order extends BaseEntity {
     @Column(nullable = false)
     private String message;
 
-    public Order(Long optionId, Integer quantity, String message) {
-        this.optionId = optionId;
-        this.quantity = quantity;
-        this.message = message;
+    @Column(nullable = false)
+    private Integer totalPrice;
+
+    @Column(nullable = false)
+    private Integer payedPrice;
+
+    @Column(nullable = false)
+    private Integer discountedPrice;
+
+    @Column(nullable = false)
+    private Integer accumulatedPoint;
+
+    public Order(PaymentInfo paymentInfo) {
+        this.optionId = paymentInfo.optionId();
+        this.quantity = paymentInfo.quantity();
+        this.message = paymentInfo.message();
+
+        /*
+         *  TODO: 주문 정보에서 결제 로직을 처리하지만, 순수하게 주문 정보를 저장하는 도메인과 결제 로직을 처리하는 도메인 분리 필요
+         *  그 경우 PaymentInfo DTO가 요긴하게 사용될 것
+         */
+        totalPrice = paymentInfo.price() * quantity;
+        this.discountedPrice = 0;
+        if (paymentInfo.usePoint()) {
+            discountedPrice = paymentInfo.usedPoint();
+        }
+        payedPrice = totalPrice - discountedPrice;
+        accumulatedPoint = payedPrice / 10;
     }
 
     protected Order() {
@@ -38,15 +63,16 @@ public class Order extends BaseEntity {
         return id;
     }
 
-    public Long getOptionId() {
-        return optionId;
+    public Integer getTotalPrice() {
+        return totalPrice;
     }
 
-    public Integer getQuantity() {
-        return quantity;
+    public Integer getDiscountedPrice() {
+        return discountedPrice;
     }
 
-    public String getMessage() {
-        return message;
+    public Integer getAccumulatedPoint() {
+        return accumulatedPoint;
     }
+
 }

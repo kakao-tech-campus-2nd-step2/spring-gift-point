@@ -72,6 +72,10 @@ public class Option {
         return product.getId();
     }
 
+    public Integer getPrice() {
+        return product.getPrice();
+    }
+
     public void initProduct(Product product) {
         Assert.notNull(product, "product is null");
         this.product = product;

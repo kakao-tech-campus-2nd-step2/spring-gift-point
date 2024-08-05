@@ -9,18 +9,20 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.net.URI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api/orders")
 @Tag(name = "주문", description = "주문을 위한 API")
 public class OrderController {
+
+    private final static Logger log = LoggerFactory.getLogger(OrderController.class);
 
     private final OrderService orderService;
 
@@ -37,10 +39,8 @@ public class OrderController {
     })
     public ResponseEntity<OrderResponse> createOrder(@LoginUser User user,
         @RequestBody OrderRequest orderRequest) {
+        log.info("order request: {}", orderRequest);
         var response = orderService.createOrder(user, orderRequest);
-        URI location = UriComponentsBuilder.fromPath("/api/orders/{id}")
-            .buildAndExpand(response.id())
-            .toUri();
-        return ResponseEntity.created(location).body(response);
+        return ResponseEntity.ok().body(response);
     }
 }

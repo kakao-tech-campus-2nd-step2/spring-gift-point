@@ -3,6 +3,7 @@ package gift.order.service;
 import gift.common.client.kakao.KakaoApiClient;
 import gift.common.client.kakao.KakaoProperties;
 import gift.order.dto.KakaoMessageRequestBody;
+import gift.order.dto.PaymentInfo;
 import gift.order.dto.TemplateArgs;
 import gift.order.dto.request.OrderRequest;
 import gift.order.dto.response.OrderResponse;
@@ -52,10 +53,11 @@ public class OrderService {
             templateArgs);
 
         Order savedOrder = orderRepository.save(
-            new Order(request.optionId(), request.quantity(), request.message()));
+            new Order(PaymentInfo.of(option, request)));
 
         kakaoApiClient.sendMessage(user.getAccessToken(), kakaoMessageRequest);
 
         return OrderResponse.from(savedOrder);
     }
+
 }

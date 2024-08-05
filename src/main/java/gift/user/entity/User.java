@@ -36,6 +36,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false, columnDefinition = "integer default 0")
+    private Integer point;
+
     @Column(nullable = false, columnDefinition = "boolean default false" )
     private Boolean isKakao;
 
@@ -52,6 +55,7 @@ public class User {
         validateEmail(email);
         this.email = email;
         this.password = password;
+        this.point = 0;
         this.isKakao = Objects.requireNonNullElse(isKakao, Boolean.FALSE);
         this.userRoles = userRoles;
     }
@@ -65,6 +69,10 @@ public class User {
 
     public String getEmail() {
         return email;
+    }
+
+    public Integer getPoint() {
+        return point;
     }
 
     public String getAccessToken() {
@@ -85,6 +93,13 @@ public class User {
 
     public void changePassword(String password) {
         this.password = password;
+    }
+
+    public void chargePoint(Integer point) {
+        if (point <= 0) {
+            throw new CustomException(ErrorCode.INVALID_POINT_CHARGE);
+        }
+        this.point += point;
     }
 
     private void validateEmail(String email) {
