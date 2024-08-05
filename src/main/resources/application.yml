@@ -30,3 +30,6 @@ kakao:
   auth-url: ${KAKAO_AUTH_URL}
   message-url: ${KAKAO_MESSAGE_URL}
   token-info-url: ${KAKAO_TOKEN_INFO_URL}
+
+cors:
+  allowed-origins: ${KATECAM_DEPLOY_URL}
