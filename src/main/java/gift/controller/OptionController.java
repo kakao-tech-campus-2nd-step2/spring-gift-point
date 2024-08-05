@@ -26,8 +26,8 @@ public class OptionController {
     // 전체 옵션 조회
     @Operation(summary = "전체 옵션 조회", description = "모든 옵션 정보를 조회합니다.")
     @GetMapping
-    public ResponseEntity<List<OptionEntity>> getProductAllOption(@PathVariable Long productId) {
-        List<OptionEntity> options = optionService.readProductAllOption(productId);
+    public ResponseEntity<List<OptionDTO>> getProductAllOption(@PathVariable Long productId) {
+        List<OptionDTO> options = optionService.readProductAllOption(productId);
         return ResponseEntity.ok(options);
     }
 

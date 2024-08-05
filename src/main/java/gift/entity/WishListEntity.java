@@ -8,9 +8,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name="wishlist")
+@Table(name="wishlist", uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "product_id"}))
 public class WishListEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,6 +41,7 @@ public class WishListEntity {
         this.userEntity = userEntity;
         this.optionEntity = optionEntity;
     }
+    public Long getId() { return id; }
 
     public ProductEntity getProductEntity() {
         return productEntity;
@@ -54,6 +56,6 @@ public class WishListEntity {
     }
 
     public static WishListDTO toDTO(WishListEntity wishListEntity) {
-        return new WishListDTO(wishListEntity.getProductEntity().getId(), wishListEntity.getUserEntity().getId());
+        return new WishListDTO(wishListEntity.getId(), wishListEntity.getProductEntity().getId());
     }
 }

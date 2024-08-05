@@ -8,6 +8,7 @@ import java.util.List;
 
 public class ProductDTO {
     // 필드 생성
+    @NotNull
     private Long id;
 
     @NotNull(message = "상품명은 필수 항목입니다.")
@@ -28,6 +29,10 @@ public class ProductDTO {
     private List<Long> optionId;
 
     public ProductDTO(){}
+
+    public ProductDTO(Long id) {
+        this.id = id;
+    }
 
     /**
      * id로 상품 객체 전체를 조회할 때 사용되는 생성자
@@ -67,7 +72,7 @@ public class ProductDTO {
 
     public Long getCategoryId() {return categoryId;}
 
-    public List<Long> getOptionIds() {
+    public List<Long> getOptionId() {
         return optionId;
     }
 

@@ -7,6 +7,7 @@ import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,10 +26,14 @@ public class OptionService {
         this.productRepository = productRepository;
     }
 
-    public List<OptionEntity> readProductAllOption(Long productId) {
+    public List<OptionDTO> readProductAllOption(Long productId) {
         ProductEntity product = productRepository.findById(productId)
             .orElseThrow(() -> new EntityNotFoundException("해당 상품이 존재하지 않습니다. ID: " + productId));
-        return optionRepository.findByProductId(productId);
+        List<OptionEntity> options = optionRepository.findByProductId(product.getId());
+
+        return options.stream()
+            .map(option -> new OptionDTO(option.getId(), option.getName(), option.getQuantity()))
+            .collect(Collectors.toList());
     }
 
     // 옵션이 존재 하지 않는 경우에 대한 예외처리

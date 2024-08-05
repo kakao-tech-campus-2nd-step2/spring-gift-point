@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class OptionDTO {
+    private Long id;
 
     @NotNull(message = "옵션명은 필수 항목입니다.")
     @Size(min = 1, max = 50, message = "옵션의 이름은 최소 1자부터 최대 50자 미만입니다.")
@@ -21,6 +22,14 @@ public class OptionDTO {
         this.name = name;
         this.quantity = quantity;
     }
+
+    public OptionDTO(Long id, String name, int quantity) {
+        this.id = id;
+        this.name = name;
+        this.quantity = quantity;
+    }
+
+    public Long getId(){ return id;}
 
     public String getName() {
         return name;

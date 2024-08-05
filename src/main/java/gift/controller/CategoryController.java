@@ -1,6 +1,7 @@
 package gift.controller;
 
 import gift.dto.CategoryDTO;
+import gift.dto.ProductDTO;
 import gift.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

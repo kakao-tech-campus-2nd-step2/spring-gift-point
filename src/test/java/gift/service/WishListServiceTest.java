@@ -151,7 +151,7 @@ class WishListServiceTest {
 
     @Test
     @DisplayName("전체 위시 삭제 성공")
-    void removeWishList_Success() {
+    void removeUserWishList_Success() {
         // Given
         Long userId = memberEntity.getId();
 
@@ -160,7 +160,7 @@ class WishListServiceTest {
 
         // Then
         assertDoesNotThrow(() -> {
-            wishListService.removeWishList(userId);
+            wishListService.removeUserWishList(userId);
         });
 
         List<WishListEntity> wishListEntities = wishListRepository.findByUserEntity_Id(userId, Pageable.unpaged()).getContent();

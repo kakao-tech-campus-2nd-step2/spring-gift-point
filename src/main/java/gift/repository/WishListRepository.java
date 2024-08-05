@@ -11,6 +11,5 @@ import org.springframework.stereotype.Repository;
 public interface WishListRepository extends JpaRepository<WishListEntity, Long> {
     Optional<WishListEntity> findByUserEntity_IdAndProductEntity_Id(Long userId, Long productId);
     Page<WishListEntity> findByUserEntity_Id(Long userId, Pageable pageable);
-
     Optional<WishListEntity> findByUserEntity_IdAndOptionEntity_Id(Long userId, Long optionId);
 }
