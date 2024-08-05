@@ -18,7 +18,6 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -55,5 +54,7 @@ public class Option extends BaseEntity {
     this.name = name;
     this.quantity = quantity;
   }
-
+  public void setAssociateProduct(Product product) {
+    this.product = product;
+  }
 }

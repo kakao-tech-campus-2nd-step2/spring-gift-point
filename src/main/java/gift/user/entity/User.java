@@ -14,7 +14,6 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -44,10 +43,21 @@ public class User extends BaseEntity {
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Wish> wishs;
 
+  @Column
+  private Integer point;
+
   @PrePersist
   protected void onCreate() {
     if (this.role == null) {
       this.role = UserRole.ROLE_USER;
     }
+
+    if (this.point == null){
+      this.point = 0;
+    }
+  }
+
+  public void setPoint(Integer point) {
+    this.point = point;
   }
 }

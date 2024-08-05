@@ -21,10 +21,10 @@ VALUES ('128GB Storage', 50, 1),
        ('32 Waist', 60, 6),
        ('34 Waist', 40, 6);
 
-INSERT INTO users (email, password, kakao_access_token, role)
-VALUES ('user1@example.com', 'password1', 'token1', 'ROLE_USER'),
-       ('user2@example.com', 'password2', 'token2', 'ROLE_USER'),
-       ('admin@example.com', 'adminpassword', 'admintoken', 'ROLE_ADMIN');
+INSERT INTO users (email, password, kakao_access_token, role, point)
+VALUES ('user1@example.com', 'password1', 'token1', 'ROLE_USER', 10000),
+       ('user2@example.com', 'password2', 'token2', 'ROLE_USER', 0),
+       ('admin@example.com', 'adminpassword', 'admintoken', 'ROLE_ADMIN', 300);
 
 INSERT INTO wish (user_id, product_id, count)
 VALUES (1, 1, 1),

@@ -10,6 +10,7 @@ import gift.wish.entity.Wish;
 import gift.user.repository.UserRepository;
 import gift.product.repository.ProductRepository;
 import gift.wish.repository.WishRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,7 +38,7 @@ public class WishService {
         .map(WishResponseDto::toDto);
   }
 
-
+  @Transactional
   public WishResponseDto addWish(Long userId,@Valid WishRequestDto wishRequestDto) {
     User user = userRepository.findById(userId)
         .orElseThrow(() -> new ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
@@ -58,9 +59,10 @@ public class WishService {
     return WishResponseDto.toDto(savedWish);
   }
 
+  @Transactional
   public WishResponseDto removeWish(Long userId, Long wishId) {
     Wish wish = wishRepository.findByIdAndUserId(wishId, userId)
-        .orElseThrow(() -> new ResourceNotFoundException("Wish item not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("위시 항목을 찾을 수 없습니다."));
 
     wishRepository.delete(wish);
     return WishResponseDto.toDto(wish);
