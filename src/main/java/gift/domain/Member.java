@@ -65,4 +65,23 @@ public class Member {
     public Role getRole() {
         return role;
     }
+
+    public int getPoint() {
+        return point;
+    }
+
+    public void decrementPoint(int point){
+        if (this.point <= 0) {
+            throw new IllegalArgumentException("The point to be deducted must be greater than zero.");
+        }
+        if (this.point >= point) {
+            this.point -= point;
+        } else {
+            throw new IllegalArgumentException("Deduction failed due to insufficient point.");
+        }
+    }
+
+    public void earnPoint(int price, int quantity){
+        this.point += (int) (price*quantity*0.3);
+    }
 }
