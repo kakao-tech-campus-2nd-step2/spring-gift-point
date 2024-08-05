@@ -11,8 +11,6 @@ public interface WishListRepository {
 
     Page<Wish> findAllByUserId(Long userId, Pageable pageable);
 
-    void update(Wish wish);
-
     Optional<Wish> findById(Long id);
 
     Optional<Wish> findByUserIdAndOptionId(Long userId, Long optionId);

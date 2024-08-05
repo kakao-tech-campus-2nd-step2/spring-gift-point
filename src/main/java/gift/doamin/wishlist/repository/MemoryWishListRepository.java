@@ -40,11 +40,6 @@ public class MemoryWishListRepository implements WishListRepository {
     }
 
     @Override
-    public void update(Wish wish) {
-        wishLists.put(wish.getId(), wish);
-    }
-
-    @Override
     public Optional<Wish> findById(Long id) {
         return Optional.ofNullable(wishLists.get(id));
     }

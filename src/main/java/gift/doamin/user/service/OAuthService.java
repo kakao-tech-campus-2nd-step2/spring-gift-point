@@ -48,6 +48,7 @@ public class OAuthService {
         KakaoOAuthToken kakaoOAuthToken = kakaoOAuthTokenRepository.findByUser(user)
             .orElseGet(() -> new KakaoOAuthToken(user));
         kakaoOAuthToken.update(tokenResponse);
+        kakaoOAuthTokenRepository.save(kakaoOAuthToken);
 
         // 우리 서비스의 jwt 토큰 생성해서 반환
         return authTokenService.genrateToken(user);
