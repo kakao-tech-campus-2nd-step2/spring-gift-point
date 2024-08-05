@@ -1,9 +1,6 @@
 package gift.Mapper;
 
-import gift.DTO.ProductDTO;
-import gift.DTO.WishDTO;
-import gift.DTO.CategoryDTO;
-import gift.DTO.OptionDTO;
+import gift.DTO.*;
 import gift.Entity.*;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +18,7 @@ public class ProductServiceMapper {
         productDTO.setPrice(productEntity.getPrice());
         productDTO.setImageUrl(productEntity.getImageUrl());
         productDTO.setWishes(convertWishesToDTOs(productEntity.getWishes()));
-        productDTO.setCategory(convertToCategoryDTO(productEntity.getCategory()));
+//        productDTO.setCategory(convertToCategoryDTO(productEntity.getCategory()));
         productDTO.setOptions(convertOptionsToDTOs(productEntity.getOptions()));
         return productDTO;
     }
@@ -39,7 +36,7 @@ public class ProductServiceMapper {
         productEntity.setPrice(productDTO.getPrice());
         productEntity.setImageUrl(productDTO.getImageUrl());
         productEntity.setWishes(convertToWishEntities(productDTO.getWishes()));
-        productEntity.setCategory(convertToCategoryEntity(productDTO.getCategory()));
+//        productEntity.setCategory(convertToCategoryEntity(productDTO.getCategory()));
         productEntity.setOptions(convertToOptionEntities(productDTO.getOptions()));
         return productEntity;
     }
@@ -55,14 +52,14 @@ public class ProductServiceMapper {
                 .collect(Collectors.toList());
     }
 
-    private CategoryDTO convertToCategoryDTO(CategoryEntity categoryEntity) {
-        if (categoryEntity == null) {
-            return null;
-        }
-        return new CategoryDTO(
-                categoryEntity.getId(),
-                categoryEntity.getName());
-    }
+//    private CategoryDTO convertToCategoryDTO(CategoryEntity categoryEntity) {
+//        if (categoryEntity == null) {
+//            return null;
+//        }
+//        return new CategoryDTO(
+//                categoryEntity.getId(),
+//                categoryEntity.getName());
+//    }
 
     private List<OptionDTO> convertOptionsToDTOs(List<OptionEntity> optionEntities) {
         return Optional.ofNullable(optionEntities).orElse(List.of())
@@ -86,15 +83,15 @@ public class ProductServiceMapper {
                 .collect(Collectors.toList());
     }
 
-    public CategoryEntity convertToCategoryEntity(CategoryDTO categoryDTO) {
-        if (categoryDTO == null) {
-            return null;
-        }
-        CategoryEntity categoryEntity = new CategoryEntity();
-        categoryEntity.setId(categoryDTO.getId());
-        categoryEntity.setName(categoryDTO.getName());
-        return categoryEntity;
-    }
+//    public CategoryEntity convertToCategoryEntity(CategoryDTO categoryDTO) {
+//        if (categoryDTO == null) {
+//            return null;
+//        }
+//        CategoryEntity categoryEntity = new CategoryEntity();
+//        categoryEntity.setId(categoryDTO.getId());
+//        categoryEntity.setName(categoryDTO.getName());
+//        return categoryEntity;
+//    }
 
     public List<OptionEntity> convertToOptionEntities(List<OptionDTO> optionDTOs) {
         return Optional.ofNullable(optionDTOs).orElse(List.of())
@@ -108,5 +105,16 @@ public class ProductServiceMapper {
                     return optionEntity;
                 })
                 .collect(Collectors.toList());
+    }
+
+
+    public ProductResponseDTO toResponseDTO(ProductEntity productEntity) {
+        return new ProductResponseDTO(
+                productEntity.getId(),
+                productEntity.getName(),
+                productEntity.getPrice(),
+                productEntity.getImageUrl(),
+                productEntity.getCategory() != null ? productEntity.getCategory().getId() : null
+        );
     }
 }

@@ -1,10 +1,14 @@
 package gift.Controller;
 
 import gift.DTO.ProductDTO;
+import gift.DTO.ProductResponseDTO;
 import gift.Service.ProductService;
+import gift.util.CustomPageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,55 +41,77 @@ public class ProductController {
             @ApiResponse(responseCode = "404", description = "Product not found")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
+    public ResponseEntity<ProductResponseDTO> getProductById(@PathVariable Long id) {
         return productService.findProductById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @Operation(summary = "상품 생성", description = "상품을 생성합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully created product"),
-            @ApiResponse(responseCode = "400", description = "Invalid input data")
-    })
-    @PostMapping
-    public ProductDTO createProduct(@RequestBody ProductDTO productDTO) {
-        return productService.saveProduct(productDTO);
-    }
+//    @Operation(summary = "상품 생성", description = "상품을 생성합니다.")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "Successfully created product"),
+//            @ApiResponse(responseCode = "400", description = "Invalid input data")
+//    })
+//    @PostMapping
+//    public ProductDTO createProduct(@RequestBody ProductDTO productDTO) {
+//        return productService.saveProduct(productDTO);
+//    }
 
-    @Operation(summary = "상품 수정", description = "상품을 수정합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully updated product"),
-            @ApiResponse(responseCode = "404", description = "Product not found"),
-            @ApiResponse(responseCode = "400", description = "Invalid input data")
-    })
-    @PutMapping("/{id}")
-    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
-        try {
-            ProductDTO updatedProduct = productService.updateProduct(id, productDTO);
-            return ResponseEntity.ok(updatedProduct);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
+//    @Operation(summary = "상품 수정", description = "상품을 수정합니다.")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "Successfully updated product"),
+//            @ApiResponse(responseCode = "404", description = "Product not found"),
+//            @ApiResponse(responseCode = "400", description = "Invalid input data")
+//    })
+//    @PutMapping("/{id}")
+//    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestBody ProductDTO) {
+//        try {
+//            ProductDTO updatedProduct = productService.updateProduct(id, productDTO);
+//            return ResponseEntity.ok(updatedProduct);
+//        } catch (RuntimeException e) {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
 
-    @Operation(summary = "상품 삭제", description = "상품을 삭제합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Successfully deleted product"),
-            @ApiResponse(responseCode = "404", description = "Product not found")
-    })
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        productService.deleteProduct(id);
-        return ResponseEntity.noContent().build();
-    }
+//    @Operation(summary = "상품 삭제", description = "상품을 삭제합니다.")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "204", description = "Successfully deleted product"),
+//            @ApiResponse(responseCode = "404", description = "Product not found")
+//    })
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+//        productService.deleteProduct(id);
+//        return ResponseEntity.noContent().build();
+//    }
 
-    @Operation(summary = "상품 리스트 조회", description = "상품의 id와 이름을 반환합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved paginated list of products")
-    })
+//    @Operation(summary = "상품 리스트 조회", description = "상품의 id와 이름을 반환합니다.")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "Successfully retrieved paginated list of products")
+//    })
+//    @GetMapping
+//    public Page<ProductDTO> getProducts(Pageable pageable) {
+//        return productService.getProducts(pageable);
+//    }
+
+    @Operation(summary = "상품 목록 조회", description = "카테고리별로 상품 목록을 페이지 단위로 조회합니다.")
     @GetMapping
-    public Page<ProductDTO> getProducts(Pageable pageable) {
-        return productService.getProducts(pageable);
+    public ResponseEntity<CustomPageResponse<ProductDTO>> getProducts(
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<ProductDTO> productPage = productService.getProducts(categoryId, pageable);
+
+        CustomPageResponse<ProductDTO> response = new CustomPageResponse<>(
+                productPage.getContent(),
+                productPage.getNumber(),
+                productPage.getTotalPages(),
+                productPage.hasNext(),
+                productPage.getTotalElements()
+        );
+
+        return ResponseEntity.ok(response);
     }
+
 }

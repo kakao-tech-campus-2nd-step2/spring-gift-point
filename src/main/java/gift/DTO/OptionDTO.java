@@ -25,6 +25,13 @@ public class OptionDTO {
         this.productId = productId;
     }
 
+    public OptionDTO(Long productId, Long id, Long quantity, String name) {
+        this.id = id;
+        this.name = name;
+        this.quantity = quantity;
+        this.productId = productId;
+    }
+
     public OptionDTO() {}
 
     public void setProductId(Long productId) {
