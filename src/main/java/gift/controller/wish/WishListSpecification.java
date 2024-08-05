@@ -30,8 +30,8 @@ public interface WishListSpecification {
                     )
             })
     ResponseEntity<String> addGiftToWishList(@Parameter(hidden = true) @RequestAttribute("user") User user,
-                                         @RequestBody WishRequest.Create wishRequest,
-                                         @RequestParam(required = false, defaultValue = "1") int quantity);
+                                             @RequestBody WishRequest.Create wishRequest,
+                                             @RequestParam(required = false, defaultValue = "1") int quantity);
 
     @Operation(summary = "위시리스트 상품 수량 수정", description = "위시리스트에 있는 주어진 ID의 상품 수량을 수정합니다.",
             responses = {
@@ -53,7 +53,7 @@ public interface WishListSpecification {
                     @ApiResponse(responseCode = "404", description = "상품을 찾을 수 없음")
             })
     ResponseEntity<String> removeGiftFromWishList(@Parameter(hidden = true) @RequestAttribute("user") User user,
-                                              @Parameter(description = "제거할 상품의 ID") @PathVariable Long giftId);
+                                                  @Parameter(description = "제거할 상품의 ID") @PathVariable Long giftId);
 
     @Operation(summary = "사용자 위시리스트 조회", description = "로그인된 사용자의 위시리스트를 페이징하여 조회합니다.",
             responses = {

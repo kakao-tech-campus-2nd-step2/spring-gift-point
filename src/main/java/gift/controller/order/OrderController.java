@@ -25,9 +25,9 @@ public class OrderController implements OrderSpecification {
 
     @PostMapping
     public ResponseEntity<OrderResponse.Info> order(@RequestAttribute("user") User user,
-                                               @Valid @RequestBody OrderRequest.Create orderRequest) {
+                                                    @Valid @RequestBody OrderRequest.Create orderRequest) {
         OrderResponse.Info orderResponse = orderService.order(user.getId(), orderRequest.productId(), orderRequest);
-        if(user.getLoginType() == LoginType.KAKAO){
+        if (user.getLoginType() == LoginType.KAKAO) {
             orderService.sendMessage(orderRequest, user, orderRequest.productId());
         }
         return ResponseEntity.ok(orderResponse);
@@ -35,8 +35,8 @@ public class OrderController implements OrderSpecification {
 
     @GetMapping
     public ResponseEntity<PagingResponse<OrderResponse.DetailInfo>> getOrderList(@RequestAttribute("user") User user,
-                                                                                 @ModelAttribute PagingRequest pagingRequest){
-        PagingResponse<OrderResponse.DetailInfo> response = orderService.getOrderList(user.getId(),pagingRequest.getPage(),pagingRequest.getSize());
+                                                                                 @ModelAttribute PagingRequest pagingRequest) {
+        PagingResponse<OrderResponse.DetailInfo> response = orderService.getOrderList(user.getId(), pagingRequest.getPage(), pagingRequest.getSize());
         return ResponseEntity.ok(response);
     }
 }

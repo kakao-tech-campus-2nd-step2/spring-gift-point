@@ -23,15 +23,16 @@ public class AdminController {
 
     @GetMapping("/members")
     public ResponseEntity<PagingResponse<UserResponse.Info>> getUserList(@RequestAttribute("user") User user,
-                                                                         @ModelAttribute PagingRequest pagingRequest){
+                                                                         @ModelAttribute PagingRequest pagingRequest) {
         PagingResponse<UserResponse.Info> userList = adminService.getUserList(user, pagingRequest.getPage(), pagingRequest.getSize());
         return ResponseEntity.ok(userList);
 
     }
+
     @PatchMapping("/members/{memberId}/point")
     public ResponseEntity<MemberPointResponse.Info> addPointToUser(@RequestAttribute("user") User user,
-                                                              @PathVariable("memberId") Long userId,
-                                                              @Valid @RequestBody MemberPointRequest.Add memberPointRequest){
+                                                                   @PathVariable("memberId") Long userId,
+                                                                   @Valid @RequestBody MemberPointRequest.Add memberPointRequest) {
         MemberPointResponse.Info info = adminService.addPointToUser(user, memberPointRequest.depositPoint(), userId);
         return ResponseEntity.ok(info);
 

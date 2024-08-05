@@ -4,9 +4,7 @@ import gift.dto.OAuth.LoginInfoResponse;
 import gift.service.OAuth.KakaoAuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -37,7 +35,7 @@ public class KakaoAuthController implements KakaoAuthSpecification {
     public ResponseEntity<Map<String, String>> getAccessToken(
             @RequestParam String code,
             @RequestParam("redirect-url") String redirectUrl) {
-        LoginInfoResponse.Info loginInfo = kakaoAuthService.register(code,redirectUrl);
+        LoginInfoResponse.Info loginInfo = kakaoAuthService.register(code, redirectUrl);
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", loginInfo.token());

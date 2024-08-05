@@ -1,6 +1,5 @@
 package gift.controller.OAuth;
 
-import gift.dto.OAuth.LoginInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.*;
@@ -35,5 +34,5 @@ public interface KakaoAuthSpecification {
                     @ApiResponse(responseCode = "400", description = "잘못된 요청"),
                     @ApiResponse(responseCode = "401", description = "인증 실패")
             })
-    ResponseEntity<Map<String, String>> getAccessToken(@Parameter(description = "카카오 인증 코드") @RequestParam String code,@RequestParam("redirect-url") String redirectUrl);
+    ResponseEntity<Map<String, String>> getAccessToken(@Parameter(description = "카카오 인증 코드") @RequestParam String code, @RequestParam("redirect-url") String redirectUrl);
 }

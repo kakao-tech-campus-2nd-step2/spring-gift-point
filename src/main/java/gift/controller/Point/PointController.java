@@ -11,7 +11,7 @@ public class PointController {
 
 
     @GetMapping("/point")
-    public ResponseEntity<MyPointResponse.Info> getUserPoint(@RequestAttribute("user") User user){
+    public ResponseEntity<MyPointResponse.Info> getUserPoint(@RequestAttribute("user") User user) {
         return ResponseEntity.ok(MyPointResponse.Info.fromEntity(user));
     }
 

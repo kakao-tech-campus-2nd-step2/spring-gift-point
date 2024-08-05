@@ -1,14 +1,13 @@
 package gift.controller.user;
 
-import gift.dto.user.*;
+import gift.dto.user.LoginResponse;
+import gift.dto.user.UserRequest;
 import gift.service.user.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/members")

@@ -11,8 +11,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Tag(name = "옵션 관리", description = "상품 옵션 관리를 위한 API")
 public interface OptionSpecification {
 

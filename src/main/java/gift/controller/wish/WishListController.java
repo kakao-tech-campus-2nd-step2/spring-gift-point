@@ -24,8 +24,8 @@ public class WishListController implements WishListSpecification {
 
     @PostMapping()
     public ResponseEntity<String> addGiftToWishList(@RequestAttribute("user") User user,
-                                                @RequestBody WishRequest.Create wishRequest,
-                                                @RequestParam(required = false, defaultValue = "1") int quantity) {
+                                                    @RequestBody WishRequest.Create wishRequest,
+                                                    @RequestParam(required = false, defaultValue = "1") int quantity) {
         wishService.addGiftToUser(user, wishRequest.productId(), quantity);
         return ResponseEntity.ok("위시리스트에 상품이 추가되었습니다.");
     }

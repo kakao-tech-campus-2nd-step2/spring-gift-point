@@ -12,7 +12,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "주문 관리", description = "주문을 위한 API")
 @SecurityRequirement(name = "bearerAuth")
@@ -28,5 +29,5 @@ public interface OrderSpecification {
                     )
             })
     ResponseEntity<OrderResponse.Info> order(@Parameter(hidden = true) @RequestAttribute("user") User user,
-                                        @Valid @RequestBody OrderRequest.Create orderRequest);
+                                             @Valid @RequestBody OrderRequest.Create orderRequest);
 }
