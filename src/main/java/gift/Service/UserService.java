@@ -6,11 +6,14 @@ import gift.DTO.UserDTO;
 import gift.Entity.UserEntity;
 import gift.Mapper.UserServiceMapper;
 import gift.Repository.UserRepository;
+import gift.util.JwtTokenUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -24,47 +27,69 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserServiceMapper userServiceMapper;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final PasswordEncoder passwordEncoder;
+
 
     @Autowired
     public UserService(UserRepository userRepository, UserServiceMapper userServiceMapper) {
         this.userRepository = userRepository;
         this.userServiceMapper = userServiceMapper;
+        this.jwtTokenUtil = new JwtTokenUtil();
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
-    // 회원 정보 조회
-    public Optional<UserDTO> findUserById(Long id) {
-        Optional<UserEntity> userEntity = userRepository.findById(id);
-        return userEntity.map(userServiceMapper::convertToDTO);
+    public void registerUser(UserDTO userDTO) {
+        String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
+        UserEntity userEntity = new UserEntity(userDTO.getEmail(), encodedPassword);
+        userRepository.save(userEntity);
     }
 
-    // 회원 저장
-    public UserDTO saveUser(UserDTO userDTO) {
-        UserEntity userEntity = userServiceMapper.convertToEntity(userDTO);
-        // 비밀번호 암호화
-        String encodedPassword = encodePassword(userDTO.getPassword());
-        userEntity.setPassword(encodedPassword);
+    public String authenticateUser(UserDTO userDTO) {
+        UserEntity userEntity = userRepository.findByEmail(userDTO.getEmail())
+                .orElseThrow(() -> new RuntimeException("Invalid credentials111"));
 
-        UserEntity savedUserEntity = userRepository.save(userEntity);
-        return userServiceMapper.convertToDTO(savedUserEntity);
-    }
-
-    // 회원 정보 업데이트
-    public UserDTO updateUser(Long id, UserDTO userDTO) {
-        Optional<UserEntity> existingUser = userRepository.findById(id);
-        if (existingUser.isPresent()) {
-            UserEntity user = existingUser.get();
-            user.setEmail(userDTO.getEmail());
-            if (userDTO.getPassword() != null) {
-                // 비밀번호가 제공된 경우에만 업데이트
-                String encodedPassword = encodePassword(userDTO.getPassword());
-                user.setPassword(encodedPassword);
-            }
-            UserEntity updatedUserEntity = userRepository.save(user);
-            return userServiceMapper.convertToDTO(updatedUserEntity);
+        if (passwordEncoder.matches(userDTO.getPassword(), userEntity.getPassword())) {
+            return jwtTokenUtil.generateToken(userEntity.getEmail());
         } else {
-            throw new RuntimeException("User not found");
+            throw new RuntimeException("Invalid credentials2222");
         }
     }
+
+//    // 회원 정보 조회
+//    public Optional<UserDTO> findUserById(Long id) {
+//        Optional<UserEntity> userEntity = userRepository.findById(id);
+//        return userEntity.map(userServiceMapper::convertToDTO);
+//    }
+
+//    // 회원 저장
+//    public UserDTO saveUser(UserDTO userDTO) {
+//        UserEntity userEntity = userServiceMapper.convertToEntity(userDTO);
+//        // 비밀번호 암호화
+//        String encodedPassword = encodePassword(userDTO.getPassword());
+//        userEntity.setPassword(encodedPassword);
+//
+//        UserEntity savedUserEntity = userRepository.save(userEntity);
+//        return userServiceMapper.convertToDTO(savedUserEntity);
+//    }
+
+//    // 회원 정보 업데이트
+//    public UserDTO updateUser(Long id, UserDTO userDTO) {
+//        Optional<UserEntity> existingUser = userRepository.findById(id);
+//        if (existingUser.isPresent()) {
+//            UserEntity user = existingUser.get();
+//            user.setEmail(userDTO.getEmail());
+//            if (userDTO.getPassword() != null) {
+//                // 비밀번호가 제공된 경우에만 업데이트
+//                String encodedPassword = encodePassword(userDTO.getPassword());
+//                user.setPassword(encodedPassword);
+//            }
+//            UserEntity updatedUserEntity = userRepository.save(user);
+//            return userServiceMapper.convertToDTO(updatedUserEntity);
+//        } else {
+//            throw new RuntimeException("User not found");
+//        }
+//    }
 
     // 회원 삭제
     public void deleteUser(Long id) {

@@ -1,42 +1,24 @@
-package gift.Entity;
+package gift.DTO;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-
-@Entity
-@Table(name = "categories")
-public class CategoryEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class CategoryResponseDTO {
 
     private String label;
     private String imageURL;
     private String title;
     private String description;
     private String backgroundColor;
+    private Long categoryId;
 
-    public CategoryEntity(String label, String imageURL, String title, String description, String backgroundColor) {
+    public CategoryResponseDTO(String label, String imageURL, String title, String description, String backgroundColor, Long categoryId) {
         this.label = label;
         this.imageURL = imageURL;
         this.title = title;
         this.description = description;
         this.backgroundColor = backgroundColor;
+        this.categoryId = categoryId;
     }
 
-    public CategoryEntity() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    // Getter 및 Setter 메서드
 
     public String getLabel() {
         return label;
@@ -76,5 +58,13 @@ public class CategoryEntity {
 
     public void setBackgroundColor(String backgroundColor) {
         this.backgroundColor = backgroundColor;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 }

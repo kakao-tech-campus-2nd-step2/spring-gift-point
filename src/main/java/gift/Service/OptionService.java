@@ -4,6 +4,7 @@ import gift.Entity.OptionEntity;
 import gift.Entity.ProductEntity;
 import gift.DTO.OptionDTO;
 import gift.Repository.OptionRepository;
+import gift.Repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,13 @@ public class OptionService {
     private OptionRepository optionRepository;
     @Autowired
     private OptionServiceMapper optionServiceMapper;
+
+    @Autowired
+    private final ProductRepository productRepository;
+
+    public OptionService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     // DB에 접근하기 때문에 트랜잭션 처리 추가
     @Transactional
@@ -42,6 +50,13 @@ public class OptionService {
         List<OptionEntity> optionEntities = optionRepository.findAll();
         return optionEntities.stream().map(optionServiceMapper::convertToDTO).collect(Collectors.toList());
     }
+
+    public List<OptionEntity> getOptionsByProductId(Long productId) {
+        ProductEntity product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+        return optionRepository.findByProduct(product);
+    }
+
 
     // DB에 접근하기 때문에 트랜잭션 처리 추가
     @Transactional

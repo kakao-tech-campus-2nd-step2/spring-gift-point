@@ -6,7 +6,18 @@ public class WishDTO {
     private Long userId;
     private Long productId;
     private String productName;
+    private String name;
+    private int price;
+    private String imageUrl;
 
+    public WishDTO(Long id, Long userId, Long productId, String name, int price, String imageUrl) {
+        this.id = id;
+        this.userId = userId;
+        this.productId = productId;
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
 
     public WishDTO(Long id, Long userId, Long productId, String productName) {
         this.id = id;

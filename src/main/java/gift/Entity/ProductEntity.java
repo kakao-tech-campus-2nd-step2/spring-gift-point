@@ -3,9 +3,12 @@ package gift.Entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@Table(name = "Product")
 public class ProductEntity {
 
     @Id
@@ -32,11 +35,37 @@ public class ProductEntity {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderEntity> orders;
 
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+
+    public List<OrderEntity> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<OrderEntity> orders) {
+        this.orders = orders;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
     public ProductEntity() {}
 
-    public ProductEntity(Long id, String name, int price, String imageUrl) {
-        this.id = id;
+    public ProductEntity(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

@@ -17,8 +17,8 @@ public class UserEntity {
     @JsonIgnore
     private String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<WishEntity> wishes;
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<WishEntity> wishes;
 
     public UserEntity(String email, String password) {
         this.email = email;
@@ -43,13 +43,13 @@ public class UserEntity {
         return email;
     }
 
-    public List<WishEntity> getWishes() {
-        return wishes;
-    }
-
-    public void setWishes(List<WishEntity> wishes) {
-        this.wishes = wishes;
-    }
+//    public List<WishEntity> getWishes() {
+//        return wishes;
+//    }
+//
+//    public void setWishes(List<WishEntity> wishes) {
+//        this.wishes = wishes;
+//    }
 
     public void setPassword(String password) {
         this.password = password;
