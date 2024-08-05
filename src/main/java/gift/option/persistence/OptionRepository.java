@@ -1,5 +1,6 @@
 package gift.option.persistence;
 
+import gift.option.persistence.entity.Option;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

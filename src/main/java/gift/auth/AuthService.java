@@ -2,7 +2,7 @@ package gift.auth;
 
 import gift.exception.NotFoundMember;
 import gift.member.util.JwtTokenUtil;
-import gift.member.persistence.Member;
+import gift.member.persistence.entity.Member;
 import gift.member.application.service.MemberService;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,7 @@
-package gift.option.persistence;
+package gift.option.persistence.entity;
 
-import gift.product.persistence.Product;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import gift.product.persistence.entity.Product;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,6 +28,7 @@ public class Option {
 
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonBackReference
     private Product product;
 
     protected Option() {

@@ -4,7 +4,7 @@ import gift.exception.AlreadyExistOption;
 import gift.exception.NotFoundOption;
 import gift.option.application.dto.OptionRequestDto;
 import gift.option.application.dto.OptionResponseDto;
-import gift.option.persistence.Option;
+import gift.option.persistence.entity.Option;
 import gift.option.persistence.OptionRepository;
 import gift.product.persistence.ProductRepository;
 import java.util.List;

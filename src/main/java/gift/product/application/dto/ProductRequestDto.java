@@ -1,6 +1,6 @@
 package gift.product.application.dto;
 
-import gift.option.persistence.Option;
+import gift.option.persistence.entity.Option;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

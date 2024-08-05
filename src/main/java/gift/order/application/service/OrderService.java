@@ -1,23 +1,25 @@
 package gift.order.application.service;
 
 import gift.auth.KakaoClient;
+import gift.exception.InvalidOrder;
 import gift.exception.NotFoundMember;
 import gift.exception.NotFoundOption;
 import gift.exception.NotFoundOrder;
-import gift.member.persistence.Member;
+import gift.member.persistence.entity.Member;
 import gift.member.persistence.MemberRepository;
 import gift.member.application.dto.RegisterRequestDto;
-import gift.option.persistence.Option;
+import gift.option.persistence.entity.Option;
 import gift.option.persistence.OptionRepository;
 import gift.option.application.service.OptionService;
 import gift.order.application.dto.OrderRequestDto;
 import gift.order.application.dto.OrderResponseDto;
-import gift.order.persistence.Order;
+import gift.order.persistence.entity.Order;
 import gift.order.persistence.OrderRepository;
 import gift.wishlist.persistence.WishlistRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrderService {
@@ -45,6 +47,7 @@ public class OrderService {
         this.wishlistRepository = wishlistRepository;
     }
 
+    @Transactional
     public OrderResponseDto createOrder(Member member, OrderRequestDto orderRequestDto)
         throws NotFoundMember {
         Option option = optionRepository.findById(orderRequestDto.optionId())
@@ -57,6 +60,16 @@ public class OrderService {
         removeFromWishlistIfExists(member.getId(), order.getOption().getId());
 
         orderRepository.save(order);
+
+        int productPrice = option.getProduct().getPrice();
+
+        member.addPoint(productPrice);
+
+        if (productPrice < orderRequestDto.point()) {
+            throw new InvalidOrder("유효하지 않은 주문입니다. 포인트가 부족합니다.");
+        } else {
+            member.usePoint(orderRequestDto.point());
+        }
 
         return new OrderResponseDto(
             order.getId(),
@@ -97,6 +110,7 @@ public class OrderService {
         orderRepository.delete(order);
     }
 
+    @Transactional
     public void removeFromWishlistIfExists(Long memberId, Long optionId) {
         Option option = optionRepository.findById(optionId)
             .orElseThrow(() -> new NotFoundOption("유효하지 않은 옵션입니다."));
