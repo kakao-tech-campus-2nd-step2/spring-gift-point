@@ -19,7 +19,7 @@ public class Order {
     @Column(name = "option_id", nullable = false)
     private Long optionId;
 
-    @Column(name = "Member_id", nullable = false)
+    @Column(name = "member_id", nullable = false)
     private Long memberId;
 
     @Column(name = "quantity", nullable = false)
@@ -27,6 +27,10 @@ public class Order {
 
     @Column(name = "message", nullable = false)
     private String message;
+
+    public Order(){
+
+    }
 
     public Long getId() {
         return id;
