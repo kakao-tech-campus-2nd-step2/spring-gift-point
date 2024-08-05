@@ -14,6 +14,27 @@
             var point = document.getElementById('point-' + id).value;
             document.getElementById('point-form-' + id).submit();
         }
+
+        function maskEmail(email) {
+            var parts = email.split("@");
+            var name = parts[0];
+            var domain = parts[1];
+
+            if (name.length <= 2) {
+                return email; // Too short to mask
+            }
+
+            var maskedName = name[0] + "*".repeat(name.length - 2) + name[name.length - 1];
+            return maskedName + "@" + domain;
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var emails = document.querySelectorAll('.masked-email');
+            emails.forEach(function (emailElement) {
+                var email = emailElement.textContent;
+                emailElement.textContent = maskEmail(email);
+            });
+        });
     </script>
     <title>member point</title>
 </head>
