@@ -30,7 +30,7 @@ class PointTest {
     void subtractBalanceSuccess() {
         point.updateBalance(1000);
         point.subtractBalance(200);
-        assertThat(point.getBalance()).isEqualTo(810);
+        assertThat(point.getBalance()).isEqualTo(800);
     }
 
     @Test
