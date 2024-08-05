@@ -4,14 +4,17 @@ import gift.auth.dto.RegisterResDto;
 import gift.auth.exception.LoginFailedException;
 import gift.auth.token.AuthToken;
 import gift.auth.token.AuthTokenGenerator;
+import gift.member.dto.MemberPointsResDto;
 import gift.member.dto.MemberReqDto;
 import gift.member.dto.MemberResDto;
 import gift.member.entity.Member;
 import gift.member.exception.MemberAlreadyExistsByEmailException;
 import gift.member.exception.MemberCreateException;
 import gift.member.exception.MemberDeleteException;
+import gift.member.exception.MemberNotEnoughPointException;
 import gift.member.exception.MemberNotFoundByIdException;
 import gift.member.exception.MemberUpdateException;
+import gift.member.points.PointsStrategy;
 import gift.member.repository.MemberRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -22,10 +25,30 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final AuthTokenGenerator authTokenGenerator;
+    private final PointsStrategy pointsStrategy;
 
-    public MemberService(MemberRepository memberRepository, AuthTokenGenerator authTokenGenerator) {
+    public MemberService(MemberRepository memberRepository, AuthTokenGenerator authTokenGenerator, PointsStrategy pointsStrategy) {
         this.memberRepository = memberRepository;
         this.authTokenGenerator = authTokenGenerator;
+        this.pointsStrategy = pointsStrategy;
+    }
+
+    @Transactional
+    public void processOrderPoints(Member member, Integer pointsToUse, Integer price) {
+        Integer points = member.getPoints();
+        if (points < pointsToUse) {
+            throw MemberNotEnoughPointException.EXCEPTION;
+        }
+        member.usePoints(pointsToUse);  // 포인트 사용
+
+        Integer pointsToAdd = pointsStrategy.calculatePointsToAdd(price);
+        member.addPoints(pointsToAdd);  // 포인트 적립
+    }
+
+    @Transactional(readOnly = true)
+    public MemberPointsResDto getMemberPoints(MemberResDto memberDto) {
+        Member member = findMemberByIdOrThrow(memberDto.id());
+        return new MemberPointsResDto(member.getPoints());
     }
 
     @Transactional(readOnly = true)
@@ -78,7 +101,7 @@ public class MemberService {
         }
     }
 
-    private Member findMemberByIdOrThrow(Long memberId) {
+    public Member findMemberByIdOrThrow(Long memberId) {
         return memberRepository.findById(memberId).orElseThrow(
                 () -> MemberNotFoundByIdException.EXCEPTION
         );
