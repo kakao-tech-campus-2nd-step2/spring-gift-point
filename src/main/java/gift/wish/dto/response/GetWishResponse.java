@@ -1,6 +1,6 @@
 package gift.wish.dto.response;
 
-import gift.user.dto.ProductDto;
+import gift.product.dto.ProductDto;
 import gift.wish.entity.Wish;
 
 public record GetWishResponse(
