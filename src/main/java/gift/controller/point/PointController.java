@@ -33,7 +33,7 @@ public class PointController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("최소 충전 금액은 10,000원입니다.");
         }
-        pointService.chargePoints(user, amount);
+        pointService.addPoints(user, amount);
         return ResponseEntity.ok("포인트 충전 완료");
     }
 }

@@ -65,7 +65,6 @@ public class KakaoController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectUrl));
-        //System.out.println(redirectUrl);
 
         return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }

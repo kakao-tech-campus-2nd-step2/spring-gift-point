@@ -16,7 +16,6 @@ public class PointService {
 
     private final PointRepository pointRepository;
 
-    @Autowired
     public PointService(PointRepository pointRepository) {
         this.pointRepository = pointRepository;
     }
@@ -25,15 +24,6 @@ public class PointService {
         return pointRepository.findByUser(user)
                 .map(Point::getAmount)
                 .orElse(0L);
-    }
-
-    @Transactional
-    public void chargePoints(User user, Long amount) {
-        Point point = pointRepository.findByUser(user)
-                .orElse(new Point(user, 0L));
-        point.charge(amount);
-        pointRepository.save(point);
-        logger.info("포인트 충전 완료. 사용자: {}, 충전된 포인트: {}", user.getId(), amount);
     }
 
     @Transactional
@@ -63,4 +53,5 @@ public class PointService {
         pointRepository.save(point);
         logger.info("포인트 적립 완료. 사용자: {}, 적립된 포인트: {}", user.getId(), amount);
     }
+
 }

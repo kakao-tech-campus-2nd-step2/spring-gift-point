@@ -11,6 +11,7 @@ import gift.domain.user.UserInfoDto;
 import gift.repository.order.OrderRepository;
 import gift.repository.product.option.ProductOptionRepository;
 import gift.repository.wish.WishRepository;
+import gift.service.order.OrderProcessingService;
 import gift.service.point.PointService;
 import gift.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestClientResponseException;
 import gift.util.JwtTokenUtil;
+import org.springframework.beans.factory.annotation.Value;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +38,9 @@ import java.util.Map;
 public class KakaoService {
     private static final Logger logger = LoggerFactory.getLogger(KakaoService.class);
 
+    @Value("${point.earn.rate}")
+    private double pointEarnRate;
+
     private final RestClient client;
     private final ObjectMapper objectMapper;
     private final KakaoProperties kakaoProperties;
@@ -45,6 +50,7 @@ public class KakaoService {
     private final OrderRepository orderRepository;
     private final JwtTokenUtil jwtTokenUtil;
     private final PointService pointService;
+    private final OrderProcessingService orderProcessingService;
 
     @Autowired
     public KakaoService(KakaoProperties kakaoProperties,
@@ -53,7 +59,8 @@ public class KakaoService {
                         WishRepository wishRepository,
                         OrderRepository orderRepository,
                         JwtTokenUtil jwtTokenUtil,
-                        PointService pointService) {
+                        PointService pointService,
+                        OrderProcessingService orderProcessingService) {
         this.client = RestClient.builder().build();
         this.objectMapper = new ObjectMapper();
         this.kakaoProperties = kakaoProperties;
@@ -63,6 +70,7 @@ public class KakaoService {
         this.orderRepository = orderRepository;
         this.jwtTokenUtil = jwtTokenUtil;
         this.pointService = pointService;
+        this.orderProcessingService = orderProcessingService;
     }
 
     public UserInfoDto kakaoLogin(String authorizationCode) {
@@ -181,50 +189,13 @@ public class KakaoService {
 
     @Transactional
     public Map<String, Object> createKakaoOrder(User user, String accessToken, OrderRequest orderRequest) {
-        ProductOption productOption = productOptionRepository.findById(orderRequest.getOptionId())
-                .orElseThrow(() -> new IllegalArgumentException("옵션을 찾을 수 없음"));
+        Order order = orderProcessingService.processOrder(user, orderRequest);
 
-        Long totalPrice = productOption.getPrice() * orderRequest.getQuantity();
-
-        //주문 총 가격이 1000원인데 사용자가 2000원의 포인트를 사용하려고 한다면, pointsToUse는 1000원이 됩니다.
-        Long pointsToUse = Math.min(orderRequest.getPointsToUse(), totalPrice);
-        //pointsToUse와 사용자의 보유 포인트 중 작은 값을 pointsToUse에 할당합니다. 이렇게 함으로써, 사용자가 보유한 포인트를 초과하여 사용할 수 없도록 함.
-        pointsToUse = Math.min(pointsToUse, pointService.getUserPoints(user));
-
-        // 포인트 사용 및 적립
-        pointService.usePoints(user, pointsToUse);
-        Long remainingCashAmount = totalPrice - pointsToUse;
-        Long pointsToEarn = (long) (remainingCashAmount * 0.05);
-        pointService.addPoints(user, pointsToEarn);
-
-        logger.info("포인트 실제 사용 : {}", pointsToUse);
-        logger.info("결제 금액 : {}", remainingCashAmount);
-        logger.info("포인트 적립: {}", pointsToEarn);
-
-        // 총 포인트 조회 및 로깅
-        Long totalPoints = pointService.getUserPoints(user); // 현재 총 포인트 조회
-        logger.info("총포인트: {}", totalPoints);
-
-        //옵션 개수 차감
-        productOption.subtract(orderRequest.getQuantity());
-        productOptionRepository.save(productOption);
-
-        //위시리스트 삭제
-        wishRepository.findByUserIdAndProductIdAndIsDeletedFalse(user.getId(), productOption.getProduct().getId())
-                .ifPresent(wish -> {
-                    wish.setIsDeleted(true);
-                    wishRepository.save(wish);
-                });
-
-        sendKakaoMessage(user, accessToken, orderRequest.getMessage(), productOption.getName(), orderRequest.getQuantity());
+        sendKakaoMessage(user, accessToken, orderRequest.getMessage(), order.getProductOption().getName(), orderRequest.getQuantity());
 
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         String formattedNow = now.format(formatter);
-
-        //주문 생성
-        Order order = new Order(user, productOption, orderRequest.getQuantity(), orderRequest.getMessage(), now, remainingCashAmount, pointsToUse);
-        orderRepository.save(order);
 
         Map<String, Object> response = new HashMap<>();
         response.put("id", order.getId());
@@ -232,12 +203,9 @@ public class KakaoService {
         response.put("quantity", orderRequest.getQuantity());
         response.put("orderDateTime", formattedNow);
         response.put("message", orderRequest.getMessage());
-        //실제 결제 금액
-        response.put("remainingCashAmount", remainingCashAmount);
-        //사용 포인트
-        response.put("pointsToUse", pointsToUse);
-        //남은 총포인트
-        response.put("totalPoints", totalPoints);
+        response.put("remainingCashAmount", order.getRemainingCashAmount());
+        response.put("pointsToUse", order.getPointsToUse());
+        response.put("totalPoints", pointService.getUserPoints(user));
 
         logger.info("주문 완료: {}", response);
         return response;

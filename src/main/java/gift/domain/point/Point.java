@@ -28,18 +28,22 @@ public class Point {
         return amount;
     }
 
-    public void charge(Long amount) {
-        this.amount += amount;
-    }
-
     public void use(Long amount) {
+        validateAmount(amount);
         if (this.amount < amount) {
             throw new IllegalArgumentException("포인트가 부족합니다.");
         }
         this.amount -= amount;
     }
 
+    private void validateAmount(Long amount) {
+        if (amount == null || amount < 0) {
+            throw new IllegalArgumentException("유효하지 않은 포인트 값입니다.");
+        }
+    }
+
     public void add(Long amount) {
+        validateAmount(amount); // null 및 음수 체크 추가
         this.amount += amount;
     }
 }

@@ -26,7 +26,7 @@ public class OrderController {
         this.userService = userService;
     }
 
-    @GetMapping("/getAll")
+    @GetMapping("/orders")
     public ResponseEntity<Page<Order>> getAllOrders(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
