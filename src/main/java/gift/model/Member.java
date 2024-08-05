@@ -20,7 +20,7 @@ public class Member {
     @Column
     private String activeToken;
     @Column(nullable = false)
-    private int point;
+    private int points;
 
     protected Member() {
     }
@@ -30,35 +30,35 @@ public class Member {
         this.email = member.email;
         this.password = member.password;
         this.activeToken = activeToken;
-        this.point = member.point;
+        this.points = member.points;
     }
 
     public Member(Member member) {
         this.id = member.id;
         this.email = member.email;
         this.password = member.password;
-        this.point = member.point;
+        this.points = member.points;
     }
 
     public Member(String email, String password) {
         this.email = email;
         this.password = password;
-        this.point = 0;
+        this.points = 0;
     }
 
     public Member(String email, String password, String activeToken) {
         this.email = email;
         this.password = password;
         this.activeToken = activeToken;
-        this.point = 0;
+        this.points = 0;
     }
 
-    public Member(Long id, String email, String password, String activeToken, int point) {
+    public Member(Long id, String email, String password, String activeToken, int points) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.activeToken = activeToken;
-        this.point = point;
+        this.points = points;
     }
 
     public Long getId() {
@@ -77,11 +77,11 @@ public class Member {
         return activeToken;
     }
 
-    public int getPoint() {
-        return point;
+    public int getPoints() {
+        return points;
     }
 
-    public void setPoint(int point) {
-        this.point = point;
+    public void setPoints(int point) {
+        this.points = points;
     }
 }

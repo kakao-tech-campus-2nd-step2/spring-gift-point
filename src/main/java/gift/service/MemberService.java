@@ -52,7 +52,7 @@ public class MemberService {
 
     public int getMemberPoints(String email) {
         Member member = getMemberByEmail(email);
-        return member.getPoint();
+        return member.getPoints();
     }
 
     public void updateMemberPoints(String email, int points) {
