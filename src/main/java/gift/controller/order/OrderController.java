@@ -6,6 +6,7 @@ import gift.dto.order.OrderResponse;
 import gift.dto.paging.PagingRequest;
 import gift.dto.paging.PagingResponse;
 import gift.model.user.User;
+import gift.service.message.MessageService;
 import gift.service.order.OrderService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,13 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController implements OrderSpecification {
 
     private final OrderService orderService;
+    private final MessageService messageService;
 
-    @Autowired
-    public OrderController(OrderService orderService) {
+
+    public OrderController(OrderService orderService,
+                           MessageService messageService) {
         this.orderService = orderService;
+        this.messageService = messageService;
     }
 
     @PostMapping
@@ -28,7 +32,7 @@ public class OrderController implements OrderSpecification {
                                                     @Valid @RequestBody OrderRequest.Create orderRequest) {
         OrderResponse.Info orderResponse = orderService.order(user.getId(), orderRequest.productId(), orderRequest);
         if (user.getLoginType() == LoginType.KAKAO) {
-            orderService.sendMessage(orderRequest, user, orderRequest.productId());
+            messageService.sendMessage(orderRequest.optionId(), orderRequest.productId(), orderRequest.quantity(), orderRequest.message(), user);
         }
         return ResponseEntity.ok(orderResponse);
     }

@@ -43,28 +43,16 @@ public class OrderService {
 
     private final UserRepository userRepository;
 
-    private final OAuthTokenRepository OAuthTokenRepository;
-
-    private final KakaoApiCaller kakaoApiCaller;
-
-    @Autowired
-    private TokenUtil tokenUtil;
-
-    @Autowired
     public OrderService(OptionRepository optionRepository,
                         ProductRepository productRepository,
                         WishRepository wishRepository,
                         UserRepository userRepository,
-                        OrderRepository orderRepository,
-                        OAuthTokenRepository OAuthTokenRepository,
-                        KakaoApiCaller kakaoApiCaller) {
+                        OrderRepository orderRepository){
         this.optionRepository = optionRepository;
         this.productRepository = productRepository;
         this.wishRepository = wishRepository;
         this.userRepository = userRepository;
         this.orderRepository = orderRepository;
-        this.OAuthTokenRepository = OAuthTokenRepository;
-        this.kakaoApiCaller = kakaoApiCaller;
     }
 
     @Transactional
@@ -103,18 +91,6 @@ public class OrderService {
                 .map(OrderResponse.DetailInfo::fromEntity)
                 .toList();
         return new PagingResponse<>(page, detailInfos, size, orders.getTotalElements(), orders.getTotalPages());
-    }
-
-    public void sendMessage(OrderRequest.Create orderRequest, User user, Long giftId) {
-        Product product = productRepository.findById(giftId)
-                .orElseThrow(() -> new NoSuchElementException("해당 상품을 찾을 수 없습니다 id :  " + giftId));
-        Option option = optionRepository.findById(orderRequest.optionId())
-                .orElseThrow(() -> new NoSuchElementException("해당 옵션을 찾을 수 없습니다 id :  " + orderRequest.optionId()));
-        OAuthToken OAuthToken = OAuthTokenRepository.findByUser(user).orElseThrow(() -> new NoSuchElementException("사용자가 카카오토큰을 가지고있지않습니다!"));
-        OAuthToken = tokenUtil.checkExpiredToken(OAuthToken);
-        String message = String.format("상품 : %s\\n옵션 : %s\\n수량 : %s\\n메시지 : %s\\n주문이 완료되었습니다!"
-                , product.getName(), option.getName(), orderRequest.quantity(), orderRequest.message());
-        kakaoApiCaller.sendMessage(OAuthToken.getAccessToken(), message);
     }
 
     public void checkOptionInProduct(Product product, Long optionId) {
