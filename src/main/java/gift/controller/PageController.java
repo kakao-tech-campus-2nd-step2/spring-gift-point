@@ -70,7 +70,7 @@ public class PageController {
         @ApiResponse(responseCode = "500", description = "서버 내부 오류 발생")
     })
     public String addPageGet(Model model) {
-        Product product = new Product(null, "", 0.0, "", null);
+        Product product = new Product(null, "", 0, "", null);
         List<CategoryDto> categories = categoryService.getAllCategories();
         model.addAttribute("product", product);
         model.addAttribute("category", categories);
@@ -89,7 +89,7 @@ public class PageController {
         List<CategoryDto> categories = categoryService.getAllCategories();
 
         if (product.isEmpty()) {
-            product = Optional.of(new Product(null, "", 0.0, "", null));
+            product = Optional.of(new Product(null, "", 0, "", null));
         }
         model.addAttribute("product", product);
         model.addAttribute("category", categories);
