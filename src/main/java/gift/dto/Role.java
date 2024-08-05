@@ -9,10 +9,6 @@ public enum Role {
         this.role = role;
     }
 
-    public String getRole() {
-        return role;
-    }
-
     public static Role of(String role) {
         if (role.equals("USER")) {
             return USER;
@@ -21,5 +17,9 @@ public enum Role {
             return ADMIN;
         }
         throw new IllegalArgumentException("유효하지 않은 권한입니다.");
+    }
+
+    public String getRole() {
+        return role;
     }
 }

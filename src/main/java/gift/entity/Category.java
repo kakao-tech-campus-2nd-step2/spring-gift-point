@@ -1,6 +1,7 @@
 package gift.entity;
 
 import jakarta.persistence.*;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,9 +25,10 @@ public class Category {
     private String description;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private Set<Product> products = new HashSet<>();
+    private final Set<Product> products = new HashSet<>();
 
-    protected Category() {}
+    protected Category() {
+    }
 
     public Category(String name, String color, String imageUrl, String description) {
         this.name = name;

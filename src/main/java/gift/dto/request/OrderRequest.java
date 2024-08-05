@@ -16,9 +16,13 @@ public class OrderRequest {
 
     }
 
-    public int getPoint() {return point;}
+    public int getPoint() {
+        return point;
+    }
 
-    public Long getOptionId() {return optionId;}
+    public Long getOptionId() {
+        return optionId;
+    }
 
     public int getQuantity() {
         return quantity;

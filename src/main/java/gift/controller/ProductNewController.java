@@ -1,10 +1,7 @@
 package gift.controller;
 
-import gift.dto.KakaoTokenDto;
 import gift.dto.response.ProductNewResponse;
-import gift.entity.Option;
 import gift.entity.Product;
-import gift.service.OptionService;
 import gift.service.ProductService;
 import gift.service.WishlistService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,13 +27,13 @@ public class ProductNewController {
 
     public ProductNewController(ProductService productService, WishlistService wishlistService) {
         this.productService = productService;
-        this.wishlistService= wishlistService;
+        this.wishlistService = wishlistService;
 
     }
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductNewResponse> getProduct(@PathVariable Long id, @RequestAttribute("userId") Long userId){
+    public ResponseEntity<ProductNewResponse> getProduct(@PathVariable Long id, @RequestAttribute("userId") Long userId) {
         Product product = productService.getProductById(id);
         boolean isWish = wishlistService.isProductInWishlist(userId, id);
         ProductNewResponse response = new ProductNewResponse(product, isWish);

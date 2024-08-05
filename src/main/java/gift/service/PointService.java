@@ -10,19 +10,21 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PointService {
-    private PointRepository pointRepository;
+    private final PointRepository pointRepository;
 
     @Autowired
-    public PointService(PointRepository pointRepository){
+    public PointService(PointRepository pointRepository) {
         this.pointRepository = pointRepository;
     }
+
     @Transactional
     public void subtractPoint(Member member, int point) {
         Point totalPoint = pointRepository.findByMember(member);
         totalPoint.subtractPoint(point);
     }
+
     @Transactional
-    public void addPoint(Member member, int point){
+    public void addPoint(Member member, int point) {
         Point totalPoint = pointRepository.findByMember(member);
         totalPoint.addPoint(point);
     }

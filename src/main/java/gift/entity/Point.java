@@ -1,28 +1,23 @@
 package gift.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import org.hibernate.validator.constraints.UniqueElements;
 
 @Entity
 @Table
 public class Point {
 
+    @OneToOne
+    Member member;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-
     private int point;
-
-    @OneToOne
-    Member member;
 
 
     public Point() {
     }
 
-    public Point(Member member, int point){
+    public Point(Member member, int point) {
         this.member = member;
         this.point = point;
     }
@@ -44,12 +39,12 @@ public class Point {
         return member;
     }
 
-    public void setPoint(int point) {
-        this.point = point;
-    }
-
     public int getPoint() {
         return point;
+    }
+
+    public void setPoint(int point) {
+        this.point = point;
     }
 
     public void subtractPoint(int point) {

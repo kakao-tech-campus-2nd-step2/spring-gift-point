@@ -5,36 +5,30 @@ import gift.dto.MemberDto;
 import gift.dto.response.TokenResponse;
 import gift.exception.MemberNotFoundException;
 import gift.repository.KakaoTokenRepository;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.http.*;
-import org.json.JSONObject;
 
 
 @Service
 public class KakaoService {
 
-    @Value("${kakao.client-id}")
-    private String clientId;
-
-    @Value("${kakao.redirect-url}")
-    private String redirectUrl;
-
-    @Value("${kakao.url}")
-    private String url;
-
     private final MemberService memberService;
     private final RestTemplate restTemplate;
     private final KakaoTokenService kakaoTokenService;
     private final KakaoTokenRepository kakaoTokenRepository;
+    @Value("${kakao.client-id}")
+    private String clientId;
+    @Value("${kakao.redirect-url}")
+    private String redirectUrl;
+    @Value("${kakao.url}")
+    private String url;
 
     @Autowired
     public KakaoService(MemberService memberService, RestTemplate restTemplate, KakaoTokenService kakaoTokenService, KakaoTokenRepository kakaoTokenRepository) {

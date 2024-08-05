@@ -21,7 +21,7 @@ public class AdminPointController {
     public AdminPointController(
             PointService pointService,
             MemberService memberService
-    ){
+    ) {
         this.pointService = pointService;
         this.memberService = memberService;
     }

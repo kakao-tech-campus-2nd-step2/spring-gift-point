@@ -11,7 +11,6 @@ public class WishlistResponse {
     private String imageUrl;
 
 
-
     public WishlistResponse(Wishlist wishlist) {
         this.wishId = wishlist.getId();
         this.productId = wishlist.getProduct().getId();
@@ -24,38 +23,39 @@ public class WishlistResponse {
         return wishId;
     }
 
+    public void setWishId(Long wishId) {
+        this.wishId = wishId;
+    }
+
     public Long getProductId() {
         return productId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-    public void setWishId(Long wishId){
-        this.wishId = wishId;
     }
 
     public void setProductId(Long productId) {
         this.productId = productId;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getPrice() {
+        return price;
     }
 
     public void setPrice(int price) {
         this.price = price;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

@@ -12,7 +12,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -61,7 +64,7 @@ public class OrderNewController {
 
         Product product = optionService.getProductById(request.getOptionId());
         int price = product.getPrice();
-        pointService.addPoint(member,(int) ((price - request.getPoint()) * 0.1));
+        pointService.addPoint(member, (int) ((price - request.getPoint()) * 0.1));
 
         wishlistService.deleteWishlistItem(member.getEmail(), product.getId());
         KakaoTokenDto tokenDto = kakaoTokenService.getTokenByEmail(member.getEmail());

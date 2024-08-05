@@ -5,13 +5,11 @@ import gift.dto.MemberDto;
 import gift.entity.Member;
 import gift.exception.MemberNotFoundException;
 import gift.repository.MemberRepository;
-
 import gift.util.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class MemberService {
@@ -54,7 +52,7 @@ public class MemberService {
         if (member != null) {
             return member;
         } else {
-            throw new MemberNotFoundException("Member with email " +id + " not found");
+            throw new MemberNotFoundException("Member with email " + id + " not found");
         }
     }
 

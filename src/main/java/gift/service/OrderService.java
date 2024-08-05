@@ -9,13 +9,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrderService {
 
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository){
+    public OrderService(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
     }
-    public OrderItem getOrder(Long optionId){
+
+    public OrderItem getOrder(Long optionId) {
         return orderRepository.findByOptionId(optionId);
     }
 }
