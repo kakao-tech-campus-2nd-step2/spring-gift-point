@@ -13,7 +13,7 @@ public class ProductRequest {
             @Pattern(regexp = "[\\s\\(\\)\\[\\]\\+\\-&/_a-zA-Z0-9\uAC00-\uD7AF]*", message = "특수문자 오류")
             String name,
 
-            int price,
+            Integer price,
 
             String imageUrl,
 

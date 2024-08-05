@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 public class MemberPointRequest {
     public record Add(
             @NotNull
-            int depositPoint
+            Integer depositPoint
     ){
 
     }

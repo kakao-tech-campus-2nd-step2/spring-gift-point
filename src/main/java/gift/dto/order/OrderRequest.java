@@ -11,11 +11,11 @@ public class OrderRequest {
             Long optionId,
             @Min(1)
             @NotNull
-            int quantity,
+            Integer quantity,
             @NotNull
             String message,
             @NotNull
-            int point
+            Integer point
     ) {
 
     }
