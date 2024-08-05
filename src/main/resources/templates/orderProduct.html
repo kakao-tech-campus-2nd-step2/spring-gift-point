@@ -56,17 +56,16 @@
     var currentPage = 0;
     var pageSize = 5;
 
-    function getOptions(page){
+    function getOptions(){
         $.ajax({
             url: '/api/products/' + product_id + '/options',
             method: 'GET',
             success: function(data) {
-                var contents = data.content;
                 var tbody = $('#option-tbody');
                 tbody.empty(); // 초기화
 
                 // 데이터에 따라 테이블 행을 생성
-                contents.forEach(function(option) {
+                data.forEach(function(option) {
                     // 한 행의 내용
                     var row = `
                         <tr>

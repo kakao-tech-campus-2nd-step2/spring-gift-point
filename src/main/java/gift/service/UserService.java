@@ -23,30 +23,11 @@ public class UserService {
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
     /*
-     * 유저 정보를 오름차순으로 조회하는 로직
+     * 유저 정보를 정렬하여 페이지 형식으로 조회하는 로직
      */
-    public Page<UserResponse> findAllASC(int page, int size, String field) {
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.asc(field));
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
-
+    public Page<UserResponse> findAll(Pageable pageable) {
         Page<User> users = userRepository.findAll(pageable);
-
-        return users.map(UserResponse::new);
-    }
-
-    /*
-     * 유저 정보를 내림차순으로 조회하는 로직
-     */
-    public Page<UserResponse> findAllDESC(int page, int size, String field) {
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc(field));
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
-
-        Page<User> users = userRepository.findAll(pageable);
-
         return users.map(UserResponse::new);
     }
 

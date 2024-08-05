@@ -9,6 +9,7 @@ import gift.security.AuthenticateMember;
 import gift.security.JwtTokenProvider;
 import gift.service.UserService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,17 +54,10 @@ public class UserController {
      */
     @GetMapping("/api/members")
     public ResponseEntity<Page<UserResponse>> readUsers(
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "5") int size,
-            @RequestParam(value = "sort") List<String> sort,
+            Pageable pageable,
             @AuthenticateMember UserResponse userRes
     ) {
-        if(sort.getLast().equals("asc")) {
-            Page<UserResponse> users = userService.findAllASC(page, size, sort.getFirst());
-            return new ResponseEntity<>(users, HttpStatus.OK);
-        }
-
-        Page<UserResponse> users = userService.findAllDESC(page, size, sort.getFirst());
+        Page<UserResponse> users = userService.findAll(pageable);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
     /*

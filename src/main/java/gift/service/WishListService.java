@@ -34,25 +34,8 @@ public class WishListService {
     /*
      * 특정 유저의 위시리스트를 오름차순으로 조회하는 로직
      */
-    public Page<WishProductResponse> findWishListASC(Long id, int page, int size, String field){
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.asc(field));
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
-
+    public Page<WishProductResponse> findWishList(Long id, Pageable pageable){
         Page<WishProduct> wishes = wishListRepository.findByUserId(id, pageable);
-
-        return wishes.map(WishProductResponse::new);
-    }
-    /*
-     * 특정 유저의 위시리스트를 내림차순으로 조회하는 로직
-     */
-    public Page<WishProductResponse> findWishListDESC(Long id, int page, int size, String field){
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc(field));
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
-
-        Page<WishProduct> wishes = wishListRepository.findByUserId(id, pageable);
-
         return wishes.map(WishProductResponse::new);
     }
     /*

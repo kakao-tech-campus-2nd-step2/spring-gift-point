@@ -11,7 +11,7 @@
 <div class="header" id="header">
 
 </div>
-<h1>Administrator Product manage Page</h1>
+<h1>Administrator Product Manage Page</h1>
 <data id="token" th:value="${token != null ? token : 'null'}"></data>
 
 <div class="form-inline">
@@ -139,14 +139,8 @@
 
     function getProducts(page){
         $.ajax({
-            url: '/api/products',
+            url: '/api/products?page=' + page + '&size=' + pageSize + '&sort=' + $('#p_field').val() + ',' + $('#p_sort').val() + '&categoryId=' + $('#categoryId').val(),
             method: 'GET',
-            data : {
-                page : page,
-                size : pageSize,
-                sort : [$('#p_field').val(), $('#p_sort').val()],
-                categoryId : $('#categoryId').val()
-            },
             success: function(data) {
                 var contents = data.content;
                 var tbody = $('#product-tbody');
