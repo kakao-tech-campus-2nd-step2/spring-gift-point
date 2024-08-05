@@ -54,7 +54,7 @@ public class OrderController {
         @Parameter(required = true, description = "주문 요청 본문")
         @RequestBody OrderRequest orderRequest) {
 
-        OrderResponse orderResponse = orderFacade.order(memberId, orderRequest);
-        return ResponseEntity.created(URI.create("/api/orders")).body(orderResponse);
+        return ResponseEntity.created(URI.create("/api/orders"))
+            .body(orderFacade.order(memberId, orderRequest));
     }
 }

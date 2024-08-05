@@ -52,7 +52,7 @@ public class OptionIntegrationTest {
         for (int i = 0; i < threadCount; i++) {
             executorService.submit(() -> {
                 try {
-                    optionService.subtract(4L, 1);
+                    optionService.subtractQuantity(4L, 1);
                 } finally {
                     countDownLatch.countDown();
                 }

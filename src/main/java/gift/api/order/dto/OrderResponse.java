@@ -13,14 +13,16 @@ public record OrderResponse(
     Integer quantity,
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     Timestamp orderDateTime,
-    String message
+    String message,
+    Integer point
 ) {
 
-    public static OrderResponse of(Order order) {
+    public static OrderResponse of(Order order, Integer point) {
         return new OrderResponse(order.getId(),
             order.getOptionId(),
             order.getQuantity(),
             order.getOrderDateTime(),
-            order.getMessage());
+            order.getMessage(),
+            point);
     }
 }

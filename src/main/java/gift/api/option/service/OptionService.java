@@ -53,7 +53,7 @@ public class OptionService {
     }
 
     @Transactional
-    public void subtract(Long id, Integer quantity) {
+    public void subtractQuantity(Long id, Integer quantity) {
         Option option = optionRepository.findByIdWithPessimisticWrite(id)
             .orElseThrow(() -> new NoSuchEntityException("option"));
         option.subtract(quantity);

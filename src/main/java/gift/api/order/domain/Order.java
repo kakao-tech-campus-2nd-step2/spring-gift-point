@@ -25,6 +25,7 @@ public class Order extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "option_id", nullable = false, foreignKey = @ForeignKey(name = "fk_order_option_id_ref_option_id"))
     private Option option;
+    private Integer quantity;
     @CreatedDate
     @Column(nullable = false)
     private Timestamp orderDateTime;
@@ -33,9 +34,10 @@ public class Order extends BaseEntity {
     protected Order() {
     }
 
-    public Order(Member member, Option option, String message) {
+    public Order(Member member, Option option, Integer quantity, String message) {
         this.member = member;
         this.option = option;
+        this.quantity = quantity;
         this.message = message;
     }
 
@@ -48,6 +50,10 @@ public class Order extends BaseEntity {
     }
 
     public Integer getQuantity() {
+        return quantity;
+    }
+
+    public Integer getOptionQuantity() {
         return option.getQuantity();
     }
 
