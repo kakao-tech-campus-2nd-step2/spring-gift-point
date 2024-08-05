@@ -8,10 +8,12 @@ import gift.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.validation.Valid;
@@ -40,7 +42,7 @@ public class ProductAdminController {
         return "productAdmin/product-create";
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public String createProduct(@Valid @ModelAttribute("product") ProductRequest productRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "productAdmin/product-create";
@@ -49,14 +51,14 @@ public class ProductAdminController {
         return "redirect:/admin/products";
     }
 
-    @GetMapping("/edit/{productId}")
+    @GetMapping("/{productId}")
     public String showEditProductPage(@PathVariable("productId") Long productId, Model model) {
         ProductResponse product = productService.getProduct(productId);
         model.addAttribute("product", product);
         return "productAdmin/product-edit";
     }
 
-    @PostMapping("/edit/{productId}")
+    @PutMapping("/{productId}")
     public String updateProduct(@PathVariable("productId") Long productId, @Valid @ModelAttribute("product") ProductUpdateRequest productUpdateRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "productAdmin/product-edit";
@@ -65,7 +67,7 @@ public class ProductAdminController {
         return "redirect:/admin/products";
     }
 
-    @GetMapping("/edit/{productId}/category")
+    @GetMapping("/{productId}/category")
     public String showEditProductCategoryPage(@PathVariable("productId") Long productId, Model model) {
         ProductResponse product = productService.getProduct(productId);
         model.addAttribute("product", product);
@@ -73,7 +75,7 @@ public class ProductAdminController {
         return "productAdmin/product-edit-category";
     }
 
-    @PostMapping("/edit/{productId}/category")
+    @PutMapping("/{productId}/category")
     public String updateProductCategory(@PathVariable("productId") Long productId, @Valid @ModelAttribute("categoryUpdateRequest") CategoryUpdateRequest categoryUpdateRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "productAdmin/product-edit-category";
@@ -82,7 +84,7 @@ public class ProductAdminController {
         return "redirect:/admin/products";
     }
 
-    @PostMapping("/delete/{productId}")
+    @DeleteMapping("/{productId}")
     public String deleteProduct(@PathVariable("productId") Long productId) {
         productService.deleteProduct(productId);
         return "redirect:/admin/products";

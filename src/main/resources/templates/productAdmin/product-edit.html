@@ -9,7 +9,8 @@
 <body>
 	<div class="container mt-5">
 		<h2>상품 수정</h2>
-		<form th:action="@{/admin/products/edit/{id}(id=${product.id})}" th:object="${product}" method="post">
+		<form th:action="@{/admin/products/{id}(id=${product.id})}" th:object="${product}" method="post">
+			<input type="hidden" name="_method" value="put"/>
 			<div class="form-group">
 				<label for="name">이름</label>
 				<input type="text" class="form-control" id="name" name="name" th:field="*{name}" required>
@@ -25,7 +26,7 @@
 			<div class="form-group">
 				<label for="categoryId">카테고리 ID</label>
 				<input type="number" class="form-control" id="categoryId" name="categoryId" th:field="*{categoryId}" readonly>
-				<a th:href="@{/admin/products/edit/{id}/category(id=${product.id})}" class="btn btn-link">카테고리 수정</a>
+				<a th:href="@{/admin/products/{id}/category(id=${product.id})}" class="btn btn-link">카테고리 수정</a>
 			</div>
 			<button type="submit" class="btn btn-primary">저장</button>
 			<a href="/admin/products" class="btn btn-secondary">취소</a>

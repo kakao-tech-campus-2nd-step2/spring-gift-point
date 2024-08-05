@@ -40,7 +40,7 @@ public class OptionAdminController {
         return "optionAdmin/option-create";
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public String createOption(@PathVariable("productId") Long productId, Model model,
                                @Valid @ModelAttribute("option") OptionRequest optionRequest,
                                BindingResult bindingResult) {

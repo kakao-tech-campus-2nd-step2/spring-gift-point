@@ -9,7 +9,7 @@
 <body>
     <div class="container mt-5">
         <h2>옵션 추가</h2>
-        <form th:action="@{/admin/products/{productId}/options/create(productId=${productId})}" th:object="${option}"
+        <form th:action="@{/admin/products/{productId}/options(productId=${productId})}" th:object="${option}"
             method="post">
             <div class="form-group">
                 <label for="name">옵션 이름</label>

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.validation.Valid;
@@ -36,7 +37,7 @@ public class CategoryAdminController {
 		return "categoryAdmin/category-create";
 	}
 
-	@PostMapping("/create")
+	@PostMapping
 	public String createCategory(@Valid @ModelAttribute("category") CategoryRequest categoryRequest,
 			BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
@@ -46,14 +47,14 @@ public class CategoryAdminController {
 		return "redirect:/admin/categories";
 	}
 
-	@GetMapping("/edit/{categoryId}")
+	@GetMapping("/{categoryId}")
 	public String showEditCategoryPage(@PathVariable("categoryId") Long categoryId, Model model) {
 		CategoryResponse category = categoryService.getCategoryById(categoryId).toDto();
 		model.addAttribute("category", category);
 		return "categoryAdmin/category-edit";
 	}
 
-	@PostMapping("/edit/{categoryId}")
+	@PutMapping("/{categoryId}")
 	public String updateCategory(@PathVariable("categoryId") Long categoryId,
 			@Valid @ModelAttribute("category") CategoryRequest categoryRequest, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {

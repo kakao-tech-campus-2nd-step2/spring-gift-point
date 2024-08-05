@@ -30,7 +30,7 @@
 					</td>
 					<td th:text="${category.description}"></td>
 					<td>
-						<a th:href="@{/admin/categories/edit/{id}(id=${category.id})}"
+						<a th:href="@{/admin/categories/{id}(id=${category.id})}"
 							class="btn btn-warning btn-sm">수정</a>
 					</td>
 				</tr>
