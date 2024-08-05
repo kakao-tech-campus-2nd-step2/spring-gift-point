@@ -80,7 +80,7 @@ public class OptionService {
     public void subtractQuantity(Long optionId, int quantity) {
         Option option = findById(optionId);
         int newQuantity = option.getQuantity() - quantity;
-        if(newQuantity < 0){
+        if (newQuantity < 0) {
             throw new IllegalArgumentException("수량이 부족합니다.");
         }
         option.setQuantity(newQuantity);
@@ -92,10 +92,14 @@ public class OptionService {
     }
 
     @Transactional(readOnly = true)
-    public List<OptionResponse> findByProductId(Long productId){
+    public List<OptionResponse> findByProductId(Long productId) {
         return optionRepository.findByProductId(productId)
             .stream()
             .map(OptionResponse::from)
             .toList();
+    }
+
+    public Option getOption(Long optionId) {
+        return optionRepository.getById(optionId);
     }
 }

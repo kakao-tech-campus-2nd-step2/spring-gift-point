@@ -37,6 +37,8 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<CommonResponse> order(@RequestHeader("Authorization") String fullToken, @RequestBody OrderRequestDto orderRequestDto) {
         String memberEmail = jwtProvider.getMemberEmail(fullToken.substring(7));
+
+
         OrderResponseDto orderResponseDto = orderService.order(orderRequestDto, memberEmail);
         return ResponseEntity.status(HttpStatus.CREATED).body(new CommonResponse(orderResponseDto, "주문 생성 성공", true));
     }
