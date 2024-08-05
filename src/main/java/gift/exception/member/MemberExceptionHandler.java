@@ -21,4 +21,10 @@ public class MemberExceptionHandler {
         return new ErrorResult("로그인 에러", e.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidPointException.class)
+    public ErrorResult invalidPointExHandle(InvalidPointException e) {
+        return new ErrorResult("포인트 에러", e.getMessage());
+    }
+
 }

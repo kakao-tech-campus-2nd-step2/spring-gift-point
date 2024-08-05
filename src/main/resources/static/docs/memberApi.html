@@ -557,7 +557,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_회원가입_http_request">HTTP request</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">POST /api/join HTTP/1.1
+<pre class="CodeRay highlight nowrap"><code data-lang="http">POST /api/members/register HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Content-Length: 53
 Host: localhost:8080
@@ -573,8 +573,8 @@ Host: localhost:8080
 <h3 id="_회원가입_http_response">HTTP response</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 201 Created
-Authorization: {ACCESS_TOKEN}
+<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+Set-Cookie: access_token={ACCESS_TOKEN}
 Content-Type: application/json;charset=UTF-8
 Content-Length: 86
 
@@ -594,7 +594,7 @@ Content-Length: 86
 <h3 id="_로그인_http_request">HTTP request</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">POST /api/login HTTP/1.1
+<pre class="CodeRay highlight nowrap"><code data-lang="http">POST /api/members/login HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Content-Length: 53
 Host: localhost:8080
@@ -611,7 +611,37 @@ Host: localhost:8080
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
-Authorization: {ACCESS_TOKEN}</code></pre>
+Set-Cookie: access_token={ACCESS_TOKEN}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_나의_정보_조회">나의 정보 조회</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_나의_정보_조회_http_request">HTTP request</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/members/me HTTP/1.1
+Authorization: Bearer {ACCESS_TOKEN}
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_나의_정보_조회_http_response">HTTP response</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 52
+
+{
+  &quot;email&quot; : &quot;abc123@a.com&quot;,
+  &quot;remain_point&quot; : 0
+}</code></pre>
 </div>
 </div>
 </div>
@@ -620,7 +650,7 @@ Authorization: {ACCESS_TOKEN}</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-07-28 19:53:01 +0900
+Last updated 2024-08-02 15:27:44 +0900
 </div>
 </div>
 <script>

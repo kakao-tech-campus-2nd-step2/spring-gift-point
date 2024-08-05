@@ -13,7 +13,9 @@ public record OrderRequest(
     Long optionId,
     @NotNull(message = "주문할 수량을 입력해주세요.")
     Integer quantity,
-    String message
+    String message,
+    @NotNull(message = "사용할 포인트를 입력해주세요.")
+    Integer point
 ) {
 
 }

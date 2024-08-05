@@ -1,7 +1,6 @@
-package gift.controller.login;
+package gift.controller.oauth2;
 
 import gift.auth.JwtService;
-import gift.model.Member;
 import gift.response.oauth2.OAuth2TokenResponse;
 import gift.service.MemberService;
 import gift.service.OAuth2LoginService;

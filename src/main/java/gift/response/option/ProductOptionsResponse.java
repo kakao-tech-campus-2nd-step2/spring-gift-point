@@ -1,6 +1,5 @@
-package gift.response;
+package gift.response.option;
 
-import gift.model.Product;
 import java.util.List;
 
 public record ProductOptionsResponse(

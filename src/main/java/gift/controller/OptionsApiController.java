@@ -2,9 +2,8 @@ package gift.controller;
 
 import gift.auth.CheckRole;
 import gift.exception.InputException;
-import gift.model.Product;
 import gift.request.OptionsRequest;
-import gift.response.ProductOptionsResponse;
+import gift.response.option.ProductOptionsResponse;
 import gift.service.OptionsService;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController

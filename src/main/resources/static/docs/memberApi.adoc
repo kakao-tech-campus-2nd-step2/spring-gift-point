@@ -1,0 +1,6 @@
+== 회원가입
+operation::rest-docs-member-test/join[snippets="http-request,http-response"]
+== 로그인
+operation::rest-docs-member-test/login[snippets="http-request,http-response"]
+== 나의 정보 조회
+operation::rest-docs-member-test/member-info[snippets="http-request,http-response"]

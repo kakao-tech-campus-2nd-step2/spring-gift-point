@@ -1,4 +1,4 @@
-package gift.response;
+package gift.response.option;
 
 import gift.model.Options;
 

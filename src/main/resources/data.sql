@@ -23,10 +23,10 @@ insert into OPTIONS (name, quantity, product_id, version) values ('productC_opti
 insert into OPTIONS (name, quantity, product_id, version) values ('productD_optionA', 10, 4L, 0);
 insert into OPTIONS (name, quantity, product_id, version) values ('productE_optionA', 232324, 5L, 0);
 
-INSERT INTO MEMBER(email,password,role) VALUES ('aaa123@a.com', '1234', 'ROLE_ADMIN');
-INSERT INTO MEMBER(email,password,role) VALUES ('bbb123@b.com', '1234', 'ROLE_USER');
-INSERT INTO MEMBER(email,password,role) VALUES ('ccc123@c.com', '1234', 'ROLE_USER');
-INSERT INTO MEMBER(email,password,role) VALUES ('ddd123@d.com', '1234', 'ROLE_USER');
+INSERT INTO MEMBER(email,password,role,point) VALUES ('aaa123@a.com', '1234', 'ROLE_ADMIN', 1000);
+INSERT INTO MEMBER(email,password,role,point) VALUES ('bbb123@b.com', '1234', 'ROLE_USER', 0);
+INSERT INTO MEMBER(email,password,role,point) VALUES ('ccc123@c.com', '1234', 'ROLE_USER', 0);
+INSERT INTO MEMBER(email,password,role,point) VALUES ('ddd123@d.com', '1234', 'ROLE_USER', 0);
 
 INSERT INTO WISH(member_id, product_id, quantity) VALUES (1, 1, 1);
 INSERT INTO WISH(member_id, product_id, quantity) VALUES (1, 2, 1);

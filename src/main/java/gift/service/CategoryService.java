@@ -4,7 +4,7 @@ import gift.exception.category.DuplicateCategoryException;
 import gift.exception.category.NotFoundCategoryException;
 import gift.model.Category;
 import gift.repository.CategoryRepository;
-import gift.response.CategoryResponse;
+import gift.response.category.CategoryResponse;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

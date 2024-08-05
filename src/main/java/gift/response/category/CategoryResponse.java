@@ -1,4 +1,4 @@
-package gift.response;
+package gift.response.category;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import gift.model.Category;

@@ -10,7 +10,7 @@ import gift.model.Wish;
 import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
-import gift.response.ProductResponse;
+import gift.response.product.ProductResponse;
 import java.util.List;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;

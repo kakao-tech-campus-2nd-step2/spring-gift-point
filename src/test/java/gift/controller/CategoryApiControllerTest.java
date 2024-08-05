@@ -18,7 +18,7 @@ import gift.model.Member;
 import gift.model.Role;
 import gift.request.CategoryAddRequest;
 import gift.request.CategoryUpdateRequest;
-import gift.response.CategoryResponse;
+import gift.response.category.CategoryResponse;
 import gift.service.CategoryService;
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,0 @@
-== 회원가입
-operation::rest-docs-login-test/join[snippets="http-request,http-response"]
-== 로그인
-operation::rest-docs-login-test/login[snippets="http-request,http-response"]

@@ -5,7 +5,7 @@ import gift.exception.product.NotFoundProductException;
 import gift.model.Product;
 import gift.repository.CategoryRepository;
 import gift.repository.ProductRepository;
-import gift.response.ProductResponse;
+import gift.response.product.ProductResponse;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -2,11 +2,10 @@ package gift.controller;
 
 import gift.auth.CheckRole;
 import gift.exception.InputException;
-import gift.model.Category;
 import gift.request.CategoryAddRequest;
 import gift.request.CategoryUpdateRequest;
-import gift.response.CategoryListResponse;
-import gift.response.CategoryResponse;
+import gift.response.category.CategoryListResponse;
+import gift.response.category.CategoryResponse;
 import gift.service.CategoryService;
 import jakarta.validation.Valid;
 import java.util.List;
