@@ -44,7 +44,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(tokenInterceptor)
-                .addPathPatterns("/**"); //우선 모든 경로에 대해 interceptor를 적용
+                .addPathPatterns(("/api/orders/**")); //주문 관련 api에 대해서 interceptor를 적용
     }
 
 }
