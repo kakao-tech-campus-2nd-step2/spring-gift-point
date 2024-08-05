@@ -13,9 +13,14 @@ public record MultipleOrderResponse(
     LocalDateTime orderDateTime
 ) {
     public static MultipleOrderResponse from(Order order, int originalPrice) {
+        List<OrderItemResponse> orderItemResponses = order.getOrderItems()
+            .stream()
+            .map(OrderItemResponse::from)
+            .toList();
+
         return new MultipleOrderResponse(
             order.getId(),
-            order.getOrderItems().stream().map(OrderItemResponse::from).toList(),
+            orderItemResponses,
             order.getRecipientMessage(),
             originalPrice,
             order.getPurchasePrice(),

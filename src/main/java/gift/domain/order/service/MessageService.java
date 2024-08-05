@@ -7,6 +7,7 @@ import gift.domain.member.entity.Member;
 import gift.domain.member.entity.OauthToken;
 import gift.domain.member.service.OauthTokenService;
 import gift.domain.order.dto.MultipleOrderResponse;
+import gift.exception.ExternalApiException;
 import gift.external.api.kakao.dto.FeedObjectRequest;
 import gift.external.api.kakao.dto.FeedObjectRequest.Button;
 import gift.external.api.kakao.dto.FeedObjectRequest.Content;
@@ -52,7 +53,13 @@ public class MessageService {
 
         try {
             String serialized = objectMapper.writeValueAsString(templateObject);
-            return messageApiProvider.sendMessageToMe(oauthToken.getAccessToken(), serialized);
+            String response = messageApiProvider.sendMessageToMe(oauthToken.getAccessToken(), serialized);
+
+            if (!response.equals("0")) {
+                throw new ExternalApiException("error.kakao.talk.message.response");
+            };
+
+            return response;
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

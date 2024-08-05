@@ -88,21 +88,23 @@ public class Member {
     }
 
     public void rechargePoint(int amount) {
-        if (amount <= 0) {
-            throw new IllegalPointUseException("error.member.negative.point.value");
-        }
+        validateAmount(amount);
         this.point += amount;
     }
 
     public void usePoint(Price price) {
-        int amount = price.getValue();
+        int amount = price.value();
+        validateAmount(amount);
 
-        if (amount <= 0) {
-            throw new IllegalPointUseException("error.member.negative.point.value");
-        }
         if (this.point < amount) {
             throw new LackOfPointException("error.member.lack.of.point");
         }
         this.point -= amount;
+    }
+
+    private static void validateAmount(int amount) {
+        if (amount <= 0) {
+            throw new IllegalPointUseException("error.member.negative.point.value");
+        }
     }
 }

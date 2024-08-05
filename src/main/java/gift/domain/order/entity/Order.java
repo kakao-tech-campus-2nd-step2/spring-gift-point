@@ -75,7 +75,7 @@ public class Order {
     }
 
     public int getPurchasePrice() {
-        return purchasePrice.getValue();
+        return purchasePrice.value();
     }
 
     public void assignPurchasePrice(Price purchasePrice) {

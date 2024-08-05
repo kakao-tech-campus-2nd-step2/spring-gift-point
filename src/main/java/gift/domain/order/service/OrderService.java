@@ -11,7 +11,6 @@ import gift.domain.order.entity.DiscountPolicy;
 import gift.domain.order.entity.Order;
 import gift.domain.order.entity.Price;
 import gift.domain.order.repository.OrderJpaRepository;
-import gift.exception.ExternalApiException;
 import gift.exception.InvalidOrderException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,10 +43,8 @@ public class OrderService {
             throw new InvalidOrderException("error.invalid.userinfo.provider");
         }
 
-        MultipleOrderResponse response = MultipleOrderResponse.from(savedOrder, originalPrice.getValue());
-        if (!messageService.sendMessageToMe(member, response).equals("0")) {
-            throw new ExternalApiException("error.kakao.talk.message.response");
-        };
+        MultipleOrderResponse response = MultipleOrderResponse.from(savedOrder, originalPrice.value());
+        messageService.sendMessageToMe(member, response).equals("0");
         return response;
     }
 
@@ -58,7 +55,7 @@ public class OrderService {
 
         Price originalPrice = orderItemService.createOne(member, order, orderItemRequest);
         Order savedOrder = purchase(member, originalPrice, order);
-        return OrderResponse.from(savedOrder, originalPrice.getValue());
+        return OrderResponse.from(savedOrder, originalPrice.value());
     }
 
     private Order purchase(Member member, Price originalPrice, Order order) {
@@ -73,7 +70,7 @@ public class OrderService {
         Price purchasePrice = originalPrice;
 
         if (discountPolicy == DiscountPolicy.DEFAULT) {
-            if (originalPrice.getValue() >= 50000) {
+            if (originalPrice.value() >= 50000) {
                 purchasePrice = originalPrice.multiply(0.9);
             }
         }
