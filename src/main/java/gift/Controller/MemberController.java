@@ -101,4 +101,11 @@ public class MemberController {
         return new ResponseEntity<>("Successfully registered", headers, HttpStatus.SEE_OTHER);
     }
 
+    @PostMapping("/increasePoint")
+    @Operation(summary = "포인트 충전", description = "포인트를 충전합니다.")
+    public ResponseEntity<?> increasePoint(@RequestBody MemberDto memberDto) {
+        memberService.increasePoint(memberDto);
+        return new ResponseEntity<>(memberDto, HttpStatus.OK);
+    }
+
 }

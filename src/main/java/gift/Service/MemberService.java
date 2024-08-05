@@ -47,6 +47,12 @@ public class MemberService {
         return user != null && user.get().getPassword().equals(password);
     }
 
+    public void increasePoint(MemberDto memberDto) {
+        Member member = memberJpaRepository.findById(memberDto.getId()).orElseThrow();
+        member.setPoint(member.getPoint() + memberDto.getPoint());
+        memberJpaRepository.save(member);
+    }
+
     public void updatePoint(MemberDto memberDto) {
         Member member = memberJpaRepository.findById(memberDto.getId()).orElseThrow();
         member.setPoint(memberDto.getPoint());
