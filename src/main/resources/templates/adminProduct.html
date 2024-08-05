@@ -139,14 +139,8 @@
 
     function getProducts(page){
         $.ajax({
-            url: '/api/products',
+            url: '/api/products?page=' + page + '&size=' + pageSize + '&sort=' + $('#p_field').val() + ',' + $('#p_sort').val() + '&categoryId=' + $('#categoryId').val(),
             method: 'GET',
-            data : {
-                page : page,
-                size : pageSize,
-                sort : [$('#p_field').val(), $('#p_sort').val()],
-                categoryId : $('#categoryId').val()
-            },
             success: function(data) {
                 var contents = data.content;
                 var tbody = $('#product-tbody');

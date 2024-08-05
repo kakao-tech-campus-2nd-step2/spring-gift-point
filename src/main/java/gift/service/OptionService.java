@@ -31,7 +31,6 @@ public class OptionService {
         System.out.println("1 = " + 1);
         Product product = productRepository.findById(productId).orElseThrow(NoSuchFieldError::new);
         Option option = new Option(optionRequest.getName(), optionRequest.getQuantity(), product);
-        product.addOption(option);
 
         Option savedOption = optionRepository.save(option);
         return new OptionResponse(savedOption, productId);
@@ -41,9 +40,8 @@ public class OptionService {
      */
     public List<OptionResponse> findOptions(Long productId){
         List<OptionResponse> answer = new ArrayList<>();
+        List<Option> options = optionRepository.findByProductId(productId);
 
-        Product product = productRepository.findById(productId).orElseThrow(NoSuchFieldError::new);
-        List<Option> options = product.getOptions();
         for (Option option : options) {
             answer.add(new OptionResponse(option, productId));
         }
@@ -63,9 +61,9 @@ public class OptionService {
      */
     @Transactional
     public void delete(Long productId, Long optionId){
-        Product savedProduct = productRepository.findById(productId).orElseThrow(NoSuchFieldError::new);
+        List<Option> options = optionRepository.findByProductId(productId);
 
-        if(savedProduct.getOptions().size() == 1)
+        if(options.size() == 1)
             return;
         optionRepository.deleteById(optionId);
     }
