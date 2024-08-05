@@ -19,6 +19,8 @@ public class Member {
     private String password;
     @Column
     private String activeToken;
+    @Column(nullable = false)
+    private int points;
 
     protected Member() {
     }
@@ -28,23 +30,35 @@ public class Member {
         this.email = member.email;
         this.password = member.password;
         this.activeToken = activeToken;
+        this.points = member.points;
     }
 
     public Member(Member member) {
         this.id = member.id;
         this.email = member.email;
         this.password = member.password;
+        this.points = member.points;
     }
 
     public Member(String email, String password) {
         this.email = email;
         this.password = password;
+        this.points = 0;
     }
 
     public Member(String email, String password, String activeToken) {
         this.email = email;
         this.password = password;
         this.activeToken = activeToken;
+        this.points = 0;
+    }
+
+    public Member(Long id, String email, String password, String activeToken, int points) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.activeToken = activeToken;
+        this.points = points;
     }
 
     public Long getId() {
@@ -61,5 +75,13 @@ public class Member {
 
     public String getActiveToken() {
         return activeToken;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int point) {
+        this.points = points;
     }
 }

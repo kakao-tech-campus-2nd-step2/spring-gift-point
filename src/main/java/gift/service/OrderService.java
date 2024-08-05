@@ -1,9 +1,11 @@
 package gift.service;
 
 import gift.dto.OrderRequestDto;
+import gift.model.Member;
 import gift.model.Option;
 import gift.model.Order;
 import gift.model.Product;
+import gift.repository.MemberRepository;
 import gift.repository.OrderRepository;
 import gift.repository.WishlistRepository;
 import jakarta.transaction.Transactional;
@@ -11,19 +13,23 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
     private final OptionService optionService;
     private final WishlistRepository wishlistRepository;
     private final KakaoMessageService kakaoMessageService;
+    private final MemberRepository memberRepository;
 
     public OrderService(OrderRepository orderRepository, OptionService optionService,
-                        WishlistRepository wishlistRepository, KakaoMessageService kakaoMessageService) {
+                        WishlistRepository wishlistRepository, KakaoMessageService kakaoMessageService, MemberRepository memberRepository) {
         this.orderRepository = orderRepository;
         this.optionService = optionService;
         this.wishlistRepository = wishlistRepository;
         this.kakaoMessageService = kakaoMessageService;
+        this.memberRepository = memberRepository;
     }
 
     @Transactional
@@ -35,13 +41,19 @@ public class OrderService {
         }
         optionService.decreaseOptionQuantity(orderRequestDto.getOptionId(), orderRequestDto.getQuantity());
 
-        Order order = new Order(option, orderRequestDto.getQuantity(), orderRequestDto.getMessage());
+        Order order = new Order(option, orderRequestDto.getQuantity(), orderRequestDto.getMessage(), orderRequestDto.getPoints());
         orderRepository.save(order);
         Product product = optionService.findProductByOptionId(option.getId());
 
         wishlistRepository.deleteByMemberIdAndProductId(memberId, product.getId());
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
+        Member updatedMember = new Member(member.getId(), member.getEmail(), member.getPassword(), member.getActiveToken(), member.getPoints() + (int) (product.getPrice() * 0.5));
+        memberRepository.save(updatedMember);
 
-        kakaoMessageService.sendMessageToKakao(order, memberId);
+        if (member.getActiveToken() != null) {
+            kakaoMessageService.sendMessageToKakao(order, memberId);
+        }
         return order;
     }
 

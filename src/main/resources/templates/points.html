@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>포인트 관리</title>
+</head>
+<body>
+<h1>포인트 관리</h1>
+<table>
+    <thead>
+    <tr>
+        <th>이메일</th>
+        <th>포인트</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="member : ${members}">
+        <td th:text="${member.email}">이메일</td>
+        <td th:text="${member.point}">포인트</td>
+        <td>
+            <form th:action="@{/admin/points/update}" method="post">
+                <input type="hidden" name="email" th:value="${member.email}"/>
+                <input type="number" name="points" th:value="${member.point}"/>
+                <button type="submit">업데이트</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

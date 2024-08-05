@@ -18,36 +18,31 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
-
     @ManyToOne
     @JoinColumn(name = "option_id", nullable = false)
     private Option option;
-
     @Column(nullable = false)
     private int quantity;
-
     @Column(nullable = false)
     private LocalDateTime orderDateTime;
-
     @Column(nullable = false)
     private String message;
+    @Column(nullable = false)
+    private int points;
 
     public Order() {
     }
 
-    public Order(Option option, int quantity, String message) {
+    public Order(Option option, int quantity, String message, int points) {
         this.option = option;
         this.quantity = quantity;
         this.orderDateTime = LocalDateTime.now();
         this.message = message;
+        this.points = points;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Option getOption() {
@@ -64,5 +59,9 @@ public class Order {
 
     public String getMessage() {
         return message;
+    }
+
+    public int getPoints() {
+        return points;
     }
 }

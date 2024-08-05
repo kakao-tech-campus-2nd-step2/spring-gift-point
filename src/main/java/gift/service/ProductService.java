@@ -36,7 +36,12 @@ public class ProductService {
     public Page<ProductResponseDto> getApiProducts(Pageable pageable) {
         Page<Product> productPage = productRepository.findAll(pageable);
         return productPage.map(product -> {
-            ProductResponseDto dto = new ProductResponseDto(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+            ProductResponseDto dto = new ProductResponseDto(
+                    product.getId(),
+                    product.getName(),
+                    product.getPrice(),
+                    product.getImageUrl()
+            );
             return dto;
         });
     }
@@ -44,7 +49,14 @@ public class ProductService {
     public Page<Product> getWebProducts(Pageable pageable) {
         Page<Product> productPage = productRepository.findAll(pageable);
         return productPage.map(product -> {
-            Product dto = new Product(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), product.getCategory(), product.getOptions());
+            Product dto = new Product(
+                    product.getId(),
+                    product.getName(),
+                    product.getPrice(),
+                    product.getImageUrl(),
+                    product.getCategory(),
+                    product.getOptions()
+            );
             return dto;
         });
     }

@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Tag(name = "Order", description = "상품 주문 관련 api")
-@RequestMapping("/api/orders")
+@RequestMapping("/api/order")
 public class OrderController {
     private final OrderService orderService;
 
