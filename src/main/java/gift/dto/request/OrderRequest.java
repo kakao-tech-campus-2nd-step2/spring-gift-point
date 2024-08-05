@@ -5,6 +5,7 @@ public class OrderRequest {
     private Long optionId;
     private int quantity;
     private String message;
+    private int pointAmount;
 
     public Long getOptionId(){
         return optionId;
@@ -16,6 +17,10 @@ public class OrderRequest {
 
     public String getMessage(){
         return message;
+    }
+
+    public int getPointAmount(){
+        return pointAmount;
     }
 
 }

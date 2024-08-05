@@ -55,7 +55,7 @@ public class MemberService {
     @Transactional
     public MemberDto findByEmail(String email){
         Member member = memberRepository.findByEmail(email)
-            .orElseThrow(() -> new CustomException("Member with email " + email + " not found", HttpStatus.NOT_FOUND, -40406));
+            .orElseThrow(() -> new CustomException("Member with email " + email + " not found", HttpStatus.NOT_FOUND, -40101));
         return new MemberDto(member.getId(), member.getPassword(), member.getEmail(), member.getRole());
     }
 

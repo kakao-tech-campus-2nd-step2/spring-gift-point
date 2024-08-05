@@ -11,6 +11,10 @@ import jakarta.persistence.Table;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+
+import gift.exception.CustomException;
+
 @Entity
 @Table(name="member")
 public class Member {
@@ -24,6 +28,8 @@ public class Member {
 
     @Column(nullable = false, unique = true)
     private String email;
+    
+    private int point;
 
     private String role;
 
@@ -41,6 +47,7 @@ public class Member {
         this.password = password;
         this.email = email;
         this.role = role;
+        this.point = 0;
     }
     
     public Long getId() {
@@ -55,6 +62,10 @@ public class Member {
         return password;
     }
 
+    public int getPoint() {
+        return point;
+    }
+
     public String getRole(){
         return role;
     }
@@ -66,4 +77,17 @@ public class Member {
     public List<Order> getOrders(){
         return orders;
     }
+
+    public void subtractPoint(int pointAmount){
+        if(this.point < pointAmount){
+            throw new CustomException("point amount is larger than remainer", HttpStatus.BAD_REQUEST, -40001);
+        }else{
+            this.point -= pointAmount;
+        }
+    }
+
+    public void chargePoint(int pointAmount){
+        this.point += pointAmount;
+    }
+    
 }
