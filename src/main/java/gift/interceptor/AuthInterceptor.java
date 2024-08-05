@@ -18,41 +18,35 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
-        if (isRequestMethodOption(request, response)) {
+        if (isRequestMethodOption(request.getMethod())) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setHeader("Access-Control-Allow-Credentials", "true");
             return false;
         }
 
-        String token = validateAndExtractToken(request, response);
-        if (token == null) {
+        if (!isValidateAuthHeader(request.getHeader("Authorization"))) {
+            response.setHeader("WWW-Authenticate", "Bearer");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
         }
 
-        request.setAttribute("memberId", tokenService.getMemberId(token));
         return true;
     }
 
-    private String validateAndExtractToken(HttpServletRequest request, HttpServletResponse response) {
-        String authHeader = request.getHeader("Authorization");
+    private boolean isValidateAuthHeader(String authHeader) {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            response.setHeader("WWW-Authenticate", "Bearer");
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return null;
+            return false;
         }
-        String token = authHeader.substring("Bearer ".length()).trim();
-        if (!tokenService.isValidateToken(token)) {
-            response.setHeader("WWW-Authenticate", "Bearer");
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return null;
-        }
-        return token;
+
+        String token = extractTokenInHeader(authHeader);
+        return tokenService.isValidateToken(token);
     }
 
-    private boolean isRequestMethodOption(HttpServletRequest request, HttpServletResponse response) {
-        if (request.getMethod().equals("OPTIONS")) {
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.setHeader("Access-Control-Allow-Credentials", "true");
-            return true;
-        }
-        return false;
+    private boolean isRequestMethodOption(String method) {
+        return method.equals("OPTIONS");
+    }
+
+    private String extractTokenInHeader(String authHeader) {
+        return authHeader.substring("Bearer ".length()).trim();
     }
 }
