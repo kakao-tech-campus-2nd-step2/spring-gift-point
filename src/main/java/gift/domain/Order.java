@@ -37,6 +37,9 @@ public class Order {
     @Column(nullable = false)
     private String message;
 
+    @Column(nullable = false)
+    private int point;
+
     public Order() {
     }
 
@@ -46,6 +49,16 @@ public class Order {
         this.quantity = quantity;
         this.message = message;
         this.orderDateTime = LocalDateTime.now();
+    }
+
+    public Order(Option option, Member member, int quantity,
+        String message, int point) {
+        this.option = option;
+        this.member = member;
+        this.quantity = quantity;
+        this.orderDateTime = LocalDateTime.now();
+        this.message = message;
+        this.point = point;
     }
 
     public MemberDto memberDto(){

@@ -23,7 +23,7 @@ public class Product {
     private String name;
 
     @Column(nullable = false)
-    private double price;
+    private int price;
 
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
@@ -35,14 +35,14 @@ public class Product {
     protected Product() {
     }
 
-    public Product(String name, double price, String imageUrl, Category category) {
+    public Product(String name, int price, String imageUrl, Category category) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.category = category;
     }
 
-    public Product(Long id, String name, double price, String imageUrl, Category category) {
+    public Product(Long id, String name, int price, String imageUrl, Category category) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -62,7 +62,7 @@ public class Product {
         return name;
     }
 
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 
@@ -76,7 +76,7 @@ public class Product {
         return categoryDto;
     }
 
-    public void update(String name, double price, String imageUrl, Category category) {
+    public void update(String name, int price, String imageUrl, Category category) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

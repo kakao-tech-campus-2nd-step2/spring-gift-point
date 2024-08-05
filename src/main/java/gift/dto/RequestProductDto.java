@@ -10,7 +10,7 @@ public class RequestProductDto {
     @Pattern(regexp = "^(?!.*카카오).*$", message = "'카카오'가 포함된 문구는 담당 MD와 협의한 경우에만 사용 가능합니다")
     private String name;
 
-    private double price;
+    private int price;
 
     private String imageUrl;
 
@@ -19,7 +19,7 @@ public class RequestProductDto {
     public RequestProductDto() {
     }
 
-    public RequestProductDto(String name, double price, String imageUrl, String categoryName) {
+    public RequestProductDto(String name, int price, String imageUrl, String categoryName) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -30,7 +30,7 @@ public class RequestProductDto {
         return name;
     }
 
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 

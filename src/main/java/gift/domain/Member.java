@@ -1,6 +1,7 @@
 package gift.domain;
 
 
+import gift.classes.Exceptions.OptionException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -28,6 +29,9 @@ public class Member {
     @Column(nullable = false)
     private Role role;
 
+    @Column(name = "point")
+    private int point;
+
     protected Member() {
     }
 
@@ -36,6 +40,14 @@ public class Member {
         this.email = email;
         this.password = password;
         this.role = role;
+    }
+
+    public Member(Long id, String email, String password, Role role, int point) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.point = point;
     }
 
     public Long getId() {
@@ -52,5 +64,24 @@ public class Member {
 
     public Role getRole() {
         return role;
+    }
+
+    public int getPoint() {
+        return point;
+    }
+
+    public void decrementPoint(int point){
+        if (this.point <= 0) {
+            throw new IllegalArgumentException("The point to be deducted must be greater than zero.");
+        }
+        if (this.point >= point) {
+            this.point -= point;
+        } else {
+            throw new IllegalArgumentException("Deduction failed due to insufficient point.");
+        }
+    }
+
+    public void addPoint(int price, int quantity){
+        this.point += (int) (price*quantity*0.3);
     }
 }
