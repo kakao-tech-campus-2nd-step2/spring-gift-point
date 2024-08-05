@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 @Entity
 public class Member {
 
+    private static final int INITIAL_POINT_BALANCE = 0;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,7 +24,7 @@ public class Member {
     public Member(String email, String password) {
         this.email = email;
         this.password = password;
-        this.point = new Point();
+        this.point = new Point(INITIAL_POINT_BALANCE);
     }
 
     protected Member() {

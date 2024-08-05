@@ -16,8 +16,11 @@ public class Point {
     @Min(0)
     private int balance;
 
-    public Point() {
-        this.balance = 0;
+    protected Point() {
+    }
+
+    public Point(int balance) {
+        this.balance = balance;
     }
 
     public int getBalance() {
