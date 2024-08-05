@@ -51,15 +51,22 @@ public class Member {
     return name;
   }
 
+  public int usePointsIfAvailable(boolean usePoints, int totalPrice) {
+    if (usePoints && this.points > 0) {
+      int pointsToUse = Math.min(totalPrice, this.points);
+      this.points -= pointsToUse;
+      return pointsToUse;
+    }
+    return 0;
+  }
+
+  public int calculateAndAddPoints(int totalPrice) {
+    int pointsEarned = (int) (totalPrice * 0.1);
+    this.points += pointsEarned;
+    return pointsEarned;
+  }
+
   public int getPoints() {
     return points;
-  }
-
-  public void addPoints(int points) {
-    this.points += points;
-  }
-
-  public void deductPoints(int points) {
-    this.points -= points;
   }
 }

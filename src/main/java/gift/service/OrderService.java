@@ -41,46 +41,42 @@ public class OrderService {
             .orElseThrow(() -> new CustomNotFoundException("Member not found"));
 
     int totalPrice = productOption.getProduct().getPrice() * orderDto.getQuantity();
-    int pointsUsed = 0;
-    int remainPoints = member.getPoints();
+    int pointsUsed = member.usePointsIfAvailable(orderDto.isUsePoint(), totalPrice);
+    totalPrice -= pointsUsed;
 
-    if (orderDto.isUsePoint() && member.getPoints() > 0) {
-      pointsUsed = Math.min(totalPrice, member.getPoints());
-      totalPrice -= pointsUsed;
-      member.deductPoints(pointsUsed);
-      remainPoints = member.getPoints();
-    }
-
-    int pointsEarned = (int) (totalPrice * 0.1);
-    member.addPoints(pointsEarned);
+    int pointsEarned = member.calculateAndAddPoints(totalPrice);
 
     Order order = new Order(productOption, member, orderDto.getQuantity(), orderDto.getMessage(), LocalDateTime.now(), pointsUsed, pointsEarned);
     Order savedOrder = orderRepository.save(order);
     memberRepository.save(member);
 
-    return new OrderDto(savedOrder.getId(), savedOrder.getProductOption().getId(), savedOrder.getQuantity(), savedOrder.getOrderDateTime(), savedOrder.getMessage(), pointsUsed, pointsEarned, member.getPoints(), member.getId(), orderDto.isUsePoint(), totalPrice, pointsUsed, remainPoints);
+    return new OrderDto(savedOrder.getId(), savedOrder.getProductOption().getId(), savedOrder.getQuantity(), savedOrder.getOrderDateTime(), savedOrder.getMessage(), pointsUsed, pointsEarned, member.getPoints(), member.getId(), orderDto.isUsePoint(), totalPrice, pointsUsed, member.getPoints());
   }
 
   @Transactional(readOnly = true)
   public Page<OrderDto> getOrders(Pageable pageable) {
     Page<Order> orders = orderRepository.findAll(pageable);
     List<OrderDto> orderDtos = orders.stream()
-            .map(order -> new OrderDto(
-                    order.getId(),
-                    order.getProductOption().getId(),
-                    order.getQuantity(),
-                    order.getOrderDateTime(),
-                    order.getMessage(),
-                    order.getPointsUsed(),
-                    order.getPointsEarned(),
-                    order.getMember().getPoints(),
-                    order.getMember().getId(),
-                    order.getPointsUsed() > 0,
-                    order.getProductOption().getProduct().getPrice() * order.getQuantity(),
-                    order.getPointsUsed(),
-                    order.getMember().getPoints()
-            ))
+            .map(this::convertToOrderDto)
             .collect(Collectors.toList());
     return new PageImpl<>(orderDtos, pageable, orders.getTotalElements());
+  }
+
+  private OrderDto convertToOrderDto(Order order) {
+    return new OrderDto(
+            order.getId(),
+            order.getProductOption().getId(),
+            order.getQuantity(),
+            order.getOrderDateTime(),
+            order.getMessage(),
+            order.getPointsUsed(),
+            order.getPointsEarned(),
+            order.getMember().getPoints(),
+            order.getMember().getId(),
+            order.getPointsUsed() > 0,
+            order.getProductOption().getProduct().getPrice() * order.getQuantity(),
+            order.getPointsUsed(),
+            order.getMember().getPoints()
+    );
   }
 }
