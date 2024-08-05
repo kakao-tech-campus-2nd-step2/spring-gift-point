@@ -455,6 +455,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_위시_조회">위시 조회</a></li>
 <li><a href="#_위시_삭제">위시 삭제</a></li>
 <li><a href="#_상품_주문하기">상품 주문하기</a></li>
+<li><a href="#_멤버_포인트_조회하기">멤버 포인트 조회하기</a></li>
 </ul>
 </div>
 </div>
@@ -1705,7 +1706,7 @@ Host: localhost:8080
 <h4 id="_예제_7_http_response">HTTP response</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 201 Created
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers</code></pre>
@@ -2256,7 +2257,7 @@ Vary: Access-Control-Request-Headers</code></pre>
   "id" : 1,
   "optionId" : 1,
   "quantity" : 10,
-  "orderDateTime" : "2024-08-02T12:26:06.415353",
+  "orderDateTime" : "2024-08-04T01:19:50.736895",
   "message" : "잘 부탁드립니다."
 }</code></pre>
 </div>
@@ -2298,8 +2299,140 @@ Content-Length: 142
   "id" : 1,
   "optionId" : 1,
   "quantity" : 10,
-  "orderDateTime" : "2024-08-02T12:26:06.415353",
+  "orderDateTime" : "2024-08-04T01:19:50.736895",
   "message" : "잘 부탁드립니다."
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_멤버_포인트_조회하기">멤버 포인트 조회하기</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_기본정보_11">기본정보</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">URL</th>
+<th class="tableblock halign-left valign-top">Authentication method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">/api/points</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AccessToken</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>설명</strong>: 멤버의 잔여 포인트를 조회합니다. 멤버 특정을 위해 로그인시 발급된 토큰이 필수로 요구됩니다.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_요청_11">요청</h3>
+<div class="sect3">
+<h4 id="_요청_11_request_headers">Request headers</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Authorization: Bearer ${ACCESS_TOKEN}<br>
+인증방식, 액세스 토큰으로 인증요청</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_요청_11_request_body">Request body</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_응답_11">응답</h3>
+<div class="sect3">
+<h4 id="_응답_11_response_fields">Response fields</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>point</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">멤버의 잔여 포인트</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_응답_11_response_body">Response body</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-json" data-lang="json">{
+  "point" : 9900
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_예제_11">예제</h3>
+<div class="sect3">
+<h4 id="_예제_11_http_request">HTTP request</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/points HTTP/1.1
+Authorization: Bearer validTokenValue
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_예제_11_http_response">HTTP response</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+Content-Length: 20
+
+{
+  "point" : 9900
 }</code></pre>
 </div>
 </div>
@@ -2311,7 +2444,7 @@ Content-Length: 142
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2024-08-01 16:57:55 +0900
+Last updated 2024-08-03 19:37:04 +0900
 </div>
 </div>
 </body>

@@ -213,3 +213,21 @@ operation::order-example[snippets='request-headers,request-fields,request-body']
 operation::order-example[snippets='response-fields,response-body']
 === 예제
 operation::order-example[snippets='http-request,http-response']
+
+== 멤버 포인트 조회하기
+=== 기본정보
+|===
+|Method | URL |Authentication method
+
+|GET
+|/api/points
+|AccessToken
+|===
+**설명**: 멤버의 잔여 포인트를 조회합니다. 멤버 특정을 위해 로그인시 발급된 토큰이 필수로 요구됩니다.
+
+=== 요청
+operation::point-get[snippets='request-headers,request-body']
+=== 응답
+operation::point-get[snippets='response-fields,response-body']
+=== 예제
+operation::point-get[snippets='http-request,http-response']

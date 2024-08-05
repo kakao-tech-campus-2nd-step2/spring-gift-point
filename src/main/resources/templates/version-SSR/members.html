@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <link rel="stylesheet" th:href="@{/style.css}"/>
+    <title>Members</title>
+</head>
+<body>
+<div class="container">
+    <div>
+        <table>
+            <thead>
+            <tr>
+                <th>멤버 아이디</th>
+                <th>이메일</th>
+                <th>잔여 포인트</th>
+                <th>포인트 수정</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="member : ${members}">
+                <td th:text="${member.id()}">id</td>
+                <td th:text="${member.email()}">category</td>
+                <td th:text="${member.point()}">name</td>
+                <td>
+                    <form method="get" th:action="@{/members/point}">
+                        <input name="memberId" th:value="${member.id}" type="hidden">
+                        <input min="0" name="newPoint" required th:value="${member.point()}" type="number">
+                        <button type="submit">수정</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+</body>
+</html>

@@ -32,7 +32,14 @@ public class OptionService {
 
     public Long getProductIdByOptionId(OrderRequest orderRequest) {
         return optionRepository.findById(orderRequest.optionId())
-                .map(Option::getId)
+                .map(Option::getProductId)
                 .orElseThrow(() -> new OptionNotFoundException(orderRequest.optionId()));
+    }
+
+    public int getProductPrice(Long optionId) {
+        return optionRepository.findById(optionId)
+                .orElseThrow(() -> new OptionNotFoundException(optionId))
+                .getProduct()
+                .getPrice();
     }
 }

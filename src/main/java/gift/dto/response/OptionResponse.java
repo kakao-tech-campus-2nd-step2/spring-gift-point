@@ -12,7 +12,8 @@ public record OptionResponse(
         return new OptionResponse(
                 option.getId(),
                 option.getName(),
-                option.getQuantity(), option.getId()
+                option.getQuantity(),
+                option.getProductId()
         );
     }
 }

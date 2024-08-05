@@ -93,4 +93,11 @@ public class ApiGlobalExceptionHandler {
 
         return problemDetail;
     }
+
+    @ExceptionHandler(InsufficientPointException.class)
+    public ProblemDetail handleInsufficientPointException(InsufficientPointException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problemDetail.setTitle(e.getMessage());
+        return problemDetail;
+    }
 }

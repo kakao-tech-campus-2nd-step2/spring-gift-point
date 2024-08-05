@@ -1,12 +1,15 @@
 package gift.service;
 
 import gift.dto.request.MemberRequest;
+import gift.dto.response.MemberInfoResponse;
 import gift.entity.Member;
 import gift.exception.EmailDuplicateException;
 import gift.exception.MemberNotFoundException;
 import gift.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class MemberService {
@@ -38,9 +41,25 @@ public class MemberService {
                 .orElseThrow(MemberNotFoundException::new);
     }
 
-    public Long findMemberIdByEmail(String email) {
+    public List<MemberInfoResponse> getAllMember() {
+        return memberRepository.findAll()
+                .stream()
+                .map(MemberInfoResponse::fromMember)
+                .toList();
+    }
+
+    @Transactional
+    public void updateMemberPoint(Long memberId, int newPoint) {
+        memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new)
+                .updatePoint(newPoint);
+    }
+
+    public Long findOrSaveMemberAndGetMemberIdByEmail(String email) {
         return memberRepository.findByEmail(email)
                 .map(Member::getId)
-                .orElseThrow(MemberNotFoundException::new);
+                .orElseGet(() ->
+                        memberRepository.save(new Member(email, "kakaoMember")).getId()
+                );
     }
 }

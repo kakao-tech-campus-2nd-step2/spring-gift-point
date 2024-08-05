@@ -18,25 +18,35 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
-        if (request.getMethod().equals("OPTIONS")) {
+        if (isRequestMethodOption(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
             response.setHeader("Access-Control-Allow-Credentials", "true");
             return false;
         }
 
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if (!isValidateAuthHeader(request.getHeader("Authorization"))) {
             response.setHeader("WWW-Authenticate", "Bearer");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
         }
-        String token = authHeader.substring("Bearer ".length()).trim();
-        if (!tokenService.isValidateToken(token)) {
-            response.setHeader("WWW-Authenticate", "Bearer");
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return false;
-        }
-        request.setAttribute("memberId", tokenService.getMemberId(token));
+
         return true;
+    }
+
+    private boolean isValidateAuthHeader(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return false;
+        }
+
+        String token = extractTokenInHeader(authHeader);
+        return tokenService.isValidateToken(token);
+    }
+
+    private boolean isRequestMethodOption(String method) {
+        return method.equals("OPTIONS");
+    }
+
+    private String extractTokenInHeader(String authHeader) {
+        return authHeader.substring("Bearer ".length()).trim();
     }
 }
