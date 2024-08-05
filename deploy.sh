@@ -5,7 +5,8 @@ JAR_NAME=$(basename $BUILD_PATH)
 
 CURRENT_PID=$(pgrep -f $JAR_NAME)
 
-if [ -z "$CURRENT_PID" ]; then
+if [ -z "$CURRENT_PID" ]
+then
   echo "No running instance found, proceeding with deployment,"
   sleep 1
 else
@@ -14,7 +15,6 @@ else
 fi
 
 DEPLOY_PATH=/home/ubuntu/
-cp $BUILD_PATH $DEPLOY_PATH
 cd $DEPLOY_PATH
 
 DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
