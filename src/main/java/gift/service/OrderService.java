@@ -28,26 +28,20 @@ public class OrderService {
     public OrderResponse processOrder(Long memberId, OrderRequest orderRequest) {
         pointService.subtractPoint(memberId, orderRequest);
 
-        OrderResponse orderResponse = saveOrder(orderRequest);
         optionService.subtractOptionQuantity(orderRequest.optionId(), orderRequest.quantity());
 
         Long productId = optionService.getProductIdByOptionId(orderRequest);
         wishService.deleteProductInWish(memberId, productId);
 
         kakaoApiService.sendMessageToMe(memberId, orderRequest);
-        return orderResponse;
+
+        return saveOrderAndReturnOrderResponse(orderRequest);
     }
 
-    private OrderResponse saveOrder(OrderRequest orderRequest) {
+    private OrderResponse saveOrderAndReturnOrderResponse(OrderRequest orderRequest) {
         Order order = new Order(orderRequest.optionId(), orderRequest.quantity(), orderRequest.message());
         Order savedOrder = orderRepository.save(order);
 
-        return new OrderResponse(
-                savedOrder.getId(),
-                savedOrder.getOptionId(),
-                savedOrder.getQuantity(),
-                savedOrder.getOrderDateTime(),
-                savedOrder.getMessage()
-        );
+        return OrderResponse.fromOrder(savedOrder);
     }
 }
