@@ -92,4 +92,16 @@ public class WishListService {
 
         wishListRepository.deleteById(wish.getId());
     }
+
+    @Transactional
+    public void subtractWishList(Long userId, Long optionId, Integer quantity) {
+        wishListRepository.findByUserIdAndOptionId(userId, optionId)
+            .ifPresent(wish -> {
+                try {
+                    wish.subtract(quantity);
+                } catch (IllegalArgumentException e) {
+                    wishListRepository.delete(wish);
+                }
+            });
+    }
 }

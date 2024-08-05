@@ -4,17 +4,13 @@ import gift.doamin.order.dto.OrderRequest;
 import gift.doamin.order.dto.OrderResponse;
 import gift.doamin.order.entity.Order;
 import gift.doamin.order.repository.OrderRepository;
-import gift.doamin.order.util.KakaoMessageRestClient;
 import gift.doamin.product.entity.Option;
 import gift.doamin.product.repository.OptionRepository;
 import gift.doamin.user.dto.UserDto;
-import gift.doamin.user.entity.KakaoOAuthToken;
 import gift.doamin.user.entity.User;
 import gift.doamin.user.exception.UserNotFoundException;
-import gift.doamin.user.repository.KakaoOAuthTokenRepository;
 import gift.doamin.user.repository.UserRepository;
-import gift.doamin.user.service.OAuthService;
-import gift.doamin.wishlist.repository.WishListRepository;
+import gift.doamin.wishlist.service.WishListService;
 import java.util.NoSuchElementException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,23 +25,19 @@ public class OrderService {
     private static final Logger log = LoggerFactory.getLogger(OrderService.class);
     private final OptionRepository optionRepository;
     private final OrderRepository orderRepository;
-    private final WishListRepository wishListRepository;
     private final UserRepository userRepository;
-    private final KakaoOAuthTokenRepository oAuthTokenRepository;
-    private final OAuthService oAuthService;
-    private final KakaoMessageRestClient kakaoMessageRestClient;
+    private final KakaoMessageService kakaoMessageService;
+    private final WishListService wishListService;
+
 
     public OrderService(OptionRepository optionRepository, OrderRepository orderRepository,
-        WishListRepository wishListRepository, UserRepository userRepository,
-        KakaoOAuthTokenRepository oAuthTokenRepository, OAuthService oAuthService,
-        KakaoMessageRestClient kakaoMessageRestClient) {
+        UserRepository userRepository, KakaoMessageService kakaoMessageService,
+        WishListService wishListService) {
         this.optionRepository = optionRepository;
         this.orderRepository = orderRepository;
-        this.wishListRepository = wishListRepository;
         this.userRepository = userRepository;
-        this.oAuthTokenRepository = oAuthTokenRepository;
-        this.oAuthService = oAuthService;
-        this.kakaoMessageRestClient = kakaoMessageRestClient;
+        this.kakaoMessageService = kakaoMessageService;
+        this.wishListService = wishListService;
     }
 
     @Transactional
@@ -54,46 +46,22 @@ public class OrderService {
             new NoSuchElementException("해당 옵션이 존재하지 않습니다."));
         User user = userRepository.findById(userDto.getId())
             .orElseThrow(UserNotFoundException::new);
-        Order order = new Order(user, user, option, orderRequest.getQuantity(),
-            orderRequest.getMessage());
-        order = orderRepository.save(order);
+        Order order = orderRepository.save(
+            new Order(user, user, option, orderRequest.getQuantity(), orderRequest.getMessage()));
 
         option.subtract(orderRequest.getQuantity());
 
         user.subtractPoint(option.getProduct().getPrice());
 
-        subtractWishList(user, option, orderRequest.getQuantity());
+        wishListService.subtractWishList(user.getId(), option.getId(), orderRequest.getQuantity());
 
         try {
-            sendKakaoTalkMessage(order);
+            kakaoMessageService.sendMessage(order.getReceiver(), order.getMessage());
         } catch (Exception e) {
             log.warn(e.getMessage());
         }
 
         return new OrderResponse(order);
-    }
-
-    @Transactional
-    public void subtractWishList(User user, Option option, Integer quantity) {
-        wishListRepository.findByUserIdAndOptionId(user.getId(), option.getId())
-            .ifPresent(wish -> {
-                try {
-                    wish.subtract(quantity);
-                } catch (IllegalArgumentException e) {
-                    wishListRepository.delete(wish);
-                }
-            });
-    }
-
-    @Transactional
-    public void sendKakaoTalkMessage(Order order) {
-        KakaoOAuthToken kakaoOAuthToken = oAuthTokenRepository.findByUser(order.getReceiver())
-            .orElseThrow(() ->
-                new IllegalArgumentException("카카오톡 사용자에게만 선물할 수 있습니다."));
-
-        oAuthService.renewOAuthTokens(kakaoOAuthToken);
-
-        kakaoMessageRestClient.sendMessage(kakaoOAuthToken.getAccessToken(), order.getMessage());
     }
 
     public Page<OrderResponse> getPage(Long userId, Pageable pageable) {
