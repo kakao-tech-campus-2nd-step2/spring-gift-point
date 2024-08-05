@@ -22,7 +22,7 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public ProductResponseDto createProductDto(String name, Integer price, String url) {
+    public ProductResponseDto createProductDto(String name, Long price, String url) {
         var newProduct = productRepository.save(new Product(name, price, url));
         return new ProductResponseDto(newProduct.getId(), newProduct.getName(), newProduct.getPrice(), newProduct.getUrl());
     }
@@ -41,7 +41,7 @@ public class ProductService {
     }
 
 
-    public boolean update(Long id, String name, Integer price, String url) {
+    public boolean update(Long id, String name, Long price, String url) {
         Product actualProduct = productRepository.findById(id).orElseThrow(() -> new RuntimeException("상품을 찾지 못했습니다."));
         Product newProduct = new Product(id, name, price, url, actualProduct.getCategory(), actualProduct.getOptions());
         productRepository.save(newProduct);

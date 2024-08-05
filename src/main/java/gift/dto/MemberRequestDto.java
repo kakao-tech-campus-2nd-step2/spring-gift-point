@@ -24,12 +24,12 @@ public class MemberRequestDto {
     }
 
     public MemberRequestDto(String email, String password) {
-        this(null, email, password);
+        this.email = email;
+        this.password = password;
     }
 
-    public MemberRequestDto(Long id, String password) {
-        this.id = id;
-        this.password = password;
+    public MemberRequestDto( String email) {
+        this.email = email;
     }
 
     public Long getId() {

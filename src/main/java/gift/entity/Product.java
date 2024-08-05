@@ -29,7 +29,7 @@ public class Product {
     private String name;
     @Column(nullable = false)
     @Schema(description = "상품 가격")
-    private Integer price;
+    private Long price;
     @Column(nullable = false)
     @Schema(description = "상품 url")
     private String url;
@@ -44,7 +44,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, Integer price, String url, Category category, List<Option> options) {
+    public Product(String name, Long price, String url, Category category, List<Option> options) {
         this.name = name;
         this.price = price;
         this.url = url;
@@ -52,7 +52,7 @@ public class Product {
         this.options = options;
     }
 
-    public Product(Long id, String name, Integer price, String url, Category category, List<Option> options) {
+    public Product(Long id, String name, Long price, String url, Category category, List<Option> options) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -61,7 +61,7 @@ public class Product {
         this.options = options;
     }
 
-    public Product(String name, Integer price, String url) {
+    public Product(String name, Long price, String url) {
         this.name = name;
         this.price = price;
         this.url = url;
@@ -75,7 +75,7 @@ public class Product {
         return name;
     }
 
-    public Integer getPrice() {
+    public Long getPrice() {
         return price;
     }
 
@@ -91,7 +91,7 @@ public class Product {
         return options;
     }
 
-    public void update(String name, Integer price, String url, Category category, List<Option> options) {
+    public void update(String name, Long price, String url, Category category, List<Option> options) {
         this.name = name;
         this.price = price;
         this.url = url;
