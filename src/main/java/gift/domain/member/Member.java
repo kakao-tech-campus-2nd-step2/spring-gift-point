@@ -62,6 +62,10 @@ public class Member {
         return accessToken;
     }
 
+    public int getPoint() {
+        return point;
+    }
+
     public boolean isMatch(String password) {
         return password.equals(this.password);
     }
@@ -77,5 +81,9 @@ public class Member {
             throw new CustomException(ErrorCode.NOT_ENOUGH_POINT);
         }
         return true;
+    }
+
+    public void updatePoint(int point) {
+        this.point = point;
     }
 }
