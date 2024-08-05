@@ -10,6 +10,7 @@ import gift.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -50,7 +51,7 @@ public class MemberController {
     }
 
     @Operation(summary = "회원 points 조회")
-    @PostMapping("/points")
+    @GetMapping ("/points")
     public ResponseEntity<PointsResponseDto> getPoints(@RequestHeader("Authorization") String fullToken,
         @RequestBody WishRequestDto wishRequestDto){
         String userEmail = jwtProvider.getMemberEmail(fullToken.substring(7));
