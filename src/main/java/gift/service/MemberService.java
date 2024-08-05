@@ -21,4 +21,27 @@ public class MemberService {
     public Optional<Member> getMemberByEmail(String email) {
         return memberRepository.findByEmail(email);
     }
+
+    public int getMemberPoints(Long memberId) {
+        return memberRepository.findById(memberId)
+            .orElseThrow(() -> new IllegalArgumentException("Member not found"))
+            .getPoints();
+    }
+
+    public void addPoints(Long memberId, int points) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+        Member updatedMember = member.updatePoints(member.getPoints() + points);
+        memberRepository.save(updatedMember);
+    }
+
+    public void subtractPoints(Long memberId, int points) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+        if (member.getPoints() < points) {
+            throw new IllegalArgumentException("Insufficient points");
+        }
+        Member updatedMember = member.updatePoints(member.getPoints() - points);
+        memberRepository.save(updatedMember);
+    }
 }
