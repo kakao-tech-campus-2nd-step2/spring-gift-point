@@ -18,20 +18,15 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
-
     @ManyToOne
     @JoinColumn(name = "option_id", nullable = false)
     private Option option;
-
     @Column(nullable = false)
     private int quantity;
-
     @Column(nullable = false)
     private LocalDateTime orderDateTime;
-
     @Column(nullable = false)
     private String message;
-
     @Column(nullable = false)
     private int points;
 
