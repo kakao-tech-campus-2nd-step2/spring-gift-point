@@ -1,14 +1,5 @@
 package gift.ResponseDto;
 
-public class RequestPointDto {
+public record RequestPointDto(int point) {
 
-  private final int point;
-
-  public RequestPointDto(int point) {
-    this.point = point;
-  }
-
-  public int getPoint() {
-    return point;
-  }
 }
