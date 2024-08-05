@@ -45,7 +45,7 @@ public class KakaoController {
     public ResponseEntity<Void> getTokenAndUserInfo(
             @RequestParam(value = "code") String kakaoCode
     ) {
-        String returnUrl = "http://localhost:3000/token.html?tokenValue=";
+        String returnUrl = "http://101.101.216.221:3000/token.html?tokenValue=";
         KakaoToken kakaoToken = kakaoOAuthService.getKakaoToken(kakaoCode);
         String token = kakaoOAuthService.kakaoMemberRegister(kakaoToken);
         HttpHeaders headers = new HttpHeaders();
