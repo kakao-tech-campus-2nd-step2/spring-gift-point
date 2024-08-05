@@ -11,7 +11,7 @@ public class OrderFixture {
         return new Order(member, option, quantity, message);
     }
 
-    public static OrderReqDto createOrderReqDto(Long optionId, Integer quantity, String message) {
-        return new OrderReqDto(optionId, quantity, message);
+    public static OrderReqDto createOrderReqDto(Long optionId, Integer quantity, Integer points, String message) {
+        return new OrderReqDto(optionId, quantity, points, message);
     }
 }

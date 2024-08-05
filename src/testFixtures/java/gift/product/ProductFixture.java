@@ -23,6 +23,10 @@ public class ProductFixture {
         return product;
     }
 
+    public static Product createProduct(String name, Integer price) {
+        return new Product(name, price, "imageUrl", CategoryFixture.createCategory("category"));
+    }
+
     public static Product createProduct(String name, Integer price, String imageUrl) {
         return new Product(name, price, imageUrl, null);
     }

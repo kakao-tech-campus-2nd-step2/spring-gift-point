@@ -1,10 +1,12 @@
 package gift.member.controller;
 
+import gift.auth.LoginMember;
 import gift.auth.dto.LoginReqDto;
 import gift.auth.dto.LoginResDto;
 import gift.auth.dto.RegisterResDto;
 import gift.auth.service.AuthService;
 import gift.common.annotation.AllowAnonymous;
+import gift.member.dto.MemberPointsResDto;
 import gift.member.dto.MemberReqDto;
 import gift.member.dto.MemberResDto;
 import gift.member.service.MemberService;
@@ -62,6 +64,15 @@ public class MemberController {
             })
     public ResponseEntity<List<MemberResDto>> getMembers() {
         return ResponseEntity.ok(memberService.getMembers());
+    }
+
+    @GetMapping("/points")
+    @Operation(summary = "포인트 조회", description = "회원의 포인트를 조회합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "포인트 조회 성공"),
+            })
+    public ResponseEntity<MemberPointsResDto> getMemberPoints(@LoginMember MemberResDto memberDto) {
+        return ResponseEntity.ok(memberService.getMemberPoints(memberDto));
     }
 
     @GetMapping("/{id}")

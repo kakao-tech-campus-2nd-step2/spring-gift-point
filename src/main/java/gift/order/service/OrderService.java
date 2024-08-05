@@ -3,8 +3,7 @@ package gift.order.service;
 import gift.auth.client.KakaoApiClient;
 import gift.member.dto.MemberResDto;
 import gift.member.entity.Member;
-import gift.member.exception.MemberNotFoundByIdException;
-import gift.member.repository.MemberRepository;
+import gift.member.service.MemberService;
 import gift.option.entity.Option;
 import gift.option.service.OptionService;
 import gift.order.dto.OrderReqDto;
@@ -12,6 +11,7 @@ import gift.order.dto.OrderResDto;
 import gift.order.entity.Order;
 import gift.order.exception.OrderNotFoundException;
 import gift.order.repository.OrderRepository;
+import gift.product.entity.Product;
 import gift.wishlist.entity.WishList;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -23,13 +23,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class OrderService {
 
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
     private final OptionService optionService;
     private final OrderRepository orderRepository;
     private final KakaoApiClient kakaoApiClient;
 
-    public OrderService(MemberRepository memberRepository, OptionService optionService, OrderRepository orderRepository, KakaoApiClient kakaoApiClient) {
-        this.memberRepository = memberRepository;
+    public OrderService(MemberService memberService, OptionService optionService, OrderRepository orderRepository, KakaoApiClient kakaoApiClient) {
+        this.memberService = memberService;
         this.optionService = optionService;
         this.orderRepository = orderRepository;
         this.kakaoApiClient = kakaoApiClient;
@@ -39,22 +39,27 @@ public class OrderService {
     public OrderResDto createOrder(MemberResDto memberDto, OrderReqDto orderReqDto) {
 
         Option option = optionService.findByIdOrThrow(orderReqDto.optionId());
-
-        Member member = memberRepository.findById(memberDto.id())
-                .orElseThrow(() -> MemberNotFoundByIdException.EXCEPTION);
-
         optionService.subtractQuantity(option, orderReqDto.quantity());
 
+        Product product = option.getProduct();
+
+        Member member = memberService.findMemberByIdOrThrow(memberDto.id());
         deleteIfExistInWishList(member, option.getId());
+
+        memberService.processOrderPoints(member, orderReqDto.points(), product.getPrice() * orderReqDto.quantity());
 
         Order savedOrder = orderRepository.save(new Order(member, option, orderReqDto.quantity(), orderReqDto.message()));
 
-        String kakaoAccessToken = member.getKakaoAccessToken();
-        if (kakaoAccessToken != null) { // 카카오톡 알림 메시지 전송
-            kakaoApiClient.messageToMe(kakaoAccessToken, orderReqDto.message(), "/orders/" + savedOrder.getId(), "주문 상세 보기");
-        }
+        sendKakaoMessage(member, savedOrder);
 
         return new OrderResDto(savedOrder);
+    }
+
+    private void sendKakaoMessage(Member member, Order order) {
+        String kakaoAccessToken = member.getKakaoAccessToken();
+        if (kakaoAccessToken != null) {
+            kakaoApiClient.messageToMe(kakaoAccessToken, order.getMessage(), "/orders/" + order.getId(), "주문 상세 보기");
+        }
     }
 
     // 주문한 상품이 위시 리스트에 있는 경우 위시 리스트에서 삭제
@@ -70,8 +75,7 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public Page<OrderResDto> getOrders(MemberResDto memberDto, Pageable pageable) {
-        Member member = memberRepository.findById(memberDto.id())
-                .orElseThrow(() -> MemberNotFoundByIdException.EXCEPTION);
+        Member member = memberService.findMemberByIdOrThrow(memberDto.id());
 
         Page<Order> orders = orderRepository.findAllByMember(member, pageable);
 

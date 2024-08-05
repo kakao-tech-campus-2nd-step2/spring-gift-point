@@ -6,7 +6,9 @@ import gift.member.entity.Member;
 public class MemberFixture {
 
     public static Member createMember() {
-        return new Member("abc123@test.com", "1234");
+        Member member = new Member("abc123@test.com", "1234");
+        member.addPoints(10000);
+        return member;
     }
 
     public static Member createMember(String email, String password) {
