@@ -1,4 +1,4 @@
-package gift.controller;
+package gift.controller.adminController;
 
 import gift.dto.MemberResponseDto;
 import gift.service.MemberService;
