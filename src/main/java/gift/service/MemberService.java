@@ -54,7 +54,7 @@ public class MemberService {
                 .updatePoint(newPoint);
     }
 
-    public Long findMemberIdByKakaoEmail(String email) {
+    public Long findOrSaveMemberAndGetMemberIdByEmail(String email) {
         return memberRepository.findByEmail(email)
                 .map(Member::getId)
                 .orElseGet(() ->
