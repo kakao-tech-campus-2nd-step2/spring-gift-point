@@ -81,7 +81,7 @@ public class Member {
         }
     }
 
-    public void earnPoint(int price, int quantity){
+    public void addPoint(int price, int quantity){
         this.point += (int) (price*quantity*0.3);
     }
 }
