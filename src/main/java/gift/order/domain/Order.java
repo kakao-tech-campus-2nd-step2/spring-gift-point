@@ -14,6 +14,7 @@ public class Order {
     private Long id;
 
     private Long userId;
+    private Long productId;
     private Long optionId;
     private Long quantity;
     private String message;
@@ -21,10 +22,12 @@ public class Order {
 
     private Boolean isReceipt;
 
-    private final LocalDateTime orderDateTime = LocalDateTime.now();
+
+    private final LocalDateTime createdAt = LocalDateTime.now();
 
     public Order(Long userId, PaymentRequest request) {
         this.userId = userId;
+        this.productId = request.getProductId();
         this.optionId = request.getOptionId();
         this.quantity = request.getQuantity();
         this.message = request.getMessage();
@@ -41,9 +44,45 @@ public class Order {
                 id,
                 optionId,
                 quantity,
-                orderDateTime.toString(),
+                createdAt.toString(),
                 message,
                 true
         );
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public Long getOptionId() {
+        return optionId;
+    }
+
+    public Long getQuantity() {
+        return quantity;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public Boolean getReceipt() {
+        return isReceipt;
+    }
+
+    public LocalDateTime getOrderDateTime() {
+        return createdAt;
     }
 }

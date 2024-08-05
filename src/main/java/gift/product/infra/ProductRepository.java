@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository
 public class ProductRepository {
@@ -63,5 +65,12 @@ public class ProductRepository {
                 .orElseThrow(() -> new ProductException(ErrorCode.PRODUCT_OPTION_NOT_FOUND));
         productOption.decreaseQuantity(quantity);
         productOptionJpaRepository.save(productOption);
+    }
+
+
+    public Map<Long, Product> getProductsByIds(List<Long> productIds) {
+        List<Product> products = productJpaRepository.findByIdIn(productIds);
+        return products.stream()
+                .collect(Collectors.toMap(Product::getId, product -> product));
     }
 }
