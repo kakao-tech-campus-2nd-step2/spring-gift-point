@@ -1,0 +1,69 @@
+name: Deploy Spring Boot Application
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - step2-3  # 배포할 브랜치 이름
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+
+      - run: touch ./src/main/resources/application.properties
+      - run: echo "${{ secrets.APPLICATION_KEY_PROPERTIES }}" > ./src/main/resources/application-key.properties
+
+      - name: Build Spring Boot application
+        run: ./gradlew build -x test  # Gradle build 수행
+
+      - name: Verify JAR file location
+        run: ls -l ./build/libs/spring-gift-0.0.1-SNAPSHOT.jar
+
+      - name: Upload JAR file to remote server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.REMOTE_SSH_HOST }}
+          username: ${{ secrets.REMOTE_SSH_USERNAME }}
+          key: ${{ secrets.REMOTE_SSH_KEY }}
+          port: ${{ secrets.REMOTE_SSH_PORT }}
+          source: "./build/libs/spring-gift-0.0.1-SNAPSHOT.jar"  # 빌드된 JAR 파일을
+          target: "/home/ubuntu/katecam"  # 원격 서버의 디렉토리에 옮김
+
+      - name: Restart Spring Boot application on remote server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_SSH_HOST }}
+          username: ${{ secrets.REMOTE_SSH_USERNAME }}
+          key: ${{ secrets.REMOTE_SSH_KEY }}
+          port: ${{ secrets.REMOTE_SSH_PORT }}
+          script: |
+            #!/bin/bash
+            set -e
+
+            # 디렉토리 변경
+            cd /home/ubuntu/katecam/build/libs || { echo "Failed to change directory. Exiting."; exit 1; }
+
+            # 디렉토리 내용 확인
+            echo "Contents of the directory:"
+            ls -l
+  
+            # 새로운 JAR 파일 이름 변경
+            echo "Renaming new JAR file..."
+            mv spring-gift-0.0.1-SNAPSHOT.jar spring-gift.jar
+
+            # 새로운 JAR 파일 실행
+            echo "Starting new JAR file..."
+            nohup java -jar spring-gift.jar > spring-gift.log 2>&1 &
+            
+            # 테스트
+            echo "after starting new jar file..."

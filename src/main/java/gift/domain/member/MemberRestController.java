@@ -1,12 +1,10 @@
 package gift.domain.member;
 
-import gift.domain.member.dto.MemberDTO;
-import gift.global.response.ResponseMaker;
-import gift.global.response.SimpleResultResponseDto;
+import gift.domain.member.dto.request.MemberRequest;
+import gift.domain.member.dto.response.MemberResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,10 +27,10 @@ public class MemberRestController {
      */
     @PostMapping("/register")
     @Operation(summary = "회원가입")
-    public ResponseEntity<SimpleResultResponseDto> join(@Valid @RequestBody MemberDTO memberDTO) {
-        memberService.join(memberDTO);
+    public ResponseEntity<MemberResponse> join(@Valid @RequestBody MemberRequest memberRequest) {
+        MemberResponse memberResponse = memberService.join(memberRequest);
 
-        return ResponseMaker.createSimpleResponse(HttpStatus.OK, "회원 가입에 성공했습니다");
+        return ResponseEntity.ok(memberResponse);
     }
 
     /**
@@ -40,10 +38,10 @@ public class MemberRestController {
      */
     @PostMapping("/login")
     @Operation(summary = "로그인을 한 후 JWT 토큰을 발급받는다.")
-    public ResponseEntity<SimpleResultResponseDto> login(@Valid @RequestBody MemberDTO memberDTO) {
-        String jwt = memberService.login(memberDTO);
+    public ResponseEntity<MemberResponse> login(@Valid @RequestBody MemberRequest memberRequest) {
+        MemberResponse memberResponse = memberService.login(memberRequest);
 
-        return ResponseMaker.createSimpleResponseWithJwtOnHeader(HttpStatus.OK, "로그인에 성공했습니다", jwt);
+        return ResponseEntity.ok(memberResponse);
     }
 
 }

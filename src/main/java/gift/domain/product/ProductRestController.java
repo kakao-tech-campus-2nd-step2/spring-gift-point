@@ -1,5 +1,9 @@
 package gift.domain.product;
 
+import gift.domain.product.dto.request.ProductRequest;
+import gift.domain.product.dto.request.UpdateProductRequest;
+import gift.domain.product.dto.response.ProductPageResponse;
+import gift.domain.product.dto.response.ProductResponse;
 import gift.global.response.ResponseMaker;
 import gift.global.response.ResultResponseDto;
 import gift.global.response.SimpleResultResponseDto;
@@ -36,25 +40,25 @@ public class ProductRestController {
     }
 
     /**
-     * 상품 추가
+     * 상품 생성
      */
     @PostMapping
-    @Operation(summary = "상품 추가")
+    @Operation(summary = "상품 생성")
     public ResponseEntity<SimpleResultResponseDto> createProduct(
-        @Valid @RequestBody ProductDTO productDTO) {
-        productService.createProduct(productDTO);
-        return ResponseMaker.createSimpleResponse(HttpStatus.CREATED, "상품이 추가되었습니다.");
+        @Valid @RequestBody ProductRequest productRequest) {
+        productService.createProduct(productRequest);
+        return ResponseEntity.ok().build();
     }
 
     /**
      * 상품 조회
      */
-    @GetMapping("{id}")
+    @GetMapping("{productId}")
     @Operation(summary = "특정 상품 조회")
-    public ResponseEntity<ResultResponseDto<Product>> getProduct(@PathVariable("id") Long id) {
+    public ResponseEntity<ProductResponse> getProduct(@PathVariable("productId") Long id) {
         Product product = productService.getProduct(id);
-
-        return ResponseMaker.createResponse(HttpStatus.OK, "해당 ID 의 상품을 조회했습니다.", product);
+        ProductResponse productResponse = product.toProductResponse();
+        return ResponseEntity.ok(productResponse);
     }
 
     /**
@@ -62,29 +66,29 @@ public class ProductRestController {
      */
     @GetMapping
     @Operation(summary = "모든 상품 조회 - 페이징")
-    public ResponseEntity<ResultResponseDto<Page<Product>>> getProductsByPageAndSort(
+    public ResponseEntity<ProductPageResponse> getProductsByPageAndSort(
         @Parameter(description = "페이지 번호") @RequestParam(value = "page", defaultValue = "0") int page,
         @Parameter(description = "페이지 크기") @RequestParam(value = "size", defaultValue = "10") int size,
-        @Parameter(description = "정렬 기준") @RequestParam(value = "sort", defaultValue = "id_asc") String sort,
+        @Parameter(description = "정렬 기준") @RequestParam(value = "sort", defaultValue = "name_asc") String sort,
         @Parameter(description = "카테고리 ID") @RequestParam(value = "categoryId", defaultValue = "0") Long categoryId
     ) {
         Sort sortObj = getSortObject(sort);
-        Page<Product> products = productService.getProductsByPage(page, size, sortObj, categoryId);
-        // 성공 시
-        return ResponseMaker.createResponse(HttpStatus.OK, "전체 목록 상품을 조회했습니다.", products);
+        ProductPageResponse productPageResponse = productService.getProductsByPage(page, size, sortObj,
+            categoryId);
+        return ResponseEntity.ok(productPageResponse);
     }
 
     /**
-     * 상품 수정
+     * 상품 수정 - (현재) 상품의 옵션은 "따로" 수정
      */
     @PutMapping("/{id}")
     @Operation(summary = "상품 수정")
-    public ResponseEntity<SimpleResultResponseDto> updateProduct(
+    public ResponseEntity updateProduct(
         @Parameter(description = "상품 ID") @PathVariable("id") Long id,
-        @Valid @RequestBody ProductDTO productDTO
+        @Valid @RequestBody UpdateProductRequest productRequest
     ) {
-        productService.updateProduct(id, productDTO);
-        return ResponseMaker.createSimpleResponse(HttpStatus.OK, "상품을 수정했습니다.");
+        productService.updateProduct(id, productRequest);
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -92,11 +96,11 @@ public class ProductRestController {
      */
     @DeleteMapping("/{id}")
     @Operation(summary = "상품 삭제")
-    public ResponseEntity<SimpleResultResponseDto> deleteProduct(
+    public ResponseEntity deleteProduct(
         @Parameter(description = "상품 ID") @PathVariable("id") Long id
     ) {
         productService.deleteProduct(id);
-        return ResponseMaker.createSimpleResponse(HttpStatus.OK, "상품이 삭제되었습니다.");
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -104,10 +108,10 @@ public class ProductRestController {
      */
     @DeleteMapping
     @Operation(summary = "선택된 상품들 삭제")
-    public ResponseEntity<SimpleResultResponseDto> deleteSelectedProducts(
+    public ResponseEntity deleteSelectedProducts(
         @RequestBody List<Long> productIds) {
         productService.deleteProductsByIds(productIds);
-        return ResponseMaker.createSimpleResponse(HttpStatus.OK, "선택된 상품들을 삭제했습니다.");
+        return ResponseEntity.ok().build();
     }
 
 

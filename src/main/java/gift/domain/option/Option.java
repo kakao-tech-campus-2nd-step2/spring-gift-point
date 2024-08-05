@@ -1,5 +1,6 @@
 package gift.domain.option;
 
+import gift.domain.option.dto.response.OptionResponse;
 import gift.domain.product.Product;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -28,7 +29,7 @@ public class Option {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public Option() {
+    protected Option() {
     }
 
     public Option(String name, Long quantity, Product product) {
@@ -97,5 +98,9 @@ public class Option {
 
     public void decrease(Long quantity) {
         this.quantity -= quantity;
+    }
+
+    public OptionResponse toOptionResponse() {
+        return new OptionResponse(this.id, this.name, this.quantity);
     }
 }

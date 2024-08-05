@@ -28,6 +28,7 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private MemberRole role;
 
+    private int point;
     private String accessToken;
     private String refreshToken;
 
@@ -59,6 +60,10 @@ public class Member extends BaseTimeEntity {
     public String getPassword() {
         return password;
     }
+
+    public MemberRole getRole() { return role; }
+
+    public int getPoint() { return point; }
 
     public String getAccessToken() {
         return accessToken;
@@ -99,5 +104,13 @@ public class Member extends BaseTimeEntity {
     public void updateKaKaoToken(KaKaoToken kaKaoToken) {
         this.accessToken = kaKaoToken.accessToken();
         this.refreshToken = kaKaoToken.refreshToken();
+    }
+
+    public void chargePoint(int point) {
+        this.point += point;
+    }
+
+    public void usePoint(Integer point) {
+        this.point -= point;
     }
 }

@@ -1,5 +1,6 @@
 package gift.domain.category;
 
+import gift.domain.category.dto.request.CategoryRequest;
 import gift.global.exception.category.CategoryDuplicateException;
 import gift.global.exception.category.CategoryNotFoundException;
 import java.util.List;
@@ -11,7 +12,7 @@ public class CategoryService {
 
     private final JpaCategoryRepository categoryRepository;
 
-    public CategoryService(gift.domain.category.JpaCategoryRepository categoryRepository) {
+    public CategoryService(JpaCategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
 
@@ -19,13 +20,13 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
-    public void createCategory(CategoryDTO categoryDTO) {
-        if (categoryRepository.existsByName(categoryDTO.name())) {
-            throw new CategoryDuplicateException(categoryDTO.name());
+    public void createCategories(List<CategoryRequest> categoryRequests) {
+        for (CategoryRequest categoryRequest : categoryRequests) {
+            if (categoryRepository.existsByName(categoryRequest.name())) {
+                throw new CategoryDuplicateException(categoryRequest.name());
+            }
+            categoryRepository.save(categoryRequest.toCategory());
         }
-
-        Category category = new Category(categoryDTO.name(), categoryDTO.description());
-        categoryRepository.save(category);
     }
 
     public void deleteCategory(Long id) {
@@ -37,16 +38,20 @@ public class CategoryService {
     }
 
     @Transactional
-    public void updateCategory(Long id, CategoryDTO categoryDTO) {
+    public void updateCategory(Long id, CategoryRequest categoryRequest) {
         Category findCategory = categoryRepository.findById(id)
             .orElseThrow(() -> new CategoryNotFoundException(id));
 
         // 이름 중복 검사, 중복되면서 id 가 자신이 아닐 때
-        if (hasDuplicateName(id, categoryDTO.name())) {
-            throw new CategoryDuplicateException(categoryDTO.name());
+        if (hasDuplicateName(id, categoryRequest.name())) {
+            throw new CategoryDuplicateException(categoryRequest.name());
 
         }
-        findCategory.update(categoryDTO.name(), categoryDTO.description());
+        findCategory.update(categoryRequest.name(),
+            categoryRequest.description(),
+            categoryRequest.color(),
+            categoryRequest.imageUrl()
+        );
     }
 
     /**
