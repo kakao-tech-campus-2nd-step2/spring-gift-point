@@ -101,7 +101,8 @@ class WishControllerTest {
 
         //When
         mockMvc.perform(MockMvcRequestBuilders
-                        .get(URL))
+                        .get(URL)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer validTokenValue"))
                 //Then
                 .andExpectAll(
                         status().isOk(),
@@ -183,6 +184,7 @@ class WishControllerTest {
         //When
         mockMvc.perform(MockMvcRequestBuilders
                         .put(URL)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer validTokenValue")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateRequest)))
                 //Then
@@ -214,7 +216,8 @@ class WishControllerTest {
 
         //When
         mockMvc.perform(RestDocumentationRequestBuilders
-                        .delete(URL + "/{wishId}", 1))
+                        .delete(URL + "/{wishId}", 1)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer validTokenValue"))
                 //Then
                 .andExpect(
                         status().isOk()

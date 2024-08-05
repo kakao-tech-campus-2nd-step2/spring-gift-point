@@ -5,6 +5,7 @@ import gift.dto.request.OrderRequest;
 import gift.dto.response.OrderResponse;
 import gift.interceptor.AuthInterceptor;
 import gift.service.OrderService;
+import gift.service.TokenService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,6 +43,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 class OrderControllerTest {
 
+    @MockBean
+    TokenService tokenService;
     @MockBean
     private JpaMetamodelMappingContext jpaMetamodelMappingContext;
     @MockBean
