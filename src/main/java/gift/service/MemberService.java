@@ -5,6 +5,7 @@ import gift.domain.member.MemberRepository;
 import gift.dto.MemberRegisterRequestDto;
 import gift.dto.MemberRegisterResponseDto;
 import gift.dto.MemberRequestDto;
+import gift.dto.PointResponseDto;
 import gift.exception.InvalidPasswordException;
 import gift.util.JwtUtil;
 import org.springframework.stereotype.Service;
@@ -38,5 +39,12 @@ public class MemberService {
         }
 
         return jwtUtil.generateToken(member.getId(), member.getEmail());
+    }
+
+    public PointResponseDto getPoint(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new IllegalArgumentException("유효하지 않은 멤버 정보입니다."));
+
+        return new PointResponseDto(member.getPoint());
     }
 }
