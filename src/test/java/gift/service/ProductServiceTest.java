@@ -5,7 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import gift.dto.ProductDTO;
+import gift.dto.optionDTO.OptionRequestDTO;
+import gift.dto.pageDTO.ProductPageResponseDTO;
+import gift.dto.productDTO.ProductAddRequestDTO;
+import gift.dto.productDTO.ProductGetResponseDTO;
+import gift.dto.productDTO.ProductUpdateRequestDTO;
 import gift.model.Category;
 import gift.model.Product;
 import gift.repository.CategoryRepository;
@@ -16,7 +20,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,7 +52,7 @@ class ProductServiceTest {
 
     @BeforeEach
     void setUp() {
-        category = new Category(1L, "교환권");
+        category = new Category(1L, "교환권", "#770077", "테스트 이미지", "테스트 설명");
         savedCategory = categoryRepository.save(category);
         product1 = new Product(1L, "상품", "100", savedCategory, "https://kakao");
         product2 = new Product(2L, "상품2", "200", savedCategory, "https://kakao2");
@@ -58,26 +61,28 @@ class ProductServiceTest {
     }
 
     @Test
-    void testFindAllProducts() {
-        Page<Product> products = productService.findAllProducts(pageable);
-        assertEquals(2, products.getTotalElements());
+    void testGetAllProducts() {
+        ProductPageResponseDTO products = productService.getAllProducts(pageable);
+        assertEquals(2, products.products().getContent().size());
     }
 
     @Test
     void testFindProductsById() {
         Long productId = product1.getId();
-        Product product = productService.findProductsById(productId);
+        ProductGetResponseDTO product = productService.getProductById(productId);
         assertAll(
             () -> assertNotNull(product),
-            () -> assertEquals(productId, product.getId())
+            () -> assertEquals(productId, product.id())
         );
     }
 
     @Test
     @Transactional
-    void testSaveProduct() {
-        ProductDTO productDTO = new ProductDTO("상품3", "100", category.getId(), "https://kakao");
-        productService.saveProduct(productDTO);
+    void testAddProduct() {
+        List<OptionRequestDTO> options = List.of(new OptionRequestDTO("옵션", 10L));
+        ProductAddRequestDTO productDTO = new ProductAddRequestDTO("상품3", "100", "https://kakao",
+            savedCategory.getId(), options);
+        productService.addProduct(productDTO);
         List<Product> savedProducts = productRepository.findAll();
         assertAll(
             () -> assertEquals(3, savedProducts.size()),
@@ -89,7 +94,8 @@ class ProductServiceTest {
     @Transactional
     void testUpdateProduct() {
         Long productId = product1.getId();
-        ProductDTO productDTO = new ProductDTO("상품3", "100", category.getId(), "https://kakao");
+        ProductUpdateRequestDTO productDTO = new ProductUpdateRequestDTO("상품3", "100",
+            "https://kakao", savedCategory.getId());
         productService.updateProduct(productDTO, productId);
 
         Product updatedProduct = productRepository.findById(productId).get();

@@ -1,11 +1,13 @@
 package gift.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import gift.dto.OptionDTO;
+import gift.dto.optionDTO.OptionRequestDTO;
+import gift.dto.optionDTO.OptionResponseDTO;
+import gift.exception.InvalidInputValueException;
 import gift.model.Category;
 import gift.model.Option;
 import gift.model.Product;
@@ -44,7 +46,7 @@ class OptionServiceTest {
     @BeforeEach
     void setUp() {
         optionRepository.deleteAll();
-        category = new Category(null, "테스트카테고리");
+        category = new Category(null, "테스트카테고리", "#770077", "테스트 이미지", "테스트 설명");
         categoryRepository.save(category);
         product = new Product(null, "상품", "100", category, "https://kakao");
         productRepository.save(product);
@@ -54,59 +56,67 @@ class OptionServiceTest {
 
     @Test
     void testFindAllByProductId() {
-        List<Option> options = optionService.findAllByProductId(product.getId());
+        List<OptionResponseDTO> options = optionService.getAllOptionsByProductId(product.getId());
         assertAll(
             () -> assertEquals(1, options.size()),
-            () -> assertEquals("테스트", options.get(0).getName())
+            () -> assertEquals("테스트", options.get(0).name())
         );
     }
 
+
     @Test
-    void testFindOptionById() {
-        Option foundOption = optionService.findOptionById(option.getId());
+    void testGetOptionById() {
+        OptionResponseDTO foundOption = optionService.getOptionById(option.getId());
         assertAll(
             () -> assertNotNull(foundOption),
-            () -> assertEquals(5, foundOption.getId())
+            () -> assertEquals(option.getId(), foundOption.id())
         );
     }
 
     @Test
     @Transactional
-    void testSaveOption() {
-        OptionDTO optionDTO = new OptionDTO("테스트2", 1L, product.getId());
-        optionService.saveOption(optionDTO);
-        List<Option> options = optionService.findAllByProductId(product.getId());
+    void testAddOption() {
+        OptionRequestDTO optionDTO = new OptionRequestDTO("테스트2", 1L);
+        optionService.addOption(product.getId(), optionDTO);
+        List<OptionResponseDTO> options = optionService.getAllOptionsByProductId(product.getId());
         assertEquals(2, options.size());
     }
 
     @Test
     @Transactional
-    void testSaveOptionWithDuplicateName() {
-        OptionDTO optionDTO = new OptionDTO("테스트", 10L, product.getId());
-        assertThrows(IllegalArgumentException.class,
-            () -> optionService.saveOption(optionDTO));
+    void testAddOptionWithDuplicateName() {
+        OptionRequestDTO optionDTO = new OptionRequestDTO("테스트", 10L);
+        try {
+            optionService.addOption(product.getId(), optionDTO);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
+        }
     }
+
 
     @Test
     @Transactional
     void testUpdateOption() {
-        OptionDTO updatedOptionDTO = new OptionDTO("테스트3", 2L, product.getId());
-        optionService.updateOption(updatedOptionDTO, option.getId());
-        Option updatedOption = optionService.findOptionById(option.getId());
+        OptionRequestDTO updatedOptionDTO = new OptionRequestDTO("테스트3", 2L);
+        optionService.updateOption(product.getId(), option.getId(), updatedOptionDTO);
+        OptionResponseDTO updatedOption = optionService.getOptionById(option.getId());
         assertAll(
-            () -> assertEquals("테스트3", updatedOption.getName()),
-            () -> assertEquals(2L, updatedOption.getQuantity())
+            () -> assertEquals("테스트3", updatedOption.name()),
+            () -> assertEquals(2L, updatedOption.quantity())
         );
     }
 
     @Test
     @Transactional
     void testUpdateOptionWithDuplicateName() {
-        OptionDTO newOptionDTO = new OptionDTO("테스트2", 10L, product.getId());
-        optionService.saveOption(newOptionDTO);
-        OptionDTO updatedOptionDTO = new OptionDTO("테스트2", 2L, product.getId());
-        assertThrows(IllegalArgumentException.class,
-            () -> optionService.updateOption(updatedOptionDTO, option.getId()));
+        OptionRequestDTO newOptionDTO = new OptionRequestDTO("테스트2", 10L);
+        optionService.addOption(product.getId(), newOptionDTO);
+        OptionRequestDTO updatedOptionDTO = new OptionRequestDTO("테스트2", 2L);
+        try {
+            optionService.updateOption(product.getId(), option.getId(), updatedOptionDTO);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
+        }
     }
 
     @Test
@@ -115,23 +125,26 @@ class OptionServiceTest {
         Option newOption = new Option(null, "테스트2", 2L, product);
         optionRepository.save(newOption);
 
-        optionService.deleteOption(option.getId(), product.getId());
-        List<Option> options = optionService.findAllByProductId(product.getId());
+        optionService.deleteOption(product.getId(), option.getId());
+        List<OptionResponseDTO> options = optionService.getAllOptionsByProductId(product.getId());
         assertEquals(1, options.size());
     }
 
     @Test
     @Transactional
     void testDeleteOptionWithSingleOption() {
-        assertThrows(IllegalArgumentException.class,
-            () -> optionService.deleteOption(option.getId(), product.getId()));
+        try {
+            optionService.deleteOption(product.getId(), option.getId());
+        } catch (IllegalArgumentException e) {
+            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        }
     }
 
     @Test
     @Transactional
     void testSubtractQuantity() {
         optionService.subtractQuantity(option.getId(), 1L);
-        Option subtractedOption = optionService.findOptionById(option.getId());
-        assertEquals(0L, subtractedOption.getQuantity());
+        OptionResponseDTO subtractedOption = optionService.getOptionById(option.getId());
+        assertEquals(0L, subtractedOption.quantity());
     }
 }

@@ -22,6 +22,9 @@ class ProductRepositoryTest {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private OptionRepository optionRepository;
+
     private Product product1;
     private Product product2;
     private Product savedProduct;
@@ -31,7 +34,7 @@ class ProductRepositoryTest {
 
     @BeforeEach
     public void setUp() {
-        category = new Category(1L, "교환권");
+        category = new Category(1L, "교환권", "#007700", "임시 이미지", "임시 설명");
         savedCategory = categoryRepository.save(category);
         product1 = new Product(1L, "상품", "100", savedCategory, "https://kakao");
         product2 = new Product(2L, "상품2", "200", savedCategory, "https://kakao2");
@@ -71,6 +74,7 @@ class ProductRepositoryTest {
 
     @Test
     void testDelete() {
+        optionRepository.deleteAllByProductId(savedProduct.getId());
         productRepository.deleteById(savedProduct.getId());
         boolean exists = productRepository.existsById(savedProduct.getId());
         assertThat(exists).isFalse();

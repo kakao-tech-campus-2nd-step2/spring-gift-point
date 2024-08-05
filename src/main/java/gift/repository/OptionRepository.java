@@ -10,7 +10,11 @@ public interface OptionRepository extends JpaRepository<Option, Long> {
 
     List<Option> findAllByProductId(Long productId);
 
+    List<Option> findAllByProductIdIn(List<Long> productIds);
+
     void deleteAllByProductIdIn(List<Long> productIds);
+
+    void deleteAllByProductId(Long productId);
 
     boolean existsByProductIdAndName(Long productId, String name);
 }

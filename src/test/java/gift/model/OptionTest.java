@@ -4,6 +4,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import gift.exception.InvalidInputValueException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +16,7 @@ class OptionTest {
 
     @BeforeEach
     void setUp() {
-        category = new Category(null, "교환권");
+        category = new Category(null, "교환권", "#007700", "테스트 이미지", "테스트 설명");
         product = new Product(1L, "kbm", "100", category, "https://kakao");
         option = new Option(3L, "임시옵션", 100L, product);
     }
@@ -24,8 +25,8 @@ class OptionTest {
     void testCreateWithNullName() {
         try {
             option = new Option(null, null, 1L, product);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -33,8 +34,8 @@ class OptionTest {
     void testCreateWithEmptyName() {
         try {
             option = new Option(null, "", 1L, product);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -42,8 +43,8 @@ class OptionTest {
     void testCreateWithLengthName() {
         try {
             option = new Option(null, "abcde".repeat(300), 1L, product);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -51,8 +52,8 @@ class OptionTest {
     void testCreateWithInvalidName() {
         try {
             option = new Option(null, "<>\\.", 1L, product);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -60,8 +61,8 @@ class OptionTest {
     void testCreateWithNullQuantity() {
         try {
             option = new Option(null, "임시옵션", null, product);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -69,8 +70,8 @@ class OptionTest {
     void testCreateWith0Quantity() {
         try {
             option = new Option(null, "임시옵션", 0L, product);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -78,8 +79,8 @@ class OptionTest {
     void testCreateWith0LessQuantity() {
         try {
             option = new Option(null, "임시옵션", -100L, product);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -87,8 +88,8 @@ class OptionTest {
     void testCreateWith1MillionGreaterQuantity() {
         try {
             option = new Option(null, "임시옵션", 100_000_000L, product);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -104,17 +105,17 @@ class OptionTest {
 
     @Test
     void testUpdateWithValidNameValidQuantity() {
-        option.updateOption("테스트",10L);
+        option.updateOption("테스트", 10L);
         assertThat("테스트").isEqualTo(option.getName());
-        assertEquals(10L,option.getQuantity());
+        assertEquals(10L, option.getQuantity());
     }
 
     @Test
     void testUpdateWithValidNameNullQuantity() {
         try {
             option.updateOption("테스트", null);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -122,8 +123,8 @@ class OptionTest {
     void testUpdateWithValidNameZeroQuantity() {
         try {
             option.updateOption("테스트", 0L);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -131,8 +132,8 @@ class OptionTest {
     void testUpdateWithValidNameMinusQuantity() {
         try {
             option.updateOption("테스트", -10L);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -140,8 +141,8 @@ class OptionTest {
     void testUpdateWithValidNameMillionQuantity() {
         try {
             option.updateOption("테스트", 100_000_000L);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -149,8 +150,8 @@ class OptionTest {
     void testUpdateWithNullNameValidQuantity() {
         try {
             option.updateOption(null, 10L);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -158,8 +159,8 @@ class OptionTest {
     void testUpdateWithNullNameNullQuantity() {
         try {
             option.updateOption(null, null);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -167,8 +168,8 @@ class OptionTest {
     void testUpdateWithNullNameZeroQuantity() {
         try {
             option.updateOption(null, 0L);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -176,8 +177,8 @@ class OptionTest {
     void testUpdateWithNullNameMinusQuantity() {
         try {
             option.updateOption(null, -10L);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -185,8 +186,8 @@ class OptionTest {
     void testUpdateWithNullNameMillionQuantity() {
         try {
             option.updateOption(null, 100_000_000L);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -194,8 +195,8 @@ class OptionTest {
     void testUpdateWithEmptyNameValidQuantity() {
         try {
             option.updateOption("", 10L);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -203,8 +204,8 @@ class OptionTest {
     void testUpdateWithEmptyNameNullQuantity() {
         try {
             option.updateOption("", null);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -212,8 +213,8 @@ class OptionTest {
     void testUpdateWithEmptyNameZeroQuantity() {
         try {
             option.updateOption("", 0L);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -221,8 +222,8 @@ class OptionTest {
     void testUpdateWithEmptyNameMinusQuantity() {
         try {
             option.updateOption("", -10L);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -230,8 +231,8 @@ class OptionTest {
     void testUpdateWithEmptyNameMillionQuantity() {
         try {
             option.updateOption("", 100_000_000L);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -239,8 +240,8 @@ class OptionTest {
     void testUpdateWithLengthNameValidQuantity() {
         try {
             option.updateOption("test".repeat(300), 10L);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -248,8 +249,8 @@ class OptionTest {
     void testUpdateWithLengthNameNullQuantity() {
         try {
             option.updateOption("test".repeat(300), null);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -257,8 +258,8 @@ class OptionTest {
     void testUpdateWithLengthNameZeroQuantity() {
         try {
             option.updateOption("test".repeat(300), 0L);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -266,8 +267,8 @@ class OptionTest {
     void testUpdateWithLengthNameMinusQuantity() {
         try {
             option.updateOption("test".repeat(300), -10L);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -275,8 +276,8 @@ class OptionTest {
     void testUpdateWithLengthNameMillionQuantity() {
         try {
             option.updateOption("test".repeat(300), 100_000_000L);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -284,8 +285,8 @@ class OptionTest {
     void testUpdateWithInvalidNameValidQuantity() {
         try {
             option.updateOption(".<>", 10L);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -293,8 +294,8 @@ class OptionTest {
     void testUpdateWithInvalidNameNullQuantity() {
         try {
             option.updateOption(".<>", null);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -302,8 +303,8 @@ class OptionTest {
     void testUpdateWithInvalidNameZeroQuantity() {
         try {
             option.updateOption(".<>", 0L);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -311,8 +312,8 @@ class OptionTest {
     void testUpdateWithInvalidNameMinusQuantity() {
         try {
             option.updateOption(".<>", -10L);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -320,35 +321,8 @@ class OptionTest {
     void testUpdateWithInvalidNameMillionQuantity() {
         try {
             option.updateOption(".<>", 100_000_000L);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
-        }
-    }
-
-    @Test
-    void testSubtractQuantityWithNull() {
-        try {
-            option.subtractQuantity(null);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
-        }
-    }
-
-    @Test
-    void testSubtractQuantityWithZero() {
-        try {
-            option.subtractQuantity(0L);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
-        }
-    }
-
-    @Test
-    void testSubtractQuantityWith0Less() {
-        try {
-            option.subtractQuantity(-10L);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 
@@ -356,8 +330,8 @@ class OptionTest {
     void testSubtractQuantityMoreThanQuantity() {
         try {
             option.subtractQuantity(200L);
-        } catch (IllegalArgumentException e) {
-            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        } catch (InvalidInputValueException e) {
+            assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
     }
 

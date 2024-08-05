@@ -20,7 +20,7 @@ class MemberRepositoryTest {
 
     @BeforeEach
     public void setUp() {
-        member = new Member(1L, "kbm", "kbm@kbm.com", "mbk", "user");
+        member = new Member(1L, "kbm@kbm.com", "mbk", "user");
         savedMember = memberRepository.save(member);
     }
 
@@ -29,7 +29,6 @@ class MemberRepositoryTest {
     void testSave() {
         assertAll(
             () -> assertThat(savedMember.getId()).isNotNull(),
-            () -> assertThat(savedMember.getName()).isEqualTo(member.getName()),
             () -> assertThat(savedMember.getEmail()).isEqualTo(member.getEmail()),
             () -> assertThat(savedMember.getPassword()).isEqualTo(member.getPassword()),
             () -> assertThat(savedMember.getRole()).isEqualTo(member.getRole())

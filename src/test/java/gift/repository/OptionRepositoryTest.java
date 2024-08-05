@@ -35,7 +35,7 @@ class OptionRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        category = new Category(1L, "교환권");
+        category = new Category(1L, "교환권", "#007700", "임시 이미지", "임시 설명");
         savedCategory = categoryRepository.save(category);
         product1 = new Product(null, "상품", "100", savedCategory, "https://kakao");
         savedProduct1 = productRepository.save(product1);

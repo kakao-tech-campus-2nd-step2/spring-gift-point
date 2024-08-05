@@ -1,7 +1,11 @@
 package gift.service;
 
-import gift.dto.CategoryDTO;
+import gift.dto.categoryDTO.CategoryRequestDTO;
+import gift.dto.categoryDTO.CategoryResponseDTO;
+import gift.exception.InvalidInputValueException;
+import gift.exception.NotFoundException;
 import gift.model.Category;
+import gift.model.Option;
 import gift.model.Product;
 import gift.repository.CategoryRepository;
 import gift.repository.OptionRepository;
@@ -29,54 +33,77 @@ public class CategoryService {
         this.optionRepository = optionRepository;
     }
 
-    public List<Category> findAllCategories() {
-        return categoryRepository.findAll();
+    public List<CategoryResponseDTO> getAllCategories() {
+        return categoryRepository.findAll().stream()
+            .map(category -> toDTO(category))
+            .toList();
     }
 
-    public Category findCategoryById(Long id) {
-        return categoryRepository.findById(id).orElse(null);
+    public CategoryResponseDTO getCategoryById(Long id) {
+        Category category = categoryRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException("카테고리를 찾을 수 없습니다."));
+        return toDTO(category);
     }
 
-    public Category findCategoryByName(String name) {
-        return categoryRepository.findByName(name);
+    public CategoryResponseDTO getCategoryByName(String name) {
+        Category category = categoryRepository.findByName(name);
+        return toDTO(category);
     }
 
     @Transactional
-    public void saveCategory(CategoryDTO categoryDTO) {
-        categoryRepository.save(toEntity(categoryDTO, null));
-    }
-
-    @Transactional
-    public void updateCategory(CategoryDTO categoryDTO, Long id) {
-        Category existingCategory = categoryRepository.findById(id).orElse(null);
-        if (existingCategory != null) {
-            existingCategory.updateName(categoryDTO.name());
-            categoryRepository.save(existingCategory);
+    public CategoryResponseDTO addCategory(CategoryRequestDTO categoryRequestDTO) {
+        if (categoryRepository.findByName(categoryRequestDTO.name()) != null) {
+            throw new InvalidInputValueException("중복된 카테고리 이름입니다.");
         }
+        Category category = requestToEntity(categoryRequestDTO, null);
+        category = categoryRepository.save(category);
+        return toDTO(category);
+    }
+
+    @Transactional
+    public CategoryResponseDTO updateCategory(Long id, CategoryRequestDTO categoryRequestDTO) {
+        Category existingCategory = categoryRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException("카테고리를 찾을 수 없습니다."));
+        existingCategory.updateCategory(categoryRequestDTO.name(), categoryRequestDTO.color(),
+            categoryRequestDTO.imageUrl(), categoryRequestDTO.description());
+        existingCategory = categoryRepository.save(existingCategory);
+        return toDTO(existingCategory);
     }
 
     @Transactional
     public void deleteCategory(Long id) {
-        Category category = categoryRepository.findById(id).orElse(null);
-        if (category != null) {
-            List<Product> products = productRepository.findAllByCategoryId(id);
-            if (!products.isEmpty()) {
-                List<Long> productIds = products.stream().map(Product::getId).toList();
-                wishlistRepository.deleteByProductIn(products);
-                optionRepository.deleteAllByProductIdIn(productIds);
-                productRepository.deleteAll(products);
-            }
-            categoryRepository.delete(category);
+        Category category = categoryRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException("카테고리를 찾을 수 없습니다."));
+        List<Product> products = productRepository.findAllByCategoryId(id);
+        if (!products.isEmpty()) {
+            List<Long> productIds = products.stream().map(Product::getId).toList();
+            List<Option> options = optionRepository.findAllByProductIdIn(productIds);
+            wishlistRepository.deleteByOptionIn(options);
+            optionRepository.deleteAllByProductIdIn(productIds);
+            productRepository.deleteAll(products);
         }
+        categoryRepository.delete(category);
     }
 
-    public static CategoryDTO toDTO(Category category) {
-        return new CategoryDTO(category.getName());
+    public static CategoryResponseDTO toDTO(Category category) {
+        return new CategoryResponseDTO(
+            category.getId(),
+            category.getName(),
+            category.getColor(),
+            category.getImageUrl(),
+            category.getDescription()
+        );
     }
 
-    public static Category toEntity(CategoryDTO categoryDTO, Long id) {
-        Category category = new Category(id, categoryDTO.name());
-        return category;
+    public Category requestToEntity(CategoryRequestDTO categoryRequestDTO, Long id) {
+        return new Category(id, categoryRequestDTO.name(), categoryRequestDTO.color(),
+            categoryRequestDTO.imageUrl(), categoryRequestDTO.description());
+    }
+
+    public Category responseToEntity(CategoryResponseDTO categoryResponseDTO) {
+        return new Category(categoryResponseDTO.id(), categoryResponseDTO.name(),
+            categoryResponseDTO.color(), categoryResponseDTO.imageUrl(),
+            categoryResponseDTO.description());
     }
 
 }

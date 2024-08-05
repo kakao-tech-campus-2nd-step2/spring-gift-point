@@ -3,11 +3,11 @@ package gift.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.config.KakaoProperties;
-import gift.dto.KakaoAccessTokenDTO;
-import gift.dto.KakaoUserInfoDTO;
-import gift.dto.MemberDTO;
-import gift.dto.OrderResponseDTO;
-import gift.dto.TemplateObjectDTO;
+import gift.dto.kakaoDTO.KakaoAccessTokenDTO;
+import gift.dto.kakaoDTO.KakaoUserInfoDTO;
+import gift.dto.memberDTO.MemberDTO;
+import gift.dto.orderDTO.OrderResponseDTO;
+import gift.dto.kakaoDTO.TemplateObjectDTO;
 import gift.model.Member;
 import gift.repository.MemberRepository;
 import gift.util.JwtUtil;
@@ -80,14 +80,14 @@ public class KakaoService {
             String name = email.split("@")[0];
             String password = generateRandomPassword();
             MemberDTO memberDTO = new MemberDTO(name, email, password);
-            member = new Member(null, memberDTO.name(), memberDTO.email(), memberDTO.password(),
+            member = new Member(null, memberDTO.email(), memberDTO.password(),
                 "user");
             memberRepository.save(member);
         }
         return member;
     }
 
-    public String generateToken(String email, String role) {
+    public String generateJwtToken(String email, String role) {
         String jwtToken = jwtUtil.generateToken(email, role);
         return jwtToken;
     }

@@ -6,7 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import gift.dto.CategoryDTO;
+import gift.dto.categoryDTO.CategoryRequestDTO;
+import gift.dto.categoryDTO.CategoryResponseDTO;
 import gift.model.Category;
 import gift.model.Product;
 import gift.model.Wishlist;
@@ -36,67 +37,75 @@ class CategoryServiceTest {
     @Autowired
     private WishlistRepository wishlistRepository;
 
-    private Category category;
+    private CategoryResponseDTO category;
     private Category testCategory;
     private Product testProduct;
 
     @BeforeEach
     void setUp() {
-        testCategory = new Category(null, "테스트");
+        testCategory = new Category(null, "테스트", "#770077", "테스트 이미지", "테스트 설명");
         testProduct = new Product(null, "상품1", "100", testCategory, "https://kakao");
         categoryRepository.save(testCategory);
         productRepository.save(testProduct);
     }
 
     @Test
-    void testFindAllCategories() {
-        List<Category> categories = categoryService.findAllCategories();
+    void testGetAllCategories() {
+        List<CategoryResponseDTO> categories = categoryService.getAllCategories();
         assertAll(
             () -> assertFalse(categories.isEmpty()),
-            () -> assertEquals("테스트", categories.get(2).getName())
+            () -> assertEquals("테스트", categories.get(2).name())
         );
     }
 
     @Test
-    void testFindCategoryById() {
-        category = categoryService.findCategoryById(testCategory.getId());
+    void testGetCategoryById() {
+        category = categoryService.getCategoryById(testCategory.getId());
         assertAll(
             () -> assertNotNull(category),
-            () -> assertEquals("테스트", category.getName())
+            () -> assertEquals("테스트", category.name())
         );
     }
 
     @Test
-    void testFindCategoryByName() {
-        category = categoryService.findCategoryByName(testCategory.getName());
+    void testGetCategoryByName() {
+        category = categoryService.getCategoryByName(testCategory.getName());
         assertAll(
             () -> assertNotNull(category),
-            () -> assertEquals("테스트", category.getName())
+            () -> assertEquals("테스트", category.name())
         );
     }
 
     @Test
     @Transactional
-    void testSaveCategory() {
-        CategoryDTO newCategoryDTO = new CategoryDTO("new테스트");
-        categoryService.saveCategory(newCategoryDTO);
+    void testAddCategory() {
+        CategoryRequestDTO categoryRequestDTO = new CategoryRequestDTO("new테스트", "#770077",
+            "테스트 이미지2", "테스트 설명2");
+        categoryService.addCategory(categoryRequestDTO);
         Category savedCategory = categoryRepository.findByName("new테스트");
         assertAll(
             () -> assertNotNull(savedCategory),
-            () -> assertEquals("new테스트", savedCategory.getName())
+            () -> assertEquals("new테스트", savedCategory.getName()),
+            () -> assertEquals("#770077", savedCategory.getColor()),
+            () -> assertEquals("테스트 이미지2", savedCategory.getImageUrl()),
+            () -> assertEquals("테스트 설명2", savedCategory.getDescription())
         );
     }
 
     @Test
     @Transactional
     void testUpdateCategory() {
-        CategoryDTO updatedCategoryDTO = new CategoryDTO("update테스트");
-        categoryService.updateCategory(updatedCategoryDTO, testCategory.getId());
+        CategoryRequestDTO categoryRequestDTO = new CategoryRequestDTO("update테스트", "#770077",
+            "테스트 이미지2", "테스트 설명2");
+        categoryService.updateCategory(testCategory.getId(), categoryRequestDTO);
 
         Category updatedCategory = categoryRepository.findById(testCategory.getId()).get();
         assertAll(
             () -> assertNotNull(updatedCategory),
-            () -> assertEquals("update테스트", updatedCategory.getName())
+            () -> assertEquals("update테스트", updatedCategory.getName()),
+            () -> assertEquals("#770077", updatedCategory.getColor()),
+            () -> assertEquals("테스트 이미지2", updatedCategory.getImageUrl()),
+            () -> assertEquals("테스트 설명2", updatedCategory.getDescription())
         );
     }
 
