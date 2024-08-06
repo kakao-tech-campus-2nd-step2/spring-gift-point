@@ -40,4 +40,8 @@ public class Wish extends BaseEntity {
             throw new WishException(WishErrorCode.NOT_FOUND);
         }
     }
+
+    public void updateProduct(Product product) {
+        this.product = product;
+    }
 }

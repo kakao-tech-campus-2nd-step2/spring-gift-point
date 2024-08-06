@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Points</title>
+</head>
+<body>
+<div class="header-container">
+    <h1>Manage Points</h1>
+</div>
+<table class="member-table">
+    <thead>
+    <tr style="background-color:lightgray">
+        <th>id</th>
+        <th>email</th>
+        <th>name</th>
+        <th>role</th>
+        <th>point</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="member: ${members.content}">
+        <td><span th:text="${member.id}"></span></td>
+        <td><span th:text="${member.email}"></span></td>
+        <td><span th:text="${member.name}"></span></td>
+        <td><span th:text="${member.role}"></span></td>
+        <td><span th:text="${member.point}"></span>></td>
+        <td>
+            <a th:href="@{/admin/points/add/{id}(id = ${member.id})}">포인트 충전</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div>
+        <span th:if="${members.hasPrevious()}">
+            <a th:href="@{/admin/points(pageNo=${members.number - 1}, pageSize=${members.size})}">Previous</a>
+        </span>
+    <span th:each="i : ${#numbers.sequence(0, members.totalPages - 1)}">
+            <a th:href="@{/admin/points(pageNo=${i}, pageSize=${members.size})}"
+               th:text="${i + 1}"
+               th:classappend="${i == members.number} ? 'current' : ''">1</a>
+        </span>
+    <span th:if="${members.hasNext()}">
+            <a th:href="@{/admin/points(pageNo=${members.number + 1}, pageSize=${members.size})}">Next</a>
+        </span>
+</div>
+<div>
+    <a href="/admin/products"> 제품 리스트로 가기</a>
+</div>
+</body>
+</html>

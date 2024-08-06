@@ -28,4 +28,8 @@ public class MemberService {
         Member member = memberRepository.save(memberRequest.toEntity());
         return member.getId();
     }
+
+    public Member getMemberById(Long id) {
+        return memberRepository.findById(id).orElseThrow();
+    }
 }

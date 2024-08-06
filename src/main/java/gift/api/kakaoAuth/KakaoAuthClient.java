@@ -3,7 +3,6 @@ package gift.api.kakaoAuth;
 import gift.api.KakaoProperties;
 import java.net.URI;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;

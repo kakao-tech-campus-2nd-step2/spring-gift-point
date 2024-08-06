@@ -3,7 +3,8 @@ package gift.member;
 import org.springframework.http.HttpStatus;
 
 public enum MemberErrorCode {
-    FAILURE_LOGIN(HttpStatus.FORBIDDEN, "아이디나 비밀번호가 틀렸습니다.");
+    FAILURE_LOGIN(HttpStatus.FORBIDDEN, "아이디나 비밀번호가 틀렸습니다."),
+    NOT_ENOUGH_POINT(HttpStatus.BAD_REQUEST, "point 가 부족합니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

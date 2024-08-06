@@ -23,7 +23,8 @@ public class AcceptanceTest {
     void cors() throws Exception {
         mockMvc.perform(
                 options("/oauth/kakao/login")
-                    .header(HttpHeaders.ORIGIN, "http://kakaogift.s3-website.ap-northeast-2.amazonaws.com/")
+                    .header(HttpHeaders.ORIGIN,
+                        "http://kakaogift.s3-website.ap-northeast-2.amazonaws.com/")
                     .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "GET")
             )
             .andExpect(status().isOk())

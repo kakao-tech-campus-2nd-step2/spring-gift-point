@@ -1,6 +1,8 @@
 package gift.member.model;
 
+import gift.common.exception.MemberException;
 import gift.common.model.BaseEntity;
+import gift.member.MemberErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 
@@ -15,6 +17,8 @@ public class Member extends BaseEntity {
     private String name;
     @Column(name = "role")
     private String role;
+    @Column(name = "point")
+    private Integer point;
 
     protected Member() {
 
@@ -34,6 +38,14 @@ public class Member extends BaseEntity {
         this.role = role;
     }
 
+    public Member(Long id, String email, String name, String role, Integer point) {
+        this.setId(id);
+        this.email = email;
+        this.name = name;
+        this.role = role;
+        this.point = point;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -50,7 +62,25 @@ public class Member extends BaseEntity {
         return role;
     }
 
+    public Integer getPoint() {
+        return point;
+    }
+
     public boolean matchPassword(String password) {
         return this.password.equals(password);
+    }
+
+    public void usePoint(Integer point) throws MemberException {
+        if (this.point < point) {
+            throw new MemberException(MemberErrorCode.NOT_ENOUGH_POINT);
+        }
+    }
+
+    public void accumulatePoint(int accumulatedPoint) {
+        point = point + accumulatedPoint;
+    }
+
+    public void addPoint(Integer point) {
+        this.point = this.point + point;
     }
 }

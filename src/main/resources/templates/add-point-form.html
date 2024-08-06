@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>포인트 페이지</title>
+</head>
+<body>
+<h1>포인트 페이지</h1>
+<form th:action="@{/admin/points/add}"
+      th:object="${create}" method="post">
+    <h3>포인트 충전</h3>
+    <p>ID: <span th:text="${member.id}"></span></p>
+    <p>Email: <span th:text="${member.email}"></span></p>
+    <p>Name: <span th:text="${member.name}"></span></p>
+    <p>충전금: <input type="number" th:field="*{point}"></p>
+    <p>
+        <button type="submit">저장</button>
+    </p>
+</form>
+<a href="/admin/points">뒤로 가기</a>
+</body>
+</html>

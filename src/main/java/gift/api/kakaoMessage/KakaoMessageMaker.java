@@ -2,7 +2,7 @@ package gift.api.kakaoMessage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.order.Order;
+import gift.order.model.Order;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Component;

@@ -32,7 +32,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public Page<ProductResponse> getAllProducts(Pageable pageable, Long categoryId) {
-        if(categoryId == null) {
+        if (categoryId == null) {
             return productRepository.findAll(pageable)
                 .map(ProductResponse::from);
         }
