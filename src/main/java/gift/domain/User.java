@@ -46,6 +46,10 @@ public class User extends BaseEntity{
         return token;
     }
 
+    public int getPoint(){
+        return point;
+    }
+
     public void insertToken(String token) {
         this.token = token;
     }

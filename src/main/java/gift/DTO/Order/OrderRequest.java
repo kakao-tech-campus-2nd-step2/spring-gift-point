@@ -5,15 +5,17 @@ public class OrderRequest {
     private int quantity;
     private String message;
     private Long productId;
+    private int point;
 
     public OrderRequest() {
     }
 
-    public OrderRequest(Long optionId, int quantity, String message, Long productId) {
+    public OrderRequest(Long optionId, int quantity, String message, Long productId, int point) {
         this.optionId = optionId;
         this.quantity = quantity;
         this.message = message;
         this.productId = productId;
+        this.point = point;
     }
 
     public Long getOptionId() {
@@ -30,5 +32,9 @@ public class OrderRequest {
 
     public Long getProductId() {
         return productId;
+    }
+
+    public int getPoint() {
+        return point;
     }
 }

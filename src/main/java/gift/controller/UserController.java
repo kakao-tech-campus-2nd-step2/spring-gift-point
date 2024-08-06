@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.DTO.PointDTO;
 import gift.exception.AlreadyExistException;
 import gift.DTO.Token;
 import gift.DTO.User.UserRequest;
@@ -90,5 +91,15 @@ public class UserController {
     ){
         userService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    /*
+     * 유저 포인트 조회
+     */
+    @GetMapping("/api/members/point")
+    public ResponseEntity<PointDTO> readPoint(
+            @AuthenticateMember UserResponse user
+    ){
+        PointDTO pointDTO = new PointDTO(user.getPoint());
+        return new ResponseEntity<>(pointDTO, HttpStatus.OK);
     }
 }
