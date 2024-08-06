@@ -11,8 +11,9 @@ public record OrderRequestDto(
     Long optionId,
     @Min(1)
     @Max(99999999)
-    int quantity,
+    Integer quantity,
     @NotBlank
-    String message
+    String message,
+    Integer point
 ) {
 }

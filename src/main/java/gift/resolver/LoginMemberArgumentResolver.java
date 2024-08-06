@@ -2,7 +2,6 @@ package gift.resolver;
 
 import gift.annotation.LoginMember;
 import gift.service.MemberService;
-import gift.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -13,8 +12,11 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
-    @Autowired
-    private MemberService memberService;
+    private final MemberService memberService;
+
+    public LoginMemberArgumentResolver(MemberService memberService) {
+        this.memberService = memberService;
+    }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {

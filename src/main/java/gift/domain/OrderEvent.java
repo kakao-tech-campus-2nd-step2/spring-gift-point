@@ -1,22 +1,26 @@
 package gift.domain;
 
-import gift.domain.Member;
-import gift.dto.OrderRequestDto;
 
 public class OrderEvent {
-    private final OrderRequestDto orderRequestDto;
+    private final Long orderId;
     private final Member member;
+    private final Long productId;
 
-    public OrderEvent(OrderRequestDto orderRequestDto, Member member) {
-        this.orderRequestDto = orderRequestDto;
+    public OrderEvent(Long orderId, Member member, Long productId) {
+        this.orderId = orderId;
         this.member = member;
+        this.productId = productId;
     }
 
-    public OrderRequestDto getOrderRequestDto() {
-        return orderRequestDto;
+    public Long getOrderId() {
+        return orderId;
     }
 
     public Member getMember() {
         return member;
+    }
+
+    public Long getProductId() {
+        return productId;
     }
 }
