@@ -1,5 +1,7 @@
 package gift.service;
 
+import gift.common.exception.unauthorized.TokenExpiredException;
+import gift.common.exception.unauthorized.TokenNotFoundException;
 import gift.dto.KakaoAccessToken;
 import gift.dto.KakaoProperties;
 import gift.dto.KakaoUserInfo;
@@ -22,13 +24,16 @@ public class KakaoService {
     private final KakaoProperties kakaoProperties;
     private final KakaoApiClient kakaoApiClient;
     private final RestTemplate restTemplate = new RestTemplate();
+    private final MemberService memberService;
 
     private final static String KAKAO_AUTH_URI = "https://kauth.kakao.com";
     private final static String KAKAO_TOKEN_URI = KAKAO_AUTH_URI + "/oauth/token";
 
-    public KakaoService(KakaoProperties kakaoProperties, KakaoApiClient kakaoApiClient) {
+    public KakaoService(KakaoProperties kakaoProperties, KakaoApiClient kakaoApiClient,
+        MemberService memberService) {
         this.kakaoProperties = kakaoProperties;
         this.kakaoApiClient = kakaoApiClient;
+        this.memberService = memberService;
     }
 
     public String getKakaoLogin() {
@@ -38,6 +43,18 @@ public class KakaoService {
     }
     // https://kauth.kakao.com/oauth/authorize?scope=talk_message&response_type=code
     // &redirect_uri={kakaoRedirectUrl}&client_id={kakaoClientId}
+
+    public String handleKakaoCallback(String code) {
+        KakaoAccessToken tokenResponse = getAccessToken(code);
+        if (tokenResponse == null || tokenResponse.getAccessToken() == null) {
+            throw new TokenNotFoundException();
+        }
+        KakaoUserInfo userInfo = getUserInfo(tokenResponse.getAccessToken());
+
+        String kakaoEmail = userInfo.getId() + "@kakao.com"; // 사용자 ID 기반 임시 이메일 생성
+
+        return memberService.processKakaoLogin(kakaoEmail, tokenResponse.getRefreshToken());
+    }
 
     public KakaoAccessToken getAccessToken(String code) {
         String url = KAKAO_AUTH_URI + "/oauth/token";
@@ -79,8 +96,8 @@ public class KakaoService {
             }
 
             return response.getBody();
-        } catch (RestClientException e) {
-            throw new RuntimeException("Error while refreshing access token", e);
+        } catch (TokenExpiredException e) {
+            throw new TokenExpiredException();
         }
     }
 

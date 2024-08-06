@@ -5,6 +5,7 @@ public enum ErrorCode {
     REQUEST_VALIDATION(-40001, "요청 시 만족해야하는 제약 조건을 위반함"),
     NO_OPTION_PROVIDED(-40002, "상품의 옵션이 하나 이상이 아님"),
     OVER_STOCK_QUANTITY(-40003, "주문 생성 시 재고보다 많은 수량을 입력함"),
+    INVALID_POINT_AMOUNT(-40004,"포인트 사용량이 잔여 포인트 또는 주문 금액보다 큼"),
 
     // 401 UNAUTHORIZED
     TOKEN_NOT_FOUND(-40101, "토큰을 찾을 수 없음"),

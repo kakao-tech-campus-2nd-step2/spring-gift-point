@@ -17,15 +17,18 @@ public class Order {
 
     private Long optionId;
     private int quantity;
+    private Long pointAmount;
     private LocalDateTime orderDateTime;
     private String message;
 
     public Order() {
     }
 
-    public Order(Long optionId, int quantity, LocalDateTime orderDateTime, String message) {
+    public Order(Long optionId, int quantity, Long pointAmount, LocalDateTime orderDateTime,
+        String message) {
         this.optionId = optionId;
         this.quantity = quantity;
+        this.pointAmount = pointAmount;
         this.orderDateTime = orderDateTime;
         this.message = message;
     }
@@ -40,6 +43,10 @@ public class Order {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public Long getPointAmount() {
+        return pointAmount;
     }
 
     public LocalDateTime getOrderDateTime() {

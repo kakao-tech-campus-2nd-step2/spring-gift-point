@@ -26,14 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class KakaoApiController {
 
     private final KakaoService kakaoService;
-    private final MemberService memberService;
-    private final JwtUtil jwtUtil;
 
-    public KakaoApiController(KakaoService kakaoService, MemberService memberService,
-        JwtUtil jwtUtil) {
+    public KakaoApiController(KakaoService kakaoService) {
         this.kakaoService = kakaoService;
-        this.memberService = memberService;
-        this.jwtUtil = jwtUtil;
     }
 
     @GetMapping("/login")
@@ -55,32 +50,8 @@ public class KakaoApiController {
             throw new TokenNotFoundException();
         }
 
-        KakaoAccessToken tokenResponse = kakaoService.getAccessToken(code);
-        if (tokenResponse == null || tokenResponse.getAccessToken() == null) {
-            throw new TokenNotFoundException();
-        }
-        KakaoUserInfo userInfo = kakaoService.getUserInfo(tokenResponse.getAccessToken());
-
-        String kakaoEmail = userInfo.getId() + "@kakao.com"; // 사용자 ID 기반 임시 이메일 생성
-
-        // 사용자 정보로 회원 가입 또는 로그인 처리
-        Optional<Member> existingMember = memberService.findByEmail(kakaoEmail);
-
-        if (existingMember.isPresent()) {
-            // 기존 회원 -> 로그인 처리
-            Member member = existingMember.get();
-            member.setRefreshToken(tokenResponse.getRefreshToken());
-            memberService.registerNewMember(member);
-            String jwtToken = jwtUtil.createToken(member.getEmail());
-            return ResponseEntity.ok("Bearer " + jwtToken);
-        } else {
-            // 신규 회원 -> 회원 가입 처리
-            Member newMember = new Member(kakaoEmail, "");
-            newMember.setRefreshToken(tokenResponse.getRefreshToken());
-            memberService.registerNewMember(newMember);
-            String jwtToken = jwtUtil.createToken(newMember.getEmail());
-            return ResponseEntity.ok("Bearer " + jwtToken);
-        }
+        String jwtToken = kakaoService.handleKakaoCallback(code);
+        return ResponseEntity.ok("Bearer " + jwtToken);
     }
 
     @GetMapping("/user")

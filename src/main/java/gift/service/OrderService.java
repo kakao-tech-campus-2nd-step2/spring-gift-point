@@ -3,6 +3,7 @@ package gift.service;
 import gift.common.exception.badRequest.OverStockQuantityException;
 import gift.common.exception.notFound.OptionNotFoundException;
 import gift.common.exception.unauthorized.TokenErrorException;
+import gift.common.exception.unauthorized.TokenExpiredException;
 import gift.common.exception.unauthorized.TokenNotFoundException;
 import gift.common.util.JwtUtil;
 import gift.dto.KakaoAccessToken;
@@ -27,38 +28,50 @@ public class OrderService {
     private final OptionRepository optionRepository;
     private final WishRepository wishRepository;
     private final OrderMessageService orderMessageService;
-    private final JwtUtil jwtUtil;
     private final MemberRepository memberRepository;
     private final KakaoService kakaoService;
 
     public OrderService(OrderRepository orderRepository, OptionRepository optionRepository,
-        WishRepository wishRepository, OrderMessageService orderMessageService, JwtUtil jwtUtil,
+        WishRepository wishRepository, OrderMessageService orderMessageService,
         MemberRepository memberRepository, KakaoService kakaoService) {
         this.orderRepository = orderRepository;
         this.optionRepository = optionRepository;
         this.wishRepository = wishRepository;
         this.orderMessageService = orderMessageService;
-        this.jwtUtil = jwtUtil;
         this.memberRepository = memberRepository;
         this.kakaoService = kakaoService;
     }
 
     @Transactional
     public OrderResponse addOrder(OrderRequest orderRequest, String token) {
-        String email = jwtUtil.extractEmail(token);
+        String email = JwtUtil.extractEmail(token);
         Member member = memberRepository.findByEmail(email)
             .orElseThrow(TokenErrorException::new);
 
         Option option = validateAndUpdateOption(orderRequest);
+
+        Long usedPoints = orderRequest.getPointAmount();
+        Long remainingPoints = member.getPoints() - usedPoints;
+        member.setPoints(remainingPoints);
+
+        int earnedPoints = calculateEarnedPoints(option.getProduct().getPrice(),
+            orderRequest.getQuantity());
+        member.setPoints(member.getPoints() + earnedPoints);
+
+        memberRepository.save(member);
+
         Order order = createOrder(orderRequest, option);
         wishRepository.deleteByOptionId(orderRequest.getOptionId());
 
-        // 새로운 Access Token 발급
-        KakaoAccessToken newAccessToken = kakaoService.refreshAccessToken(member.getRefreshToken());
-        member.setRefreshToken(newAccessToken.getRefreshToken());
-        memberRepository.save(member);
+        try {
+            KakaoAccessToken newAccessToken = kakaoService.refreshAccessToken(member.getRefreshToken());
+            member.setRefreshToken(newAccessToken.getRefreshToken());
+            memberRepository.save(member);
 
-        orderMessageService.sendOrderMessage(order, newAccessToken.getAccessToken());
+            orderMessageService.sendOrderMessage(order, newAccessToken.getAccessToken());
+        } catch (TokenExpiredException e) {
+            throw new TokenExpiredException();
+        }
 
         return getOrderResponse(order);
     }
@@ -76,9 +89,13 @@ public class OrderService {
             throw new TokenNotFoundException();
         }
         String authToken = token.substring(7);
-        String email = jwtUtil.extractEmail(authToken);
+        String email = JwtUtil.extractEmail(authToken);
         memberRepository.findByEmail(email)
             .orElseThrow(TokenErrorException::new);
+    }
+
+    private int calculateEarnedPoints(int price, int quantity) {
+        return (int) (price * quantity * 0.03);
     }
 
     private Option validateAndUpdateOption(OrderRequest orderRequest) {
@@ -95,6 +112,7 @@ public class OrderService {
 
     private Order createOrder(OrderRequest orderRequest, Option option) {
         Order order = new Order(orderRequest.getOptionId(), orderRequest.getQuantity(),
+            orderRequest.getPointAmount(),
             LocalDateTime.now(), orderRequest.getMessage());
         order = orderRepository.save(order);
         return order;
