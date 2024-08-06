@@ -56,13 +56,6 @@ public class Member extends BaseEntity {
         return point;
     }
 
-    public void addPoint(long amount) {
-        if (amount < 0) {
-            throw new NegativePointException(ErrorMessage.NEGATIVE_POINT_MSG);
-        }
-        point += amount;
-    }
-
     public boolean isCorrectPassword(String password) {
         return this.password.equals(password);
     }
@@ -78,6 +71,13 @@ public class Member extends BaseEntity {
         return wishlist.stream().anyMatch(product ->
             product.getId().equals(productId)
         );
+    }
+
+    public void addPoint(long amount) {
+        if (amount < 0) {
+            throw new NegativePointException(ErrorMessage.NEGATIVE_POINT_MSG);
+        }
+        point += amount;
     }
 
     public void subtractPoint(long usedPoint) {
