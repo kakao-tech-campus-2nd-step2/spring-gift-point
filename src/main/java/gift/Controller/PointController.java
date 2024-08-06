@@ -27,7 +27,7 @@ public class PointController {
   public ResponseEntity addPoint(@RequestBody RequestPointDto requestPointDto,
     @LoginUser MemberDto memberDto) throws IllegalAccessException {
     pointService.addPoint(requestPointDto, memberDto);
-    return ResponseEntity.ok().build();
+    return ResponseEntity.noContent().build();
   }
 
   @GetMapping
