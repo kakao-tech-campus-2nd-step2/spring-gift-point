@@ -52,5 +52,18 @@ public class OrderService {
             jpaWishRepository.deleteByMemberIdAndProductId(member.getId(), product.getId());
         }
 
+        usePoint(product.getPrice()*orderRequest.getQuantity(),member);
+
+    }
+
+    private int usePoint(int price, Member member){
+        int memberPoint = member.getPoint();
+
+        if(memberPoint < price){
+            member.useAllPoint();
+            return price - memberPoint;
+        }
+        member.usePoint(price);
+        return 0;
     }
 }

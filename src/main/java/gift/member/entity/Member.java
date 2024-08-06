@@ -83,4 +83,19 @@ public class Member {
         return wishList;
     }
 
+    public Integer getPoint() {
+        return point;
+    }
+
+    public void usePoint(Integer point) {
+        this.point -= point;
+        if(this.point < 0){
+            this.point = 0;
+        }
+    }
+
+    public void useAllPoint(){
+        this.point = 0;
+    }
+
 }
