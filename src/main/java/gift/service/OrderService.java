@@ -1,5 +1,7 @@
 package gift.service;
 
+import static gift.constants.OrderConstants.*;
+
 import gift.dto.betweenClient.member.MemberDTO;
 import gift.dto.betweenClient.order.OrderRequestDTO;
 import gift.dto.betweenClient.order.OrderResponseDTO;
@@ -14,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class OrderService {
 
-    private static final double DISCOUNT_RATIO = 0.9;
 
     private final KakaoTokenService kakaoTokenService;
     private final MemberService memberService;
@@ -54,7 +55,7 @@ public class OrderService {
     }
 
     private Integer discountFilter(Integer price){
-        if(price >= 50000)
+        if(price >= DISCOUNT_THRESHOLD)
             price = (int) (price * DISCOUNT_RATIO);
 
         return price;
