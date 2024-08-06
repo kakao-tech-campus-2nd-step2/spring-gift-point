@@ -18,7 +18,7 @@ public class JpaMemberTest {
     @Test
     @DisplayName("멤버 저장 테스트")
     void saveMember() {
-        Member member = new Member(1L, "asdfasdf@naver.com", "asdfasdf");
+        Member member = new Member(1L, "asdfasdf@naver.com", "asdfasdf", 0);
         Member real = memberRepository.save(member);
         assertAll(
                 () -> assertThat(real.getId()).isNotNull(),
@@ -31,7 +31,7 @@ public class JpaMemberTest {
     @DisplayName("멤버를 이메일로 조회")
     void memberRepoFindByEmail() {
         String expected = "asdfasdf@naver.com";
-        Member member = new Member(1L, expected, "asdfasdf");
+        Member member = new Member(1L, expected, "asdfasdf", 0);
         memberRepository.save(member);
         String actual = memberRepository.findByEmail(expected).get().getEmail();
         assertThat(actual).isEqualTo(expected);

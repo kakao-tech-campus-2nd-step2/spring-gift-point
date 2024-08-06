@@ -12,6 +12,8 @@ public class Member {
     @Column(nullable = false)
     private String password;
     private String accessToken;
+    @Embedded
+    private Point point;
 
     public Member() {
     }
@@ -19,18 +21,21 @@ public class Member {
     public Member(String email, String password) {
         this.email = email;
         this.password = password;
+        this.point = new Point(0);
     }
 
     public Member(String email, String password, String accessToken) {
         this.email = email;
         this.password = password;
         this.accessToken = accessToken;
+        this.point = new Point(0);
     }
 
-    public Member(Long id, String email, String password) {
+    public Member(Long id, String email, String password, Point point) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.point = point;
     }
 
     public Long getId() {
@@ -56,4 +61,10 @@ public class Member {
     public void updateAccessToken(String accessToken) {
         this.accessToken = accessToken;
     }
+
+    public Point getPoint() {
+        return point;
+    }
+
+
 }

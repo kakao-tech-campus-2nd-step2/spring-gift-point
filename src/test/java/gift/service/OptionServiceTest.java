@@ -104,7 +104,7 @@ public class OptionServiceTest {
     @Test
     @DisplayName("subtractQuantity 성공 테스트")
     public void testSubtractQuantity_Success() {
-        OrderRequest request = new OrderRequest(1L, 5L, "asdf");
+        OrderRequest request = new OrderRequest(1L, 5L, "asdf", 0);
 
         optionService.subtractQuantity(request);
 
@@ -114,7 +114,7 @@ public class OptionServiceTest {
     @Test
     @DisplayName("subtractQuantity 수량 부족 테스트")
     public void testSubtractQuantity_OutOfStock() {
-        OrderRequest request = new OrderRequest(1L, 20L, "asdf");
+        OrderRequest request = new OrderRequest(1L, 20L, "asdf", 0);
 
         assertThrows(OutOfStockException.class, () -> optionService.subtractQuantity(request));
     }

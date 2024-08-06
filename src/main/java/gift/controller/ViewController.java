@@ -15,4 +15,9 @@ public class ViewController {
     public String wishlist() {
         return "wish";
     }
+
+    @GetMapping("/point")
+    public String point() {
+        return "point";
+    }
 }
