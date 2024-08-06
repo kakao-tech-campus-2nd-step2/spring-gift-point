@@ -1,6 +1,6 @@
 package gift.config;
 
-import gift.interceptor.LoggingInterceptor;
+import gift.common.interceptor.LoggingInterceptor;
 import java.time.Duration;
 import org.springframework.boot.web.client.ClientHttpRequestFactories;
 import org.springframework.boot.web.client.ClientHttpRequestFactorySettings;

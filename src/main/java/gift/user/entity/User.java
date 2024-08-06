@@ -1,7 +1,7 @@
 package gift.user.entity;
 
-import gift.exception.CustomException;
-import gift.exception.ErrorCode;
+import gift.common.exception.CustomException;
+import gift.common.exception.ErrorCode;
 import gift.wish.entity.Wish;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -20,11 +20,11 @@ import java.util.regex.Pattern;
 @Entity
 @Table(
     name = "users",
-    uniqueConstraints = @UniqueConstraint(columnNames = {"email"}, name = "uk_users" )
+    uniqueConstraints = @UniqueConstraint(columnNames = {"email"}, name = "uk_users")
 )
 public class User {
 
-    private static final Pattern EMAIL_PATTERN = Pattern.compile("^(.+)@(\\S+)$" );
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^(.+)@(\\S+)$");
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +36,10 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, columnDefinition = "boolean default false" )
+    @Column(nullable = false, columnDefinition = "integer default 0")
+    private Integer point;
+
+    @Column(nullable = false, columnDefinition = "boolean default false")
     private Boolean isKakao;
 
     @Column(nullable = true, length = 100)
@@ -52,6 +55,7 @@ public class User {
         validateEmail(email);
         this.email = email;
         this.password = password;
+        this.point = 0;
         this.isKakao = Objects.requireNonNullElse(isKakao, Boolean.FALSE);
         this.userRoles = userRoles;
     }
@@ -67,8 +71,16 @@ public class User {
         return email;
     }
 
+    public Integer getPoint() {
+        return point;
+    }
+
     public String getAccessToken() {
         return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     public Set<UserRole> getRoles() {
@@ -79,12 +91,23 @@ public class User {
         return wishes;
     }
 
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
     public void changePassword(String password) {
         this.password = password;
+    }
+
+    public void usePoint(Integer point) {
+        if (this.point < point) {
+            throw new CustomException(ErrorCode.INVALID_POINT_USE);
+        }
+
+        this.point -= point;
+    }
+
+    public void chargePoint(Integer point) {
+        if (point < 0) {
+            throw new CustomException(ErrorCode.INVALID_POINT_CHARGE);
+        }
+        this.point += point;
     }
 
     private void validateEmail(String email) {

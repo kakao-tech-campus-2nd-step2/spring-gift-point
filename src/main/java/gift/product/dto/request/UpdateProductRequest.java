@@ -1,7 +1,7 @@
 package gift.product.dto.request;
 
 
-import gift.validation.annotation.RestrictedKeyword;
+import gift.common.validation.annotation.RestrictedKeyword;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

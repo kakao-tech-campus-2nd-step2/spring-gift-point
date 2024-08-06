@@ -1,7 +1,7 @@
 package gift.product.option.entity;
 
-import gift.exception.CustomException;
-import gift.exception.ErrorCode;
+import gift.common.exception.CustomException;
+import gift.common.exception.ErrorCode;
 import gift.product.entity.Product;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -70,6 +70,10 @@ public class Option {
 
     public Long getProductId() {
         return product.getId();
+    }
+
+    public Integer getPrice() {
+        return product.getPrice();
     }
 
     public void initProduct(Product product) {

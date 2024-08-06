@@ -1,7 +1,7 @@
 package gift.product.category.service;
 
-import gift.exception.CustomException;
-import gift.exception.ErrorCode;
+import gift.common.exception.CustomException;
+import gift.common.exception.ErrorCode;
 import gift.product.category.dto.request.CreateCategoryRequest;
 import gift.product.category.dto.request.UpdateCategoryRequest;
 import gift.product.category.dto.response.CategoryResponse;

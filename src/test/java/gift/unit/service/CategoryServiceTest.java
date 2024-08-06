@@ -8,7 +8,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.times;
 
-import gift.exception.CustomException;
+import gift.common.exception.CustomException;
 import gift.product.category.dto.request.CreateCategoryRequest;
 import gift.product.category.dto.request.UpdateCategoryRequest;
 import gift.product.category.dto.response.CategoryResponse;

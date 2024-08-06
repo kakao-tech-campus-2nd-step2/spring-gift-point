@@ -7,7 +7,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.any;
 
-import gift.exception.CustomException;
+import gift.common.exception.CustomException;
 import gift.product.category.entity.Category;
 import gift.product.category.repository.CategoryJpaRepository;
 import gift.product.dto.request.CreateProductRequest;

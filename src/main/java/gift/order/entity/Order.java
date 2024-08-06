@@ -1,6 +1,7 @@
 package gift.order.entity;
 
 import gift.common.entity.BaseEntity;
+import gift.order.dto.PaymentInfo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,10 +26,26 @@ public class Order extends BaseEntity {
     @Column(nullable = false)
     private String message;
 
-    public Order(Long optionId, Integer quantity, String message) {
-        this.optionId = optionId;
-        this.quantity = quantity;
-        this.message = message;
+    @Column(nullable = false)
+    private Integer totalPrice;
+
+    @Column(nullable = false)
+    private Integer payedPrice;
+
+    @Column(nullable = false)
+    private Integer discountedPrice;
+
+    @Column(nullable = false)
+    private Integer accumulatedPoint;
+
+    public Order(PaymentInfo paymentInfo) {
+        this.optionId = paymentInfo.optionId();
+        this.quantity = paymentInfo.quantity();
+        this.message = paymentInfo.message();
+        this.totalPrice = paymentInfo.totalPrice();
+        this.payedPrice = paymentInfo.payedPrice();
+        this.discountedPrice = paymentInfo.discountedPrice();
+        this.accumulatedPoint = paymentInfo.accumulatedPrice();
     }
 
     protected Order() {
@@ -38,15 +55,16 @@ public class Order extends BaseEntity {
         return id;
     }
 
-    public Long getOptionId() {
-        return optionId;
+    public Integer getTotalPrice() {
+        return totalPrice;
     }
 
-    public Integer getQuantity() {
-        return quantity;
+    public Integer getDiscountedPrice() {
+        return discountedPrice;
     }
 
-    public String getMessage() {
-        return message;
+    public Integer getAccumulatedPoint() {
+        return accumulatedPoint;
     }
+
 }

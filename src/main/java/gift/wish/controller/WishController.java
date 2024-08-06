@@ -1,6 +1,6 @@
 package gift.wish.controller;
 
-import gift.annotation.LoginUser;
+import gift.common.annotation.LoginUser;
 import gift.config.PageConfig;
 import gift.user.entity.User;
 import gift.wish.dto.request.CreateWishRequest;

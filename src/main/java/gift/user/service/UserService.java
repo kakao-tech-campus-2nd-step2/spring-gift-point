@@ -1,7 +1,8 @@
 package gift.user.service;
 
-import gift.exception.CustomException;
-import gift.exception.ErrorCode;
+import gift.common.exception.CustomException;
+import gift.common.exception.ErrorCode;
+import gift.user.dto.UserInfo;
 import gift.user.dto.request.UserLoginRequest;
 import gift.user.dto.request.UserRegisterRequest;
 import gift.user.dto.response.UserResponse;
@@ -15,6 +16,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +33,12 @@ public class UserService {
         this.jwtUtil = jwtUtil;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<UserInfo> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable)
+            .map(UserInfo::from);
     }
 
     @Transactional
@@ -92,5 +101,6 @@ public class UserService {
         return userRepository.findById(userId)
             .orElseThrow(() -> new CustomException(ErrorCode.INVALID_TOKEN));
     }
+
 
 }

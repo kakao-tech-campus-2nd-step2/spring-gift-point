@@ -1,7 +1,7 @@
 package gift.product.category.entity;
 
-import gift.exception.CustomException;
-import gift.exception.ErrorCode;
+import gift.common.exception.CustomException;
+import gift.common.exception.ErrorCode;
 import java.util.ArrayList;
 import java.util.List;
 

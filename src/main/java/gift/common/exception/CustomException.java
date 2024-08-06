@@ -1,4 +1,4 @@
-package gift.exception;
+package gift.common.exception;
 
 public class CustomException extends RuntimeException {
 

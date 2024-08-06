@@ -1,4 +1,4 @@
-package gift.exception;
+package gift.common.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -28,6 +28,8 @@ public enum ErrorCode {
     USER_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "권한이 없습니다." ),
     INVALID_TOKEN(HttpStatus.BAD_REQUEST, "유효하지 않은 토큰입니다." ),
     INVALID_EMAIL(HttpStatus.BAD_REQUEST, "유효하지 않은 이메일입니다." ),
+    INVALID_POINT_CHARGE(HttpStatus.BAD_REQUEST, "포인트 충전은 0 이상만 가능합니다." ),
+    INVALID_POINT_USE(HttpStatus.BAD_REQUEST, "포인트가 모자랍니다." ),
 
     /* Wish 관련 예외 */
     WISH_NOT_FOUND(HttpStatus.NOT_FOUND, "위시리스트를 찾을 수 없습니다." ),

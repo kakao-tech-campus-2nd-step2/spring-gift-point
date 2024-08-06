@@ -1,6 +1,6 @@
-package gift.validation.validator;
+package gift.common.validation.validator;
 
-import gift.validation.annotation.RestrictedKeyword;
+import gift.common.validation.annotation.RestrictedKeyword;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import java.util.Arrays;
