@@ -50,10 +50,9 @@ public class Product {
         this.options = options;
     }
 
-    public static Product of(String name, int price, String imageUrl, Category category,
-        Option option) {
+    public static Product of(String name, int price, String imageUrl, Category category) {
         // 상품 추가 시에 무조건 하나의 옵션을 넣게 해서 최소 하나 이상의 옵션 유지
-        return new Product(null, name, price, imageUrl, category, new Options(option));
+        return new Product(null, name, price, imageUrl, category, new Options());
     }
 
     public void updateProduct(String name, int price, String image, Category category) {

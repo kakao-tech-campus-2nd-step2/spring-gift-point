@@ -30,17 +30,6 @@ public class OptionApiController {
         this.optionService = optionService;
     }
 
-    // 관리자 권한으로 옵션을 추가하는 핸들러.
-    // 제품에 종속적이므로 productId가 필요하나, 연관관계 매핑을 하지 않아 존재하지 않는 id를 가져올 수도 있습니다.
-    // 이미 존재하는 id를 가져오는 검증이 필요하기 때문에 resolver를 사용하여 존재하는 id만 가져오도록 합니다.
-    @PostMapping
-    public ApiResponseDto<Void> createOption(@RequestBody @Valid OptionRequestDto optionRequestDto,
-        @RequestParam(name = "product-id") long productId) {
-        optionService.insertOption(optionRequestDto, productId);
-
-        return SUCCESS();
-    }
-
     // 관리자 권한으로 존재하는 모든 옵션을 볼 수 있는 핸들러.
     @GetMapping
     public ApiResponseDto<List<OptionResponseDto>> readOptions() {

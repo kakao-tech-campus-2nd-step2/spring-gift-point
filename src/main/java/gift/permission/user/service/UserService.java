@@ -80,7 +80,6 @@ public class UserService {
 
     // 유저의 refresh token을 반환하는 메서드
     public String getRefreshToken(long id) {
-        System.out.println(id);
         var actualUser = userRepository.findById(id)
             .orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저입니다."));
         return actualUser.getRefreshToken();

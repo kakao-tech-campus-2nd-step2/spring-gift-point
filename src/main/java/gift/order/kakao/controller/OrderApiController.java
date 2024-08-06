@@ -26,8 +26,6 @@ public class OrderApiController {
     @PostMapping("/api/order")
     public ResponseEntity<String> order(@RequestBody @Valid OrderRequestDto orderRequestDto,
         @UserId Long userId) {
-        System.out.println(userId);
-        System.out.println();
         orderService.order(orderRequestDto, userId);
 
         return ResponseEntity.ok("");

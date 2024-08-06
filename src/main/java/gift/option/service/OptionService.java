@@ -20,13 +20,13 @@ public class OptionService {
         this.optionRepository = optionRepository;
     }
 
-    // 여기에서는 종속된 옵션을 만들지만, 실제로 제품에 추가하지는 않습니다. 제품에 추가하는 과정은 Product에서 시행합니다.
+    // 종속된 옵션을 만들면서 제품에 추가합니다. (로직 변경). productService에서만 호출 가능
     @Transactional
-    public void insertOption(OptionRequestDto optionRequestDto, long productId) {
+    public Option insertOption(OptionRequestDto optionRequestDto, long productId) {
         var option = new Option(optionRequestDto.name(), optionRequestDto.quantity(),
             productId);
 
-        optionRepository.save(option);
+        return optionRepository.save(option);
     }
 
     // 전체 옵션을 조회하는 메서드 (관리자 권한 필요)

@@ -54,7 +54,7 @@ public class WishListApiController {
     public ApiResponseDto<Void> deleteWishProduct(
         @PathVariable(name = "wishlist-id") Long wishListId,
         @UserId Long userId) {
-        wishListService.deleteWishProduct(wishListId, userId);
+        wishListService.deleteWishProductWithVerification(wishListId, userId);
         return SUCCESS();
     }
 }

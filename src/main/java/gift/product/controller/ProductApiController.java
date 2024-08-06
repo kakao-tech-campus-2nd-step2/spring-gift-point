@@ -4,6 +4,8 @@ import static gift.global.dto.ApiResponseDto.SUCCESS;
 
 import gift.global.dto.ApiResponseDto;
 import gift.global.dto.PageInfoDto;
+import gift.option.dto.OptionRequestDto;
+import gift.product.dto.CreateProductRequestDto;
 import gift.product.dto.ProductRequestDto;
 import gift.product.dto.ProductResponseDto;
 import gift.product.service.ProductService;
@@ -38,10 +40,8 @@ public class ProductApiController {
     // 제품을 추가하는 핸들러
     @PostMapping("/admin/products")
     public ApiResponseDto<Void> createProduct(
-        @RequestBody @Valid ProductRequestDto productRequestDto,
-        @RequestParam(name = "category-id") long categoryId,
-        @RequestParam(name = "option-id") long optionId) {
-        productService.insertProduct(productRequestDto, categoryId, optionId);
+        @RequestBody @Valid CreateProductRequestDto createProductRequestDto) {
+        productService.insertProduct(createProductRequestDto);
 
         return SUCCESS();
     }
@@ -68,8 +68,8 @@ public class ProductApiController {
     // 최소 하나 이상의 옵션이 있어야 하므로 제품을 추가할 때도 기본 옵션을 받도록 하고, 해당 핸들러로 옵션을 더 추가하도록 함.
     @PutMapping("/admin/products/{product-id}/options")
     public ApiResponseDto<Void> addProductOption(@PathVariable(name = "product-id") long productId,
-        @RequestParam(name = "option-id") long optionId) {
-        productService.insertOption(productId, optionId);
+        @RequestBody OptionRequestDto optionRequestDto) {
+        productService.insertOption(productId, optionRequestDto);
 
         return SUCCESS();
     }

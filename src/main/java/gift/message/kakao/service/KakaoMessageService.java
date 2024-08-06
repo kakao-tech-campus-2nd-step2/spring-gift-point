@@ -61,7 +61,7 @@ public class KakaoMessageService {
             KakaoMessageForMeResponseDto.class).getBody();
 
         // 실패 시 예외
-        if (response.resultCode() != 0) {
+        if (!response.isSuccess()) {
             throw new IllegalArgumentException("메시지 전송에 실패했습니다.");
         }
     }
