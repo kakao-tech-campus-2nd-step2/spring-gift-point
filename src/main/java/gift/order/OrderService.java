@@ -44,31 +44,46 @@ public class OrderService {
     @Transactional
     public OrderResponse createOrder(OrderRequest orderRequest, LoginMemberDto loginMemberDto)
         throws OptionException, MemberException {
-        Member member = memberRepository.findById(loginMemberDto.getId()).orElseThrow();
-        member.usePoint(orderRequest.point());
-
         Option option = optionRepository.findById(orderRequest.optionId())
             .orElseThrow(() -> new OptionException(OptionErrorCode.NOT_FOUND));
+        deleteWish(loginMemberDto, option);
+        option.subtract(orderRequest.quantity());
+        Product product = option.getProduct();
+        Order order = saveOrder(loginMemberDto, orderRequest, option, product);
+        updateMemberPoint(loginMemberDto, orderRequest, product);
+        sendOrderMessage(loginMemberDto, order);
+        return OrderResponse.from(order);
+    }
+
+    private Order saveOrder( LoginMemberDto loginMemberDto,OrderRequest orderRequest, Option option,
+        Product product) {
+        Order order = new Order(loginMemberDto.toEntity(), option, orderRequest.quantity(), orderRequest.message(), product.calTotalPrice(
+            orderRequest.quantity()), orderRequest.point(), calAccumulatedPoint(orderRequest, product));
+        orderRepository.save(order);
+        return order;
+    }
+
+    private int calAccumulatedPoint(OrderRequest orderRequest, Product product) {
+        return (product.calTotalPrice(orderRequest.quantity()) - orderRequest.point()) / 10;
+    }
+
+    private void updateMemberPoint(LoginMemberDto loginMemberDto, OrderRequest orderRequest, Product product) throws MemberException {
+        Member member = memberRepository.findById(loginMemberDto.getId()).orElseThrow();
+        member.usePoint(orderRequest.point());
+        member.accumulatePoint(calAccumulatedPoint(orderRequest, product));
+    }
+
+    private void sendOrderMessage(LoginMemberDto loginMemberDto, Order order) {
+        OauthToken oauthToken = oauthTokenRepository.findByMemberId(loginMemberDto.getId())
+            .orElseThrow();
+        kakaoMessageClient.sendOrderMessage(oauthToken.getAccessToken(), order);
+    }
+
+    private void deleteWish(LoginMemberDto loginMemberDto, Option option) {
         if (wishRepository.existsByMemberIdAndProductId(loginMemberDto.getId(),
             option.getProduct().getId())) {
             wishRepository.deleteByMemberIdAndProductId(loginMemberDto.getId(),
                 option.getProduct().getId());
         }
-        Product product = option.getProduct();
-
-        option.subtract(orderRequest.quantity());
-        int accumulatedPoint =
-            (product.getTotalPrice(orderRequest.quantity()) - orderRequest.point()) / 10;
-        Order order = new Order(loginMemberDto.toEntity(), option, orderRequest.quantity(),
-            orderRequest.message(), product.getTotalPrice(orderRequest.quantity()),
-            orderRequest.point(),
-            accumulatedPoint);
-        orderRepository.save(order);
-        member.accumulatePoint(accumulatedPoint);
-
-        OauthToken oauthToken = oauthTokenRepository.findByMemberId(loginMemberDto.getId())
-            .orElseThrow();
-        kakaoMessageClient.sendOrderMessage(oauthToken.getAccessToken(), order);
-        return OrderResponse.from(order);
     }
 }

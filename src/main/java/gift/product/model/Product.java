@@ -84,7 +84,7 @@ public class Product extends BaseEntity {
         Product.Validator.validateDuplicated(options);
     }
 
-    public Integer getTotalPrice(Integer quantity) {
+    public Integer calTotalPrice(Integer quantity) {
         return price * quantity;
     }
 
