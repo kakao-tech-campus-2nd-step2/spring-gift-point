@@ -51,4 +51,5 @@ public class ErrorMessage {
     public static final String KAKAO_SERVICE_UNAVAILABLE_MSG = "서비스가 점검중입니다.";
 
     public static final String NEGATIVE_POINT_MSG = "포인트는 음수가 되어선 안됩니다.";
+    public static final String LACK_OF_POINT_MSG = "포인트가 부족합니다.";
 }

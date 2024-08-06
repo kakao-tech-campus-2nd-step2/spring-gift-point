@@ -79,4 +79,11 @@ public class Member extends BaseEntity {
             product.getId().equals(productId)
         );
     }
+
+    public void subtractPoint(long usedPoint) {
+        if (this.point < usedPoint) {
+            throw new IllegalArgumentException(ErrorMessage.LACK_OF_POINT_MSG);
+        }
+        this.point -= usedPoint;
+    }
 }

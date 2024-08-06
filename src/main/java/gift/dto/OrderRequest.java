@@ -19,6 +19,9 @@ public class OrderRequest {
 
     private String message;
 
+    @Min(value = 0, message = ErrorMessage.NEGATIVE_POINT_MSG)
+    private long point = 0;
+
     protected OrderRequest() {
     }
 
@@ -36,5 +39,9 @@ public class OrderRequest {
 
     public String getMessage() {
         return message;
+    }
+
+    public long getPoint() {
+        return point;
     }
 }
