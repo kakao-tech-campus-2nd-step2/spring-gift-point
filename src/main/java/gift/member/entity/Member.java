@@ -36,11 +36,16 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Wish> wishList = new ArrayList<>();
 
-    public Member(Long id, String email, String password, MemberRole role) {
+    @Column(name="MEMBER_POINT")
+    private Integer point;
+
+    public Member(Long id, String email, String password, MemberRole role, Integer point) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.point = point;
+
     }
 
     public Member() {
