@@ -1,6 +1,5 @@
 package gift.entity;
 
-import gift.exception.BadRequestExceptions.BadRequestException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -60,20 +59,20 @@ public class OrderHistory {
 
     private void validateQuantity(Integer quantity){
         if(quantity == null)
-            throw new BadRequestException("개수가 올바르지 않습니다.");
+            throw new IllegalArgumentException("개수가 올바르지 않습니다.");
 
         if(quantity < 1 || quantity >= 100000000)
-            throw new BadRequestException("주문 수량은 1개 이상, 1억개 미만만 가능합니다.");
+            throw new IllegalArgumentException("주문 수량은 1개 이상, 1억개 미만만 가능합니다.");
     }
 
     private void validateMessage(String message){
         if(message == null || message.isEmpty())
-            throw new BadRequestException("주문 메세지를 입력해주세요.");
+            throw new IllegalArgumentException("주문 메세지를 입력해주세요.");
     }
 
     private void validatePhoneNumber(String phoneNumber){
         if(phoneNumber != null && !PHONE_NUMBER_PATTERN.matcher(phoneNumber).matches())
-            throw new BadRequestException("올바르지 않은 전화번호 입니다.");
+            throw new IllegalArgumentException("올바르지 않은 전화번호 입니다.");
     }
 
     @Override
