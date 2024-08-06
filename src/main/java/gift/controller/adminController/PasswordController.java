@@ -25,10 +25,10 @@ public class PasswordController {
     @PostMapping("/verifyPassword")
     public String verifyPassword(@RequestParam String password, Model model, HttpSession session) {
         if (PASSWORD.equals(password)) {
-            session.setAttribute("authenticated",true);
+            session.setAttribute("authenticated", true);
             return "redirect:/";
         }
-        model.addAttribute("error","Incorrect Password. Try Again");
+        model.addAttribute("error", "Incorrect Password. Try Again");
         return "landing-password";
     }
 
