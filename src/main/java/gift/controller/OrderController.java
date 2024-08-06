@@ -2,6 +2,7 @@ package gift.controller;
 
 import gift.dto.OrderRequestDTO;
 import gift.dto.OrderResponseDTO;
+import gift.enums.SortDirection;
 import gift.model.Order;
 import gift.service.OrderService;
 import gift.service.MemberService;
@@ -39,13 +40,15 @@ public class OrderController {
     public ResponseEntity<Page<OrderResponseDTO>> getOrderList(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
-        @RequestParam(defaultValue = "orderDateTime,desc") String sort,
+        @RequestParam(defaultValue = "orderDateTime") String sortBy,
+        @RequestParam(defaultValue = "DESC") SortDirection direction,
         @RequestHeader("Authorization") String token) {
-        String[] sortParams = sort.split(",");
-        Sort sorting = Sort.by(Sort.Direction.fromString(sortParams[1]), sortParams[0]);
-        PageRequest pageRequest = PageRequest.of(page, size, sorting);
+
+        Sort sort = Sort.by(direction == SortDirection.DESC ? Sort.Direction.DESC : Sort.Direction.ASC, sortBy);
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
         Page<OrderResponseDTO> orderList = orderService.getOrderList(token, pageRequest);
         return ResponseEntity.ok(orderList);
     }
+
 
 }
