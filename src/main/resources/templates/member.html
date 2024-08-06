@@ -36,6 +36,11 @@
             });
         });
     </script>
+    <style>
+        .errorMessage {
+            color: red;
+        }
+    </style>
     <title>member point</title>
 </head>
 <body>
@@ -55,9 +60,12 @@
                     <td th:text="${member.name}"></td>
                     <td th:text="${member.email}"></td>
                     <td>
-                        <form th:action="@{/admin/points}" method="post" th:id="'point-form-' + ${member.id}">
+                        <form th:action="@{/admin/points}" th:object="${requestDto}" method="post" th:id="'point-form-' + ${member.id}">
                             <input type="hidden" th:value="${member.id}" name="id"/>
                             <input type="number" th:value="${member.point}" th:id="'point-' + ${member.id}" name="point" class="form-control" disabled/>
+                            <div th:if="${#fields.hasErrors('point')}">
+                                <div th:if="${member.id == requestDto.id}" th:errors="*{point}" class="errorMessage"></div>
+                            </div>
                         </form>
                     </td>
                     <td>
