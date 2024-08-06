@@ -1,5 +1,7 @@
 package gift.controller.member;
 
-public record WishMemberResponse(String email) {
+import java.util.UUID;
+
+public record WishMemberResponse(UUID id, String email) {
 
 }

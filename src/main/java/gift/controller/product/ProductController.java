@@ -1,9 +1,11 @@
 package gift.controller.product;
 
-import gift.config.LoginAdmin;
 import gift.config.LoginUser;
-import gift.controller.auth.AuthController;
 import gift.controller.auth.LoginResponse;
+import gift.controller.order.OrderPageResponse;
+import gift.controller.response.ApiResponseBody;
+import gift.controller.response.ApiResponseBuilder;
+import gift.controller.response.PageInfo;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,37 +38,63 @@ public class ProductController {
 
     @GetMapping
     @Operation(summary = "get All products", description = "상품 조회")
-    public ResponseEntity<Page<ProductResponse>> getAllProducts(
-        @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
+    public ResponseEntity<ApiResponseBody<ProductPageResponse>> getAllProductsByCategoryId(
+        @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size, @RequestParam UUID categoryId) {
         Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.status(HttpStatus.OK).body(productService.findAll(pageable));
+        var targets = productService.findAllByCategoryId(categoryId, pageable);
+        PageInfo pageInfo = new PageInfo(targets.getPageable().getPageNumber(),
+            targets.getTotalElements(), targets.getTotalPages());
+        return new ApiResponseBuilder<ProductPageResponse>()
+            .httpStatus(HttpStatus.OK)
+            .data(new ProductPageResponse(pageInfo, targets.toList()))
+            .messages("모든 상품 조회")
+            .build();
     }
 
     @GetMapping("/{productId}")
     @Operation(summary = "get product", description = "상품 조회")
-    public ResponseEntity<ProductResponse> getProduct(@PathVariable UUID productId) {
-        return ResponseEntity.status(HttpStatus.OK).body(productService.getProductResponse(productId));
+    public ResponseEntity<ApiResponseBody<ProductResponse>> getProduct(
+        @PathVariable UUID productId) {
+        return new ApiResponseBuilder<ProductResponse>()
+            .httpStatus(HttpStatus.OK)
+            .data(productService.getProductResponse(productId))
+            .messages("상품 조회")
+            .build();
     }
 
     @PostMapping
     @Operation(summary = "create product", description = "상품 생성")
-    public ResponseEntity<ProductResponse> createProduct(@LoginUser LoginResponse loginMember,
+    public ResponseEntity<ApiResponseBody<ProductResponse>> createProduct(
+        @LoginUser LoginResponse loginMember,
         @RequestBody ProductRequest product) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.save(product));
+        return new ApiResponseBuilder<ProductResponse>()
+            .httpStatus(HttpStatus.OK)
+            .data(productService.save(product))
+            .messages("상품 생성")
+            .build();
     }
 
     @PutMapping("/{productId}")
     @Operation(summary = "modify product", description = "상품 수정")
-    public ResponseEntity<ProductResponse> updateProduct(@LoginAdmin LoginResponse loginMember,
+    public ResponseEntity<ApiResponseBody<ProductResponse>> updateProduct(
+        @LoginUser LoginResponse loginMember,
         @PathVariable UUID productId, @RequestBody ProductRequest product) {
-        return ResponseEntity.status(HttpStatus.OK).body(productService.update(productId, product));
+        return new ApiResponseBuilder<ProductResponse>()
+            .httpStatus(HttpStatus.OK)
+            .data(productService.update(productId, product))
+            .messages("상품 수정")
+            .build();
     }
 
     @DeleteMapping("/{productId}")
     @Operation(summary = "delete product", description = "상품 삭제")
-    public ResponseEntity<Void> deleteProduct(@LoginAdmin LoginResponse loginMember,
+    public ResponseEntity<ApiResponseBody<Void>> deleteProduct(@LoginUser LoginResponse loginMember,
         @PathVariable UUID productId) {
         productService.delete(productId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        return new ApiResponseBuilder<Void>()
+            .httpStatus(HttpStatus.OK)
+            .data(null)
+            .messages("상품 삭제")
+            .build();
     }
 }

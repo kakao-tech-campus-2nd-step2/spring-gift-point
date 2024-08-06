@@ -10,6 +10,7 @@ import gift.domain.Member;
 import gift.exception.FailedHashException;
 import gift.exception.MemberAlreadyExistsException;
 import gift.exception.MemberNotExistsException;
+import gift.exception.NotEnoughPointException;
 import gift.repository.MemberRepository;
 import gift.util.HashUtil;
 import java.util.List;
@@ -68,6 +69,20 @@ public class MemberService {
         Member target = memberRepository.findById(id).orElseThrow(MemberNotExistsException::new);
         target.setMember(member);
         return toMemberResponse(target);
+    }
+
+    @Transactional
+    public Long chargePoint(UUID id, Long point) {
+        Member target = memberRepository.findById(id).orElseThrow(MemberNotExistsException::new);
+        target.setPoint(target.getPoint() + point);
+        return target.getPoint();
+    }
+
+    @Transactional
+    public void usePoint(UUID id, Long point) {
+        Member target = memberRepository.findById(id).orElseThrow(MemberNotExistsException::new);
+        if (target.getPoint() < point) throw new NotEnoughPointException();
+        target.setPoint(target.getPoint() - point);
     }
 
     @Transactional

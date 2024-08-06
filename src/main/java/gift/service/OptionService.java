@@ -37,11 +37,9 @@ public class OptionService {
     }
 
     @Transactional(readOnly = true)
-    public Page<OptionResponse> findAllByProductId(UUID productId, Pageable pageable) {
-        Page<Option> optionPage = optionRepository.findAllByProductId(productId, pageable);
-        List<OptionResponse> optionResponses = optionPage.stream()
+    public List<OptionResponse> findAllByProductId(UUID productId) {
+        return optionRepository.findAllByProduct(productService.find(productId)).stream()
             .map(OptionMapper::toOptionResponse).toList();
-        return new PageImpl<>(optionResponses, pageable, optionPage.getTotalElements());
     }
 
     @Transactional(readOnly = true)
@@ -70,7 +68,7 @@ public class OptionService {
     public OptionResponse update(UUID id, OptionRequest option) {
         Option target = optionRepository.findById(id)
             .orElseThrow(OptionNotExistsException::new);
-        optionRepository.findByNameAndProduct(target.getName(), productService.find(target.getProductId())).ifPresent(p -> {
+        optionRepository.findByNameAndProduct(option.name(), productService.find(target.getProductId())).ifPresent(p -> {
             throw new OptionAlreadyExistsException();
         });
         target.updateDetails(option.name(), option.quantity());

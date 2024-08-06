@@ -7,12 +7,11 @@ import java.util.UUID;
 
 public class OrderMapper {
 
-    public static Order toOrder(Option option, LocalDateTime orderDateTime, String message) {
-        return new Order(option, orderDateTime, message);
+    public static Order toOrder(Option option, Integer quantity, LocalDateTime orderDateTime, String message) {
+        return new Order(option, quantity, orderDateTime, message);
     }
 
-    public static OrderResponse toOrderResponse(UUID orderId, UUID optionId, Integer quantity,
-        LocalDateTime orderDateTime, String message) {
-        return new OrderResponse(orderId, optionId, quantity, orderDateTime, message);
+    public static OrderResponse toOrderResponse(Order order) {
+        return new OrderResponse(order.getId(), order.getOption().getId(), order.getQuantity(), order.getOrderDateTime(), order.getMessage());
     }
 }

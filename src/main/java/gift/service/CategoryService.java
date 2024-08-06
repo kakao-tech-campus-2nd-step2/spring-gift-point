@@ -12,9 +12,6 @@ import gift.exception.CategoryNotExistsException;
 import gift.repository.CategoryRepository;
 import java.util.List;
 import java.util.UUID;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,11 +25,9 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
-    public Page<CategoryResponse> findAll(Pageable pageable) {
-        Page<Category> categoryPage = categoryRepository.findAll(pageable);
-        List<CategoryResponse> categoryResponses = categoryPage.stream()
+    public List<CategoryResponse> findAll() {
+        return categoryRepository.findAll().stream()
             .map(CategoryMapper::toCategoryResponse).toList();
-        return new PageImpl<>(categoryResponses, pageable, categoryPage.getTotalElements());
     }
 
     @Transactional(readOnly = true)

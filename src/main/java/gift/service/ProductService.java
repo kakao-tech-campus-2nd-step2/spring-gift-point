@@ -40,6 +40,15 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
+    public Page<ProductResponse> findAllByCategoryId(UUID categoryId, Pageable pageable) {
+        Page<Product> productPage = productRepository.findAllByCategoryId(categoryId, pageable);
+        List<ProductResponse> productResponses = productPage.stream()
+            .filter(product -> product.getOptions() != null && !product.getOptions().isEmpty())
+            .map(ProductMapper::toProductResponse).toList();
+        return new PageImpl<>(productResponses, pageable, productPage.getTotalElements());
+    }
+
+    @Transactional(readOnly = true)
     public ProductResponse getProductResponse(UUID id) {
         Product target = productRepository.findById(id).orElseThrow(ProductNotExistsException::new);
         if(target.getOptions().isEmpty()) throw new ProductHasNotOptionException();

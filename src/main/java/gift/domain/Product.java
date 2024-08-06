@@ -70,6 +70,8 @@ public class Product {
         return category.getId();
     }
 
+    public String getCategoryName() {return category.getName();}
+
     public List<Option> getOptions() {
         return options;
     }

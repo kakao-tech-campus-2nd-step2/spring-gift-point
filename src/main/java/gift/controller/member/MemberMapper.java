@@ -6,7 +6,7 @@ import gift.domain.Member;
 public class MemberMapper {
 
     public static Member from(SignUpRequest member) {
-        return new Member(member.getEmail(), member.getPassword(), member.getNickName());
+        return new Member(member.getEmail(), member.getPassword());
     }
 
     public static MemberResponse toMemberResponse(Member member) {

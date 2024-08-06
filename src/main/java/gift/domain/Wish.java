@@ -1,6 +1,5 @@
 package gift.domain;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,16 +23,16 @@ public class Wish {
     @JoinColumn(name = "productId", nullable = false)
     private Product product;
 
-    @Column(nullable = false)
-    private Long count;
-
     public Wish() {
     }
 
-    public Wish(Member member, Product product, Long count) {
+    public Wish(Member member, Product product) {
         this.member = member;
         this.product = product;
-        this.count = count;
+    }
+
+    public UUID getWishId() {
+        return wishId;
     }
 
     public Member getMember() {
@@ -44,11 +43,4 @@ public class Wish {
         return product;
     }
 
-    public Long getCount() {
-        return count;
-    }
-
-    public void setCount(Long count) {
-        this.count = count;
-    }
 }
