@@ -133,7 +133,6 @@ public class MemberServiceTest {
         when(kakaoAuthService.getUserProfile(accessToken)).thenReturn(kakaoProfileResponse);
         when(memberRepository.findByEmailAndLoginType(email, KAKAO)).thenReturn(Optional.empty());
         when(memberRepository.save(any(Member.class))).thenReturn(member);
-        when(tokenService.saveToken(any(Member.class), eq(accessToken))).thenReturn(accessToken);
 
         KakaoLoginResponse kakaoLoginResponse = memberService.handleKakaoLogin(authorizationCode);
 
@@ -146,7 +145,7 @@ public class MemberServiceTest {
         verify(kakaoAuthService, times(1)).getUserProfile(accessToken);
         verify(memberRepository, times(1)).findByEmailAndLoginType(email, KAKAO);
         verify(memberRepository, times(1)).save(any(Member.class));
-        verify(tokenService, times(1)).saveToken(any(Member.class), eq(accessToken));
+        verify(tokenService, times(1)).saveKakaoToken(any(Member.class), eq(accessToken), eq(refreshToken));
     }
 
     @Test

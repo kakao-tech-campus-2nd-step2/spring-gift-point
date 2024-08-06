@@ -55,6 +55,22 @@ public class TokenService {
     }
 
     @Transactional
+    public void saveKakaoToken(Member member, String accessToken, String refreshToken) {
+        TokenAuth tokenAuth = tokenRepository.findByMember(member)
+                .orElse(new TokenAuth());
+
+        tokenAuth.setMember(member);
+        tokenAuth.setAccessToken(accessToken);
+        tokenAuth.setRefreshToken(refreshToken);
+
+        // 리프레시 부분은 나중에 구현
+        tokenAuth.setAccessTokenExpiry(new Date(System.currentTimeMillis() + refreshTokenValidityInMillis));
+        tokenAuth.setRefreshTokenExpiry(new Date(System.currentTimeMillis() + refreshTokenValidityInMillis));
+
+        tokenRepository.save(tokenAuth);
+    }
+
+    @Transactional
     public String generateAccessToken(Member member) {
         return Jwts.builder()
                 .setSubject(member.getId().toString())
@@ -70,19 +86,6 @@ public class TokenService {
                 .claim("email", member.getEmail())
                 .signWith(getSecretKey())
                 .compact();
-    }
-
-    @Transactional
-    public String saveToken(Member member, String accessToken) {
-        TokenAuth tokenAuth = tokenRepository.findByMember(member)
-                .orElse(new TokenAuth());
-
-        tokenAuth.setMember(member);
-        tokenAuth.setAccessToken(accessToken);
-
-        tokenRepository.save(tokenAuth);
-
-        return tokenAuth.getAccessToken();
     }
 
     public TokenAuth findTokenByAccessToken(String accessToken) {

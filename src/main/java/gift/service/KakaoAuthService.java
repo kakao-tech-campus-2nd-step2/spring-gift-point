@@ -19,6 +19,8 @@ public class KakaoAuthService {
     private static final String GRANT_TYPE = "authorization_code";
     private static final String TOKEN_URL_SUFFIX = "/oauth/token";
     private static final String PROFILE_URL_SUFFIX = "/v2/user/me";
+    private static final String KAKAO_REFRESH_TOKEN_URL = "https://kapi.kakao.com/v1/user/access_token/refresh";
+
 
     @Value("${kakao.client-id}")
     private String clientId;

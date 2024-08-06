@@ -14,6 +14,7 @@ public class TokenAuth {
     @Column(nullable = false)
     private String accessToken;
 
+    @Column(nullable = false)
     private String refreshToken;
 
     @Temporal(TemporalType.TIMESTAMP)

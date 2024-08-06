@@ -95,9 +95,9 @@ public class MemberService {
             member = findByEmailAndLoginType(email, loginType);
         }
 
-        String accessToken = tokenService.saveToken(member, tokenResponse.accessToken());
+        tokenService.saveKakaoToken(member, tokenResponse.accessToken(), tokenResponse.refreshToken());
 
-        return new KakaoLoginResponse(code, accessToken, email);
+        return new KakaoLoginResponse(code, tokenResponse.accessToken(), email);
     }
 
     public PointResponse getPoint(Long memberId) {
