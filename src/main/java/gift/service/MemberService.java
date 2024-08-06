@@ -51,4 +51,14 @@ public class MemberService {
         memberRepository.save(member);
         return jwtUtil.generateToken(member);
     }
+
+    public void addPoint(Long memberId, Long point) {
+        Member member = memberRepository.findById(memberId).get();
+        if (0 < point) {
+            member.addPoint(point);
+        } else if (point < 0) {
+            member.subPoint(-point);
+        }
+        memberRepository.save(member);
+    }
 }

@@ -9,7 +9,9 @@ public record OrderRequest(
     @NotNull
     Long quantity,
 
-    String message
+    String message,
+
+    Long point
 ) {
 
 }

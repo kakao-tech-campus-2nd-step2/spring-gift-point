@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 @Entity
 public class Member {
@@ -27,6 +29,9 @@ public class Member {
 
     @Column
     private String kakaoToken;
+
+    @Column
+    private Long point = 0L;
 
     public Member() {
 
@@ -65,5 +70,25 @@ public class Member {
 
     public void setKakaoToken(String kakaoToken) {
         this.kakaoToken = kakaoToken;
+    }
+
+    public Long getPoint() {
+        return point;
+    }
+    public void addPoint(Long point) {
+        if (point < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "사용할 포인트는 0 이상이여야 합니다");
+        }
+        this.point += point;
+    }
+
+    public void subPoint(Long point) {
+        if (point < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "사용할 포인트는 0 이상이여야 합니다");
+        }
+        else if (this.point < point) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "현재 보유중인 포인트 보다 많은 포인트를 사용할 수 없습니다");
+        }
+        this.point -= point;
     }
 }

@@ -30,6 +30,8 @@ public class Order {
     @Column
     private String message;
     @Column
+    private Long point;
+    @Column
     private final LocalDateTime orderDateTime = LocalDateTime.now();
 
     public Order() {
@@ -41,6 +43,7 @@ public class Order {
         this.option = new Option(orderRequest.optionId());
         this.quantity = orderRequest.quantity();
         this.message = orderRequest.message();
+        this.point = orderRequest.point();
     }
 
     public OrderResponse toOrderResponse() {
