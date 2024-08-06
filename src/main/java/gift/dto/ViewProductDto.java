@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.List;
+
 public class ViewProductDto {
     @Length(min = 1, max = 15, message = "상품의 이름은 공백을 포함하여 최대 15자까지 입력할 수 있습니다.")
     @Pattern(
@@ -24,6 +26,8 @@ public class ViewProductDto {
 
     @NotNull(message = "상품 카테고리는 필수항목입니다.")
     private Long category;
+    @NotNull(message = "상품 옵션은 필수항목입니다.")
+    List<OptionRequestDto> options;
 
     public String getName() {
         return name;
@@ -41,6 +45,10 @@ public class ViewProductDto {
         return category;
     }
 
+    public List<OptionRequestDto> getOptions() {
+        return options;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -55,5 +63,9 @@ public class ViewProductDto {
 
     public void setCategory(Long category) {
         this.category = category;
+    }
+
+    public void setOptions(List<OptionRequestDto> options) {
+        this.options = options;
     }
 }

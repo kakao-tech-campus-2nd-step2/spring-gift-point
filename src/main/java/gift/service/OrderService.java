@@ -45,18 +45,26 @@ public class OrderService {
     public void handleOrder(Long memberId, OrderRequestDto request) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ErrorCode.INVALID_MEMBER, memberId));
-        Option option = subtractOption(request.optionId(), request.quantity());
-        Optional<Wish> wish = wishRepository.findByMemberIdAndProductId(memberId, option.getProduct().getId());
-        wish.ifPresent(wishRepository::delete);
+        Option option = optionRepository.findById(request.optionId())
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_OPTION, request.optionId()));
 
+        int totalPoint = calculateTotalPrice(request, option);
+
+        if ((option.checkValidateQuantity(request.quantity()) && member.checkPoint(totalPoint))) {
+            option.subtract(request.quantity());
+            member.buyProduct(totalPoint);
+        }
+        deleteWish(memberId, option);
         sendMessage(member.getAccessToken());
     }
 
-    private Option subtractOption(Long optionId, Integer quantity) {
-        Option option = optionRepository.findById(optionId)
-                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_OPTION, optionId));
-        option.subtract(quantity);
-        return option;
+    private int calculateTotalPrice(OrderRequestDto request, Option option) {
+        return (int) (option.getProduct().getPrice() * request.quantity() * 0.95);
+    }
+
+    private void deleteWish(Long memberId, Option option) {
+        Optional<Wish> wish = wishRepository.findByMemberIdAndProductId(memberId, option.getProduct().getId());
+        wish.ifPresent(wishRepository::delete);
     }
 
     private void sendMessage(String accessToken) {

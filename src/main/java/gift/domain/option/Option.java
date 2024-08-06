@@ -54,9 +54,15 @@ public class Option {
     }
 
     public void subtract(int target) {
+        if (checkValidateQuantity(target)) {
+            this.quantity = this.quantity - target;
+        }
+    }
+
+    public boolean checkValidateQuantity(int target) {
         if (target >= this.quantity) {
             throw new CustomException(ErrorCode.INVALID_QUANTITY, this.quantity);
         }
-        this.quantity = this.quantity - target;
+        return true;
     }
 }

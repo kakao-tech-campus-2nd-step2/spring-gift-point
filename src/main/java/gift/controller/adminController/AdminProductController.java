@@ -1,9 +1,6 @@
-package gift.controller;
+package gift.controller.adminController;
 
-import gift.dto.CategoryResponseDto;
-import gift.dto.ProductChangeRequestDto;
-import gift.dto.ProductResponseDto;
-import gift.dto.ViewProductDto;
+import gift.dto.*;
 import gift.service.CategoryService;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
@@ -17,16 +14,17 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-public class WebController {
+@RequestMapping("/admin")
+public class AdminProductController {
     private final ProductService productService;
     private final CategoryService categoryService;
 
-    public WebController(ProductService productService, CategoryService categoryService) {
+    public AdminProductController(ProductService productService, CategoryService categoryService) {
         this.productService = productService;
         this.categoryService = categoryService;
     }
 
-    @GetMapping("/")
+    @GetMapping("/products")
     public String itemList(Model model,
                            @PageableDefault(sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
                            @RequestParam(value = "categoryId", required = false, defaultValue = "1") Long categoryId) {
@@ -35,7 +33,7 @@ public class WebController {
         return "items";
     }
 
-    @GetMapping("products/add")
+    @GetMapping("/products/add")
     public String getAddForm(Model model, Pageable pageable) {
         Page<CategoryResponseDto> list = categoryService.getAll(pageable);
         model.addAttribute("requestDto", new ViewProductDto());
@@ -43,7 +41,20 @@ public class WebController {
         return "addForm";
     }
 
-    @GetMapping("products/edit/{id}")
+    @PostMapping("products/add")
+    public String add(@Valid @ModelAttribute("requestDto") ViewProductDto requestDto,
+                      BindingResult result, Model model, Pageable pageable) {
+        if (result.hasErrors()) {
+            Page<CategoryResponseDto> list = categoryService.getAll(pageable);
+            model.addAttribute("list", list);
+            return "addForm";
+        }
+        ProductRequestDto request = new ProductRequestDto(requestDto.getName(), requestDto.getImageUrl(), requestDto.getPrice(), requestDto.getCategory(), requestDto.getOptions());
+        productService.addProduct(request);
+        return "redirect:/";
+    }
+
+    @GetMapping("/products/edit/{id}")
     public String getEditForm(
             @PathVariable("id") Long id, Model model) {
         ProductResponseDto product = productService.findProduct(id);
@@ -52,7 +63,7 @@ public class WebController {
         return "editForm";
     }
 
-    @PutMapping("products/edit/{id}")
+    @PutMapping("/products/edit/{id}")
     public String editProduct(
             @PathVariable("id") Long id,
             @Valid @ModelAttribute("requestDto") ProductChangeRequestDto requestDto,
@@ -64,7 +75,7 @@ public class WebController {
         return "redirect:/";
     }
 
-    @DeleteMapping("products/delete/{id}")
+    @DeleteMapping("/products/delete/{id}")
     public String deleteProduct(
             @PathVariable("id") Long id
     ) {

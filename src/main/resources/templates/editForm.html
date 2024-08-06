@@ -15,7 +15,7 @@
     }
 </style>
 <body>
-<form method="post" th:object="${requestDto}" th:action="@{'/products/edit/' + ${id}}">
+<form method="post" th:object="${requestDto}" th:action="@{'/admin/products/edit/' + ${id}}">
     <input type="hidden" name="_method" value="put">
     <div>
         <label for="id">상품 ID</label>

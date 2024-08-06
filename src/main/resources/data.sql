@@ -158,3 +158,6 @@ VALUES ('"하기스 9종 출산선물세트" NEW 하기스 네이처메이드 �
         'https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240723154022_4293c778400d4257bd1961c3538899d9.jpg',
         12);
 INSERT INTO option (name, quantity, product_id) VALUES ('옵션 없음', 800, 21);
+
+INSERT INTO member (name, email,password,point,role) VALUES ('테스터','test@gmail.com','password',10,1);
+INSERT INTO member (name, email,password,point,role) VALUES ('최고심','test2@gmail.com','password',70,1);
