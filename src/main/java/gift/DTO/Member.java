@@ -28,23 +28,23 @@ public class Member {
   private String password;
 
   @Embedded
-  private PointVo pointVo;
+  private Point point;
 
   protected Member() {
 
   }
 
-  public Member(Long id, String email, String password, PointVo pointVo) {
+  public Member(Long id, String email, String password, Point point) {
     this.id = id;
     this.email = email;
     this.password = password;
-    this.pointVo = pointVo;
+    this.point = point;
   }
 
-  public Member(String email, String password, PointVo pointVo) {
+  public Member(String email, String password, Point point) {
     this.email = email;
     this.password = password;
-    this.pointVo = pointVo;
+    this.point = point;
   }
 
   public Long getId() {
@@ -59,8 +59,8 @@ public class Member {
     return this.password;
   }
 
-  public PointVo getPointVo() {
-    return this.pointVo;
+  public Point getPointVo() {
+    return this.point;
   }
 
   public boolean matchLoginInfo(MemberDto memberDtoByEmail) {

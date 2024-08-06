@@ -27,23 +27,23 @@ public class Orders {
   private String message;
 
   @Embedded
-  private PointVo pointVo;
+  private Point point;
 
-  public Orders(Option option, int quantity, String message, PointVo pointVo) {
+  public Orders(Option option, int quantity, String message, Point point) {
     this.option = option;
     this.quantity = quantity;
     this.orderDateTime = LocalDateTime.now();
     this.message = message;
-    this.pointVo = pointVo;
+    this.point = point;
   }
 
-  public Orders(Long id, Option option, int quantity, String message, PointVo pointVo) {
+  public Orders(Long id, Option option, int quantity, String message, Point point) {
     this.id = id;
     this.option = option;
     this.quantity = quantity;
     this.orderDateTime = LocalDateTime.now();
     this.message = message;
-    this.pointVo = pointVo;
+    this.point = point;
   }
 
   protected Orders() {
@@ -69,7 +69,7 @@ public class Orders {
     return message;
   }
 
-  public PointVo getPointVo() {
-    return this.pointVo;
+  public Point getPointVo() {
+    return this.point;
   }
 }

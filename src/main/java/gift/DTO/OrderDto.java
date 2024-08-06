@@ -8,16 +8,16 @@ public class OrderDto {
   private final String orderDateTime;
   private final String message;
 
-  private final PointVo pointVo;
+  private final Point point;
 
   public OrderDto(Long id, OptionDto optionDto, int quantity, String orderDateTime,
-    String message, PointVo pointVo) {
+    String message, Point point) {
     this.id = id;
     this.optionDto = optionDto;
     this.quantity = quantity;
     this.orderDateTime = orderDateTime;
     this.message = message;
-    this.pointVo = pointVo;
+    this.point = point;
   }
 
   public Long getId() {
@@ -40,7 +40,7 @@ public class OrderDto {
     return message;
   }
 
-  public PointVo getPointVo() {
-    return this.pointVo;
+  public Point getPointVo() {
+    return this.point;
   }
 }
