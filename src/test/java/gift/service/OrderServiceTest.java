@@ -33,7 +33,7 @@ public class OrderServiceTest {
 
     @Test
     public void PlaceOrderSuccess() {
-        OrderRequest orderRequest = new OrderRequest(1L, 1L, 1, "Test message", LocalDateTime.now(), "user@example.com");
+        OrderRequest orderRequest = new OrderRequest(1L, 1L, 1, 1000 ,"Test message", LocalDateTime.now(), "user@example.com");
 
         Order order = new Order.Builder()
                 .id(1L)
