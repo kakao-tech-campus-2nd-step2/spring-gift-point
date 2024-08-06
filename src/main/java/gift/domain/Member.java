@@ -87,13 +87,13 @@ public class Member extends BaseTimeEntity {
 
     public void matchPassword(final String password) {
         if (!this.password.matches(password)) {
-            throw new IncorrectPasswordException();
+            throw new IllegalArgumentException();
         }
     }
 
     public Point subtractPoint(final Integer point) {
         if (this.point.getValue() < point) {
-            throw new BadRequestException("포인트가 부족합니다.");
+            throw new IllegalArgumentException();
         }
         return this.point.subtract(point);
     }
