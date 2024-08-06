@@ -42,4 +42,9 @@ public class MemberService {
 
         return memberRepository.save(member);
     }
+
+    public Long getMemberIdByEmail(String email) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new CustomException.EntityNotFoundException("Member not found"));
+        return member.getId();
+    }
 }
