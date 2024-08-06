@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static gift.constant.Message.ADD_OPTION_SUCCESS_MSG;
+import static gift.constant.SuccessMessage.ADD_OPTION_SUCCESS_MSG;
 import static gift.exception.ErrorCode.DATA_NOT_FOUND;
 
 @Service

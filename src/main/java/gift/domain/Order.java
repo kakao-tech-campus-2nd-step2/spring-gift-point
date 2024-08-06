@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDateTime;
 
-import static gift.constant.Message.POSITIVE_NUMBER_REQUIRED_MSG;
+import static gift.constant.ErrorMessage.POSITIVE_NUMBER_REQUIRED_MSG;
 
 @Entity
 @Table(name = "order_details")

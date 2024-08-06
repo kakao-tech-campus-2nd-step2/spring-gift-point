@@ -2,7 +2,7 @@ package gift.dto.request;
 
 import jakarta.validation.constraints.*;
 
-import static gift.constant.Message.*;
+import static gift.constant.ErrorMessage.*;
 
 public record AddOptionRequest(
         @NotBlank(message = REQUIRED_FIELD_MSG)

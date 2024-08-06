@@ -6,7 +6,7 @@ import gift.exception.CustomException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
-import static gift.constant.Message.*;
+import static gift.constant.ErrorMessage.*;
 import static gift.exception.ErrorCode.INVALID_AMOUNT_ERROR;
 
 @Entity

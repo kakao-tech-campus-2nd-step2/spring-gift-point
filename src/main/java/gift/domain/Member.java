@@ -7,8 +7,8 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
 
-import static gift.constant.Message.EMAIL_PATTERN_ERROR_MSG;
-import static gift.constant.Message.REQUIRED_FIELD_MSG;
+import static gift.constant.ErrorMessage.EMAIL_PATTERN_ERROR_MSG;
+import static gift.constant.ErrorMessage.REQUIRED_FIELD_MSG;
 
 @Entity
 @Table(name = "member")

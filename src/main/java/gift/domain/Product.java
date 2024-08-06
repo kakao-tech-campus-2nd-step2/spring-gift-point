@@ -8,7 +8,7 @@ import jakarta.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static gift.constant.Message.*;
+import static gift.constant.ErrorMessage.*;
 
 @Entity
 @Table(name = "product")

@@ -18,8 +18,8 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Optional;
 
-import static gift.constant.Message.ADD_SUCCESS_MSG;
-import static gift.constant.Message.UPDATE_SUCCESS_MSG;
+import static gift.constant.SuccessMessage.ADD_SUCCESS_MSG;
+import static gift.constant.SuccessMessage.UPDATE_SUCCESS_MSG;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;

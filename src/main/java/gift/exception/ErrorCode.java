@@ -2,7 +2,7 @@ package gift.exception;
 
 import org.springframework.http.HttpStatus;
 
-import static gift.constant.Message.*;
+import static gift.constant.ErrorMessage.*;
 
 public enum ErrorCode {
 
