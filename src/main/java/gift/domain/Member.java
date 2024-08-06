@@ -15,12 +15,20 @@ public class Member {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "point", nullable = false)
+    private int point;
+
+    @Column(name = "role", nullable = false)
+    private String role;
+
     protected Member() {}
 
     public Member(Long id, String email, String password) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.point = 0;
+        this.role = "member";
     }
 
     public Long getId() {
@@ -33,5 +41,33 @@ public class Member {
 
     public String getPassword() {
         return password;
+    }
+
+    public int getPoint() {
+        return point;
+    }
+
+    public void setPoint(int point) {
+        this.point = point;
+    }
+
+    public void addPoint(int point) {
+        this.point += point;
+    }
+
+    public void usePoint(int price) {
+        if (this.point >= price) {
+            this.point -= price;
+        } else {
+            this.point = 0;
+        }
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
