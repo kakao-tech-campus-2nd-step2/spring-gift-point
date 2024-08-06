@@ -6,14 +6,14 @@ function charge() {
     const token = getAuthToken();
 
     fetch('/api/points', {
-        method: 'POST',
+        method: 'PUT',
         headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({point})
     }).then(response => {
-        if (response.status === 201) {
+        if (response.status === 204) {
             alert("포인트 충전이 되었습니다.");
             updatePointDisplay();
         } else {

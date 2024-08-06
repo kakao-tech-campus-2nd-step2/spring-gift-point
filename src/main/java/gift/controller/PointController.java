@@ -22,7 +22,7 @@ public class PointController {
     @PutMapping
     public ResponseEntity<Void> chargePoint(@Valid @RequestBody PointRequest request, @LoginMember Member member) {
         pointService.pointCharge(request, member);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @GetMapping

@@ -17,14 +17,14 @@ public class PointService {
     }
 
     public void pointCharge(PointRequest request, Member member) {
-        member.chargePoint(request.point());
+        member.getPoint().chargePoint(request.point());
     }
 
     public PointResponse getPoint(Member member) {
-        return new PointResponse(member.getPoint());
+        return new PointResponse(member.getPoint().getValue());
     }
 
     public void subtractPoint(int point, Member member) {
-        member.subtractPoint(point);
+        member.getPoint().subtractPoint(point);
     }
 }

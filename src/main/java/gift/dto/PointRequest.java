@@ -1,9 +1,7 @@
 package gift.dto;
 
-import jakarta.validation.constraints.Min;
-
-public record PointRequest(
-        @Min(0)
-        int point
-) {
+public record PointRequest(int point) {
+    public static PointRequest of(int point) {
+        return new PointRequest(Math.max(point, 0));
+    }
 }
