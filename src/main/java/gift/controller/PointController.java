@@ -22,6 +22,9 @@ public class PointController {
     @PostMapping
     @Operation(summary = "포인트 충전", description = "포인트를 충전합니다.")
     public ResponseEntity<String> addPoints(@RequestBody int point, @LoginMember Member member) {
+        if (!"ADMIN".equals(member.getRole())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("접근 권한이 없습니다.");
+        }
         try {
             pointService.addPoint(member.getId(), point);
             return ResponseEntity.status(HttpStatus.CREATED).body("포인트 충전 완료!");

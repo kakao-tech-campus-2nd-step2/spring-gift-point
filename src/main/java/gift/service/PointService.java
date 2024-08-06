@@ -16,23 +16,21 @@ public class PointService {
 
     @Transactional
     public void addPoint(Long memberId, int point) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 회원이 존재하지 않습니다."));
+        Member member = memberRepository.findByIdOrThrow(memberId);
         member.addPoint(point);
         memberRepository.save(member);
     }
 
-    @Transactional
     public int getPoint(Long memberId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 회원이 존재하지 않습니다."));
+        Member member = memberRepository.findByIdOrThrow(memberId);
+
         return member.getPoint();
     }
 
     @Transactional
     public void subtractPoint(Long memberId, int price) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 회원이 존재하지 않습니다."));
+        Member member = memberRepository.findByIdOrThrow(memberId);
+
         member.usePoint(price);
         memberRepository.save(member);
     }

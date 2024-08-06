@@ -7,6 +7,7 @@ import gift.repository.*;
 import gift.service.KakaoService;
 import gift.service.OptionService;
 import gift.service.OrderService;
+import gift.service.PointService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,6 +39,9 @@ class OrderServiceTest {
 
     @Mock
     private OptionService optionService;
+
+    @Mock
+    private PointService pointService;
 
     @Mock
     private OptionRepository optionRepository;

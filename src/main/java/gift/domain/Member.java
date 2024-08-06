@@ -18,6 +18,9 @@ public class Member {
     @Column(name = "point", nullable = false)
     private int point;
 
+    @Column(name = "role", nullable = false)
+    private String role;
+
     protected Member() {}
 
     public Member(Long id, String email, String password) {
@@ -25,6 +28,7 @@ public class Member {
         this.email = email;
         this.password = password;
         this.point = 0;
+        this.role = "member";
     }
 
     public Long getId() {
@@ -57,5 +61,13 @@ public class Member {
         } else {
             this.point = 0;
         }
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
