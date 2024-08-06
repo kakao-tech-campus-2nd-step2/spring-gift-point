@@ -113,6 +113,8 @@ public class MemberService {
             Member member = memberRepository.findByEmail(memberDTO.getEmail())
                     .orElseThrow(()  -> new BadRequestException("해당 유저를 찾을 수 없습니다."));
             member.addPoint(addPointDTO.point());
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException(e.getMessage());
         } catch (BadRequestException e) {
             throw e;
         } catch (Exception e) {
@@ -128,6 +130,8 @@ public class MemberService {
             member.substractPoint(subtractPoint);
         } catch (BadRequestException e) {
             throw e;
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException(e.getMessage());
         } catch (Exception e) {
             throw new InternalServerException(e.getMessage());
         }
