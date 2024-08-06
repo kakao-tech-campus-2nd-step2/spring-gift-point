@@ -15,7 +15,6 @@ import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
