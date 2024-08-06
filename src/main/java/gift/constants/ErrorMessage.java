@@ -49,4 +49,6 @@ public class ErrorMessage {
     public static final String KAKAO_INTERNAL_SERVER_ERROR_MSG = "예상치 못한 시스템 오류가 발생했습니다.";
     public static final String KAKAO_BAD_GATEWAY_MSG = "Bad Gateway 시스템 오류가 발생했습니다.";
     public static final String KAKAO_SERVICE_UNAVAILABLE_MSG = "서비스가 점검중입니다.";
+
+    public static final String NEGATIVE_POINT_MSG = "포인트는 음수가 되어선 안됩니다.";
 }

@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,6 +47,12 @@ public class MemberController {
 
         return ResponseEntity.ok().header("token", token)
             .body(SuccessMessage.LOGIN_MEMBER_SUCCESS_MSG);
+    }
+
+    @GetMapping("/point")
+    public long getPoint(HttpServletRequest request) {
+        String email = (String) request.getAttribute("email");
+        return memberService.getPoint(email);
     }
 
     @PostMapping("/wishlist/{productId}")

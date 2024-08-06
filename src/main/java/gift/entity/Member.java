@@ -2,6 +2,7 @@ package gift.entity;
 
 import gift.constants.ErrorMessage;
 import gift.dto.MemberDto;
+import gift.exception.NegativePointException;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +10,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 public class Member extends BaseEntity {
@@ -21,6 +23,10 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Wishlist> wishlist = new ArrayList<>();
+
+    @ColumnDefault(value = "0")
+    @Column(name = "point", nullable = false)
+    private long point;
 
     protected Member() {
     }
@@ -44,6 +50,17 @@ public class Member extends BaseEntity {
 
     public List<Wishlist> getWishlist() {
         return wishlist;
+    }
+
+    public long getPoint() {
+        return point;
+    }
+
+    public void addPoint(long amount) {
+        if (amount < 0) {
+            throw new NegativePointException(ErrorMessage.NEGATIVE_POINT_MSG);
+        }
+        point += amount;
     }
 
     public boolean isCorrectPassword(String password) {
