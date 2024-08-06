@@ -14,8 +14,6 @@ public class PointUpdateDto {
     public PointUpdateDto() {
     }
 
-    ;
-
     public PointUpdateDto(Long id, int point) {
         this.id = id;
         this.point = point;
