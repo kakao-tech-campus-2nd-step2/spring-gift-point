@@ -2,7 +2,7 @@ package gift.global;
 
 import gift.doamin.user.dto.UserDto;
 import gift.doamin.user.exception.UserNotFoundException;
-import gift.doamin.user.repository.JpaUserRepository;
+import gift.doamin.user.repository.UserRepository;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,9 +15,9 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final JpaUserRepository userRepository;
+    private final UserRepository userRepository;
 
-    public LoginUserArgumentResolver(JpaUserRepository userRepository) {
+    public LoginUserArgumentResolver(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

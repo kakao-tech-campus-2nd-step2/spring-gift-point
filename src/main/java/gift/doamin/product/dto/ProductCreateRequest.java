@@ -13,7 +13,7 @@ public class ProductCreateRequest {
 
     @Schema(description = "상품의 카테고리 id")
     @NotNull
-    private Long category_id;
+    private Long categoryId;
 
     @Schema(description = "상품명")
     @Pattern(regexp = "^[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣0-9 ()\\[\\]+\\-&/_]{1,15}$", message = "영문, 한글, 숫자, 공백, 특수문자 ()[]+-&/_ 1자 이상 15자 미만으로 입력해야 합니다.")
@@ -33,17 +33,17 @@ public class ProductCreateRequest {
     @Valid
     private List<OptionRequest> options;
 
-    public ProductCreateRequest(Long category_id, String name, Integer price, String imageUrl,
+    public ProductCreateRequest(Long categoryId, String name, Integer price, String imageUrl,
         List<OptionRequest> options) {
-        this.category_id = category_id;
+        this.categoryId = categoryId;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.options = options;
     }
 
-    public Long getCategory_id() {
-        return category_id;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
     public String getName() {

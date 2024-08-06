@@ -2,17 +2,16 @@ package gift.doamin.wishlist.service;
 
 import gift.doamin.product.entity.Option;
 import gift.doamin.product.exception.ProductNotFoundException;
-import gift.doamin.product.repository.JpaProductRepository;
 import gift.doamin.product.repository.OptionRepository;
 import gift.doamin.user.entity.User;
 import gift.doamin.user.exception.UserNotFoundException;
-import gift.doamin.user.repository.JpaUserRepository;
+import gift.doamin.user.repository.UserRepository;
 import gift.doamin.wishlist.dto.WishRequest;
 import gift.doamin.wishlist.dto.WishResponse;
 import gift.doamin.wishlist.entity.Wish;
 import gift.doamin.wishlist.exception.InvalidWishFormException;
 import gift.doamin.wishlist.exception.WishListNotFoundException;
-import gift.doamin.wishlist.repository.JpaWishListRepository;
+import gift.doamin.wishlist.repository.WishListRepository;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,17 +21,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class WishListService {
 
-    private final JpaWishListRepository wishListRepository;
-    private final JpaUserRepository UserRepository;
-    private final JpaProductRepository productRepository;
+    private final WishListRepository wishListRepository;
+    private final UserRepository UserRepository;
     private final OptionRepository optionRepository;
 
-    public WishListService(JpaWishListRepository wishListRepository,
-        JpaUserRepository UserRepository, JpaProductRepository productRepository,
-        OptionRepository optionRepository) {
+    public WishListService(WishListRepository wishListRepository,
+        UserRepository UserRepository, OptionRepository optionRepository) {
         this.wishListRepository = wishListRepository;
         this.UserRepository = UserRepository;
-        this.productRepository = productRepository;
         this.optionRepository = optionRepository;
     }
 
@@ -95,5 +91,17 @@ public class WishListService {
             .orElseThrow(() -> new WishListNotFoundException("위시리스트에 삭제할 상품이 존재하지 않습니다."));
 
         wishListRepository.deleteById(wish.getId());
+    }
+
+    @Transactional
+    public void subtractWishList(Long userId, Long optionId, Integer quantity) {
+        wishListRepository.findByUserIdAndOptionId(userId, optionId)
+            .ifPresent(wish -> {
+                try {
+                    wish.subtract(quantity);
+                } catch (IllegalArgumentException e) {
+                    wishListRepository.delete(wish);
+                }
+            });
     }
 }

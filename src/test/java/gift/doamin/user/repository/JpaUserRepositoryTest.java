@@ -15,7 +15,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 class JpaUserRepositoryTest {
 
     @Autowired
-    JpaUserRepository jpaUserRepository;
+    UserRepository jpaUserRepository;
 
     @Test
     void save() {

@@ -5,8 +5,9 @@ import gift.doamin.product.dto.OptionResponse;
 import gift.doamin.product.entity.Option;
 import gift.doamin.product.entity.Product;
 import gift.doamin.product.exception.ProductNotFoundException;
-import gift.doamin.product.repository.JpaProductRepository;
 import gift.doamin.product.repository.OptionRepository;
+import gift.doamin.product.repository.ProductRepository;
+import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class OptionService {
 
-    private final JpaProductRepository productRepository;
+    private final ProductRepository productRepository;
     private final OptionRepository optionRepository;
 
-    public OptionService(JpaProductRepository productRepository,
+    public OptionService(ProductRepository productRepository,
         OptionRepository optionRepository) {
         this.productRepository = productRepository;
         this.optionRepository = optionRepository;
@@ -34,6 +35,11 @@ public class OptionService {
         Option option = optionRepository.save(
             new Option(product, optionRequest.getName(), optionRequest.getQuantity()));
         return new OptionResponse(option);
+    }
+
+    public List<OptionResponse> findAll(Long productId) {
+        List<Option> options = optionRepository.findAllByProductId(productId);
+        return options.stream().map(OptionResponse::new).toList();
     }
 
     @Transactional

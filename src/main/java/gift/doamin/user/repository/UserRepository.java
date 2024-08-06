@@ -1,12 +1,15 @@
 package gift.doamin.user.repository;
 
 import gift.doamin.user.entity.User;
+import java.util.Optional;
 
 public interface UserRepository {
 
-    void save(User user);
+    User save(User user);
 
-    User findById(Long id);
+    Optional<User> findById(Long id);
 
-    User findByEmail(String email);
+    Optional<User> findByEmail(String email);
+
+    boolean existsByEmail(String email);
 }

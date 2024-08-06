@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link th:href="@{/css/admin/product.css}" rel="stylesheet"/>
+  <script defer th:src="@{/js/admin/product.js}"></script>
+  <title>상품 관리</title>
+</head>
+<body>
+<div id="productsContainer" class="products-container">
+  <h1>상품 관리</h1>
+  <select id="categorySelect">
+    <option value="">카테고리 선택</option>
+  </select>
+  <button id="loadProductsButton">상품 조회</button>
+  <button id="openAddProductModalButton">상품 추가</button>
+  <div id="productsList"></div>
+  <div class="pagination">
+    <button id="prevPageButton">이전 페이지</button>
+    <button id="nextPageButton">다음 페이지</button>
+  </div>
+  <button id="goToMainPageButton">메인 페이지로 가기</button>
+</div>
+
+<!-- 상품 추가 모달 -->
+<div id="addProductModal" class="modal">
+  <div class="modal-content">
+    <span class="close-button">&times;</span>
+    <h2>상품 추가</h2>
+    <form id="addProductForm">
+      <label for="addProductName">상품명:</label>
+      <input type="text" id="addProductName" required>
+      <label for="addProductPrice">가격:</label>
+      <input type="number" id="addProductPrice" required>
+      <label for="addProductImageUrl">이미지 URL:</label>
+      <input type="text" id="addProductImageUrl" required>
+      <label for="addProductCategory">카테고리:</label>
+      <select id="addProductCategory"></select>
+      <button type="submit">추가</button>
+    </form>
+  </div>
+</div>
+
+<!-- 상품 수정 모달 -->
+<div id="editProductModal" class="modal">
+  <div class="modal-content">
+    <span class="close-button">&times;</span>
+    <h2>상품 수정</h2>
+    <form id="editProductForm">
+      <input type="hidden" id="editProductId">
+      <label for="editProductName">상품명:</label>
+      <input type="text" id="editProductName" required>
+      <label for="editProductPrice">가격:</label>
+      <input type="number" id="editProductPrice" required>
+      <label for="editProductImageUrl">이미지 URL:</label>
+      <input type="text" id="editProductImageUrl" required>
+      <label for="editProductCategory">카테고리:</label>
+      <select id="editProductCategory"></select>
+      <button type="submit">수정하기</button>
+    </form>
+  </div>
+</div>
+</body>
+</html>

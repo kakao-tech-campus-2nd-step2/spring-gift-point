@@ -9,12 +9,11 @@ import static org.mockito.Mockito.mock;
 
 import gift.doamin.category.entity.Category;
 import gift.doamin.product.dto.OptionRequest;
-import gift.doamin.product.dto.OptionResponse;
 import gift.doamin.product.entity.Option;
 import gift.doamin.product.entity.Product;
 import gift.doamin.product.exception.ProductNotFoundException;
-import gift.doamin.product.repository.JpaProductRepository;
 import gift.doamin.product.repository.OptionRepository;
+import gift.doamin.product.repository.ProductRepository;
 import gift.doamin.user.entity.User;
 import gift.doamin.user.entity.UserRole;
 import java.util.NoSuchElementException;
@@ -24,7 +23,7 @@ import org.junit.jupiter.api.Test;
 
 class OptionServiceTest {
 
-    private JpaProductRepository productRepository = mock(JpaProductRepository.class);
+    private ProductRepository productRepository = mock(ProductRepository.class);
     private OptionRepository optionRepository = mock(OptionRepository.class);
     private OptionService optionService;
 

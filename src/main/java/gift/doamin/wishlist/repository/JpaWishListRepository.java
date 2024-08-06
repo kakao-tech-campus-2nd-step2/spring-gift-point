@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface JpaWishListRepository extends JpaRepository<Wish, Long> {
+public interface JpaWishListRepository extends JpaRepository<Wish, Long>, WishListRepository {
 
     boolean existsByUserIdAndOptionId(Long userId, Long optionId);
 

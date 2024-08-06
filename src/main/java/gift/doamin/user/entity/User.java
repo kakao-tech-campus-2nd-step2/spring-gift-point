@@ -33,6 +33,9 @@ public class User extends AuditingEntity {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
+    @Column(nullable = false)
+    private Integer point;
+
     @OneToMany(mappedBy = "user")
     private List<Product> products;
 
@@ -44,6 +47,7 @@ public class User extends AuditingEntity {
         this.password = password;
         this.name = name;
         this.role = role;
+        this.point = 0;
     }
 
     protected User() {
@@ -78,7 +82,25 @@ public class User extends AuditingEntity {
         return wishList;
     }
 
+    public Integer getPoint() {
+        return point;
+    }
+
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void addPoint(Integer point) {
+        if (this.point > Integer.MAX_VALUE - point) {
+            throw new IllegalArgumentException("포인트는 " + Integer.MAX_VALUE + "를 초과할 수 없습니다.");
+        }
+        this.point += point;
+    }
+
+    public void subtractPoint(Integer price) {
+        if (this.point < price) {
+            throw new IllegalArgumentException("보유중인 포인트가 부족합니다.");
+        }
+        this.point -= price;
     }
 }
