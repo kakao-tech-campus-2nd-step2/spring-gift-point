@@ -1,8 +1,7 @@
 package gift.service;
 
-import gift.dto.KakaoMessageRequestDto;
 import gift.dto.OrderRequestDto;
-import gift.dto.OrderResponseDto;
+import gift.repository.MemberRepository;
 import gift.repository.OrderRepository;
 import gift.vo.Member;
 import gift.vo.Option;
@@ -18,12 +17,14 @@ public class OrderService {
     private final OptionService optionService;
     private final WishlistService wishlistService;
     private final MemberService memberService;
+    private final MemberRepository memberRepository;
 
-    public OrderService(OrderRepository orderRepository, OptionService optionService, WishlistService wishlistService, MemberService memberService) {
+    public OrderService(OrderRepository orderRepository, OptionService optionService, WishlistService wishlistService, MemberService memberService, MemberRepository memberRepository) {
         this.orderRepository = orderRepository;
         this.optionService = optionService;
         this.wishlistService = wishlistService;
         this.memberService = memberService;
+        this.memberRepository = memberRepository;
     }
 
     public Option getOptionByOptionId(Long optionId) {
@@ -48,13 +49,12 @@ public class OrderService {
 
     @Transactional
     public Order createOrder(Long memberId, OrderRequestDto orderRequestDto) {
+        Member member = getMemberByMemberId(memberId);
+        member.subtractPoint(orderRequestDto.usedPoint()); // 포인트 차감
         optionService.subtractOptionQuantity(orderRequestDto.optionId(), orderRequestDto.quantity());
         Order savedOrder = orderRepository.save(orderRequestDto.toOrder(memberId));
 
-        Member member = getMemberByMemberId(memberId);
         Option option = getOptionByOptionId(savedOrder.getOptionId());
-        Product product = option.getProduct();
-
         checkWishAndRemove(member, option);
 
         return savedOrder;

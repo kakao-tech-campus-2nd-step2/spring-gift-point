@@ -49,4 +49,9 @@ public class ViewController {
     public String wishlist(Model model) {
         return "wishlist";
     }
+
+    @GetMapping("/pointView")
+    public String pointView() {
+        return "pointView";
+    }
 }

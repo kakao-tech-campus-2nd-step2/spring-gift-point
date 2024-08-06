@@ -5,6 +5,7 @@ import gift.auth.Token;
 import gift.repository.MemberRepository;
 import gift.vo.Member;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberService {
@@ -44,5 +45,14 @@ public class MemberService {
 
     public boolean hasMemberByEmail(String email) {
         return repository.findByEmail(email).isPresent();
+    }
+
+    @Transactional
+    public void updateMemberPoint(Long memberId, int point) {
+        Member existingMember = repository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하는 회원을 찾을 수 없습니다."));
+
+        existingMember.updatePoint(point);
+        repository.save(existingMember);
     }
 }

@@ -39,7 +39,6 @@
     <tr>
         <th>상품명</th>
         <th>가격</th>
-        <th>이미지</th>
         <th>위시</th>
     </tr>
     </thead>
@@ -63,9 +62,9 @@
         fetchWishlist();
     });
 
-    function fetchWishlist(pageNumber = 1) {
+    function fetchWishlist(pageNumber = 0) {
         $.ajax({
-            url: `/wishlist?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+            url: `/api/wishes?page=${pageNumber}&size=${pageSize}`,
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('token')
             },
@@ -74,10 +73,6 @@
                 const wishlistItems = response.content;
                 const totalPages = response.totalPages;
 
-                // Display member's name
-                const memberName = wishlistItems.length > 0 ? wishlistItems[0].memberDto.email : '';
-                $('#memberName').text(memberName);
-
                 // Display wishlist items
                 const wishlistTable = $("#wishlist-items");
                 wishlistTable.empty();
@@ -85,10 +80,9 @@
                     console.log(item)
                     wishlistTable.append(`
                         <tr>
-                            <td>${item.productResponseDto.name}</td>
-                            <td>${item.productResponseDto.price}</td>
-                            <td><img src="${item.productResponseDto.imageUrl}" alt="상품 이미지" width="100"></td>
-                            <td><button class="heart-button" onclick="removeFromWishlist(${item.id})" onmouseover="unfillHeart(this)" onmouseout="fillHeart(this)"><i class="fas fa-heart"></i></button></td>
+                            <td>${item.productName}</td>
+                            <td><img src="${item.productImageUrl}" alt="상품 이미지" width="100"></td>
+                            <td><button class="heart-button" onclick="removeFromWishlist(${item.wishId})" onmouseover="unfillHeart(this)" onmouseout="fillHeart(this)"><i class="fas fa-heart"></i></button></td>
                         </tr>
                     `);
                 });
@@ -108,7 +102,7 @@
         pagination.empty();
 
         const currentGroup = Math.floor(currentPage / buttonsPerPage);
-        const startPage = currentGroup * buttonsPerPage + 1;
+        const startPage = currentGroup * buttonsPerPage ;
         const endPage = Math.min(startPage + buttonsPerPage, totalPages);
 
         if (currentGroup > 0) {
@@ -116,7 +110,7 @@
         }
 
         for (let i = startPage; i <= endPage; i++) {
-            pagination.append(`<button onclick="fetchWishlist(${i})" class="${i === currentPage ? 'active' : ''}">${i}</button>`);
+            pagination.append(`<button onclick="fetchWishlist(${i})" class="${i === currentPage ? 'active' : ''}">${i + 1}</button>`);
         }
 
         if (endPage < totalPages) {
@@ -126,7 +120,7 @@
 
     function removeFromWishlist(wishId) {
         $.ajax({
-            url: `/wishlist/${wishId}`,
+            url: `/api/wishes/${wishId}`,
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('token')
             },
