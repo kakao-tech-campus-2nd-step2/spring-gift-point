@@ -2,6 +2,7 @@ package gift.service;
 
 import gift.domain.*;
 import gift.dto.request.WishlistRequest;
+
 import gift.exception.WishlistNotFoundException;
 import gift.repository.member.MemberSpringDataJpaRepository;
 import gift.repository.product.ProductSpringDataJpaRepository;
