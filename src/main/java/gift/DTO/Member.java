@@ -68,18 +68,6 @@ public class Member {
         memberDtoByEmail.getPassword());
   }
 
-  public PointVo subtractPoint(PointVo pointVo) throws IllegalAccessException {
-    if (pointVo.getPoint() > this.pointVo.getPoint()) {
-      throw new IllegalAccessException("보유 포인트가 차감 포인트보다 적습니다.");
-    }
-    return new PointVo(this.pointVo.getPoint() - pointVo.getPoint());
-  }
 
-  public PointVo addPoint(PointVo pointVo) throws IllegalAccessException {
-    if (pointVo.getPoint() < 0) {
-      throw new IllegalAccessException("point는 1원 이상 충전 가능합니다");
-    }
-    return new PointVo(this.pointVo.getPoint() + pointVo.getPoint());
-  }
 
 }

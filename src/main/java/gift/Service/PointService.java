@@ -28,7 +28,7 @@ public class PointService {
     Member member = memberRepository.findById(memberId)
       .orElseThrow(() -> new EmptyResultDataAccessException("해당 고객이 없습니다", 1));
 
-    PointVo newPointVo = member.addPoint(pointVo);
+    PointVo newPointVo = member.getPointVo().addPoint(pointVo);
     Member newPointMember = new Member(member.getId(), member.getEmail(), member.getPassword(),
       newPointVo);
     memberRepository.save(newPointMember);
