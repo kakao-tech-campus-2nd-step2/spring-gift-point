@@ -23,7 +23,7 @@ public class MemberService {
 
     public void register(MemberDto memberDto) {
         Member member = mapper.memberDtoToEntity(memberDto);
-        member.setKakaoId(memberDto.getKakaoId());
+        member.setEmail(memberDto.getEmail());
         memberJpaRepository.save(member);
     }
 
@@ -47,9 +47,10 @@ public class MemberService {
         return user != null && user.get().getPassword().equals(password);
     }
 
-    public Optional<MemberDto> findByKakaoId(long kakaoId) {
-        Optional<Member> member = memberJpaRepository.findByKakaoId(kakaoId);
-        return member.map(mapper::memberToDto);
+    public void increasePoint(MemberDto memberDto) {
+        Member member = memberJpaRepository.findById(memberDto.getId()).orElseThrow();
+        member.setPoint(member.getPoint() + memberDto.getPoint());
+        memberJpaRepository.save(member);
     }
 
     public void updatePoint(MemberDto memberDto) {

@@ -35,7 +35,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {    // CORS 설정
         registry.addMapping("/**")
-                .allowedOriginPatterns("https://geongyu09-step1--gorgeous-chebakia-afa13a.netlify.app/")
+                .allowedOriginPatterns("https://geongyu09-step3.react-deploy-d5u.pages.dev/")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*")
                 .allowCredentials(true);
@@ -44,7 +44,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(tokenInterceptor)
-                .addPathPatterns("/**"); //우선 모든 경로에 대해 interceptor를 적용
+                .addPathPatterns(("/api/orders/**")); //주문 관련 api에 대해서 interceptor를 적용
     }
 
 }

@@ -46,12 +46,6 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
                     token = cookie.getValue();
                     break;
                 }
-
-                if ("accessToken".equals(cookie.getName())) {
-                    token = cookie.getValue();
-                    isKakaoToken = true;
-                    break;
-                }
             }
         }
 
@@ -59,16 +53,8 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
             throw new IllegalArgumentException("JWT token not found in cookies");
         }
 
-        if (isKakaoToken) {
-            //카카오 토큰 검증
-            long kakaoId = KakaoTokenValidator.validateToken(token);
-            Optional<MemberDto> memberDto = memberService.findByKakaoId(kakaoId);
-
-            return memberDto.orElseThrow(() -> new IllegalArgumentException("User not found"));
-        }
-
         Claims claims = jwtUtil.decodeToken(token); //decode
-        String memberEmail = claims.getSubject(); // subject를 email로 설정했기 때문에 userEmail로 사용
+        String memberEmail = claims.getSubject(); // subject를 email로 설정했기 때문에 userEmail로 사용, 카카오도 마찬가지
         Optional<MemberDto> memberDto = memberService.findByEmail(memberEmail); //null이라면 인증된 것이 아닐 것이고 null이 아니라면 인증된 것
         if (memberDto.isEmpty()) {
             throw new IllegalArgumentException("User not found");

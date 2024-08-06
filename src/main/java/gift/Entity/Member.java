@@ -11,7 +11,6 @@ public class Member {
     private String email;
     private String password;
     private boolean isAdmin;
-    private long kakaoId;
     private int point;
 
     protected Member() {
@@ -57,8 +56,12 @@ public class Member {
         isAdmin = admin;
     }
 
-    public void setKakaoId(long kakaoId) {
-        this.kakaoId = kakaoId;
+    public int getPoint() {
+        return point;
+    }
+
+    public void setPoint(int point) {
+        this.point = point;
     }
 
     public int getPoint() {

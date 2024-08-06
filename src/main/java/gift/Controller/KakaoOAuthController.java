@@ -27,6 +27,18 @@ public class KakaoOAuthController {
     @Value("${kakao.clientId}")
     private String clientId;
 
+    @Value("${kakao.authorization_url}")
+    private String authorizationUrl;
+
+    @Value("${kakao.user_info_url}")
+    private String userInfoUrl;
+
+    @Value("${kakao.redirect_url}")
+    private String redirectUrl;
+
+    @Value("${kakao.token_url}")
+    private String tokenUrl;
+
     @Autowired
     private MemberService memberService;
 
@@ -36,11 +48,9 @@ public class KakaoOAuthController {
     @GetMapping("/oauth/authorize")
     @Operation(summary = "카카오 로그인 화면", description = "카카오 로그인 화면을 보여줍니다.")
     public void authorize(HttpServletResponse response) throws IOException {
-        var url = "https://kauth.kakao.com/oauth/authorize";
-        var redirectUri = "http://localhost:8080/auth/kakao/callback";
         var responseType = "code";
 
-        String redirectUrl = url + "?response_type=" + responseType + "&client_id=" + clientId + "&redirect_uri=" + redirectUri;
+        String redirectUrl = authorizationUrl + "?response_type=" + responseType + "&client_id=" + clientId + "&redirect_uri=" + this.redirectUrl;
         response.sendRedirect(redirectUrl);
     }
 
@@ -57,7 +67,7 @@ public class KakaoOAuthController {
         String validAccessToken = accessToken.getBody();
 
         //토큰을 쿠키에 저장하기
-        Cookie cookie = new Cookie("accessToken", validAccessToken);
+        Cookie cookie = new Cookie("token", validAccessToken);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         response.addCookie(cookie);
@@ -69,23 +79,24 @@ public class KakaoOAuthController {
 
         HttpEntity<String> entity = new HttpEntity<>(null, headers);
         ResponseEntity<String> responseEntity = restTemplate.exchange(
-                "https://kapi.kakao.com/v2/user/me",
+                userInfoUrl,
                 HttpMethod.GET,
                 entity,
                 String.class
         );
 
         ObjectMapper objectMapper = new ObjectMapper();
-        //id는 가능한데 email을 가져오려고 하면 null이 되는 이유?????????? -> 권한 동의 필요
         KakaoMemberDto kakaoMemberDto = objectMapper.readValue(responseEntity.getBody(), KakaoMemberDto.class);
-        long id = kakaoMemberDto.getId();
+        String email = kakaoMemberDto.getKakaoAccount().getEmail();
+
+        request.getSession().setAttribute("email", email);
 
         request.getSession().setAttribute("kakaoId", id);
 
         //이미 가입된 회원인지 확인, 가입되지 않은 회원이라면 회원가입 진행
-        if (memberService.findByKakaoId(id).isEmpty()) {
+        if (memberService.findByEmail(email).isEmpty()) {
             MemberDto memberDto = new MemberDto();
-            memberDto.setKakaoId(id);
+            memberDto.setEmail(email);
             memberService.register(memberDto);
         }
 
@@ -105,13 +116,13 @@ public class KakaoOAuthController {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("client_id", clientId);
-        body.add("redirect_uri", "http://localhost:8080/auth/kakao/callback");
+        body.add("redirect_uri", redirectUrl);
         body.add("code", code);
 
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, headers); //순서가 body가 먼저
 
         ResponseEntity<String> response = restTemplate.exchange(
-                "https://kauth.kakao.com/oauth/token",
+                tokenUrl,
                 HttpMethod.POST,
                 requestEntity,
                 String.class
