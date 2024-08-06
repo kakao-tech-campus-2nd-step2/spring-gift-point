@@ -57,7 +57,7 @@ class WishListControllerTest {
 
         doNothing().when(wishListService).addWishes(any(), any());
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/products/wishes").header("Authorization", token).content(requestJson).contentType(
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/wishes").header("Authorization", token).content(requestJson).contentType(
                         MediaType.APPLICATION_JSON)).andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
@@ -67,7 +67,7 @@ class WishListControllerTest {
     void deleteWishes() throws Exception {
         doNothing().when(wishListService).removeWishListProduct(any(), any());
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/products/wishes/1").header("Authorization", token).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/wishes/1").header("Authorization", token).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
 
@@ -85,7 +85,7 @@ class WishListControllerTest {
 
         doNothing().when(wishListService).setWishListNumber(any(), any(), any());
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/products/wishes/10").header("Authorization", token).content(requestJson
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/wishes/10").header("Authorization", token).content(requestJson
         ).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 }
