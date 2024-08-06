@@ -28,11 +28,14 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<WishList> wishLists = new HashSet<>();
 
+    private int points = 10000; // 회원가입하면 기본 포인트 만 원
+
     protected Member() {}
 
     public Member(String email, String password) {
         this.email = email;
         this.password = password;
+        this.points = 10000;
     }
 
     public Long getId() {
@@ -64,6 +67,14 @@ public class Member {
         } else {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
     }
 
     public boolean checkPassword(String password) {

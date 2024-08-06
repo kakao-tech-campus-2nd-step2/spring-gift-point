@@ -75,6 +75,19 @@ public class MemberService {
             .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
     }
 
+    // 포인트 조회 메서드
+    public int getMemberPoints(String email) {
+        Member member = findMemberEntityByEmail(email);
+        return member.getPoints();
+    }
+
+    // 포인트 업데이트 메서드
+    public void updateMemberPoints(String email, int points) {
+        Member member = findMemberEntityByEmail(email);
+        member.setPoints(points);
+        memberRepository.save(member);
+    }
+
     // 토큰에서 이메일 추출
     public String extractEmailFromToken(String token) {
         return JwtUtil.extractEmail(token);

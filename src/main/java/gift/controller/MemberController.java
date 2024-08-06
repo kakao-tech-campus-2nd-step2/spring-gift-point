@@ -35,5 +35,17 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
+
+    // 사용자 포인트 조회
+    @GetMapping("/points")
+    public ResponseEntity<Integer> getMemberPoints(@RequestHeader("Authorization") String token) {
+        try {
+            String email = memberService.extractEmailFromToken(token.substring(7));
+            int points = memberService.getMemberPoints(email);
+            return ResponseEntity.ok(points);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 }
 

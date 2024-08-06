@@ -13,9 +13,9 @@ VALUES (3245119, '[단독각인] 피렌체 1221 에디션 오드코롱 50ml (13�
        (1379982, '[정관장] 홍삼정 에브리타임 리미티드 (10ml x 30포)', 'https://st.kakaocdn.net/product/gift/product/20240118135914_a6e1a7442ea04aa49add5e02ed62b4c3.jpg', 133000, 2920);
 
 -- 회원 데이터 입력 (예시)
-INSERT INTO member (email, password)
-VALUES ('user1@example.com', 'password1'),
-       ('user2@example.com', 'password2');
+INSERT INTO member (email, password, points)
+VALUES ('user1@example.com', 'password1', 50000),
+       ('user2@example.com', 'password2', 30000);
 
 -- user1
 INSERT INTO wish_list (id, product_id, member_id)

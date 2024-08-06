@@ -29,6 +29,13 @@ public class OrderService {
         Option option = optionService.findOptionById(orderRequestDTO.getOptionId());
         optionService.subtractOptionQuantity(option.getId(), orderRequestDTO.getQuantity());
 
+        int remainingPoints = member.getPoints() - orderRequestDTO.getPoints();
+        if (remainingPoints < 0) {
+            throw new IllegalArgumentException("포인트가 부족합니다.");
+        }
+        member.setPoints(remainingPoints);
+        memberService.updateMemberPoints(email, remainingPoints);
+
         Order order = new Order(member, option, orderRequestDTO.getQuantity(), orderRequestDTO.getMessage());
         return orderRepository.save(order);
     }
