@@ -20,7 +20,7 @@ public class TokenExtractor {
     private String extractTokenFromCookie(HttpServletRequest request) {
         if (request.getCookies() != null) {
             return Arrays.stream(request.getCookies())
-                    .filter(cookie -> "accessToken".equals(cookie.getName())) //카카오 토큰이면 accessToken인데 jwt면 token, 이렇게 이름이 다르다면?
+                    .filter(cookie -> "token".equals(cookie.getName())) //카카오 토큰이면 accessToken인데 jwt면 token, 이렇게 이름이 다르다면?
                     .findFirst()
                     .map(Cookie::getValue)
                     .orElse(null);
