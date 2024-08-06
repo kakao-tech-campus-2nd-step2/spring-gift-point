@@ -14,7 +14,9 @@ import gift.web.dto.response.LoginResponse;
 import gift.web.dto.response.member.CreateMemberResponse;
 import gift.web.dto.response.member.PointResponse;
 import gift.web.dto.response.member.ReadMemberResponse;
+import gift.web.validation.exception.client.BadRequestException;
 import gift.web.validation.exception.client.IncorrectEmailException;
+import gift.web.validation.exception.client.IncorrectPasswordException;
 import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,7 +74,12 @@ public class MemberService {
 
     public Point subtractPoint(Long id, int point) {
         Member member = memberRepository.findById(id).orElseThrow(NoSuchElementException::new);
-        return member.subtractPoint(point);
+
+        try {
+            return member.subtractPoint(point);
+        } catch (Exception e) {
+            throw new BadRequestException("포인트가 부족합니다.");
+        }
     }
 
     public void deleteMember(Long id) {
@@ -85,7 +92,11 @@ public class MemberService {
         Email email = Email.from(request.getEmail());
         Member member = memberRepository.findByEmail(email).orElseThrow(() -> new IncorrectEmailException(email.getValue()));
 
-        member.matchPassword(request.getPassword());
+        try {
+            member.matchPassword(request.getPassword());
+        } catch (IllegalArgumentException e) {
+            throw new IncorrectPasswordException(member.getPassword().getValue());
+        }
 
         Token token = jwtProvider.generateToken(member);
 
