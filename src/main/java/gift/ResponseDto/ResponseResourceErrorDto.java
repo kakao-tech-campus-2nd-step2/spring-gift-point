@@ -7,7 +7,10 @@ public class ResponseResourceErrorDto {
   private String status;
   @Schema(description = "상태 메시지", example = "매핑되는 URI가 없습니다.")
   private String message;
-  public ResponseResourceErrorDto() {}
+
+  public ResponseResourceErrorDto() {
+  }
+
   public ResponseResourceErrorDto(String status, String message) {
     this.status = status;
     this.message = message;

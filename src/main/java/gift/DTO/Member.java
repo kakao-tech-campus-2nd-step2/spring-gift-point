@@ -1,17 +1,15 @@
 package gift.DTO;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table
@@ -29,19 +27,24 @@ public class Member {
   @Column(nullable = false)
   private String password;
 
+  @Embedded
+  private Point point;
+
   protected Member() {
 
   }
 
-  public Member(Long id, String email, String password) {
+  public Member(Long id, String email, String password, Point point) {
     this.id = id;
     this.email = email;
     this.password = password;
+    this.point = point;
   }
 
-  public Member(String email, String password) {
+  public Member(String email, String password, Point point) {
     this.email = email;
     this.password = password;
+    this.point = point;
   }
 
   public Long getId() {
@@ -56,9 +59,15 @@ public class Member {
     return this.password;
   }
 
+  public Point getPointVo() {
+    return this.point;
+  }
+
   public boolean matchLoginInfo(MemberDto memberDtoByEmail) {
     return this.email.equals(memberDtoByEmail.getEmail()) && this.password.equals(
-      memberDtoByEmail.getPassword());
+        memberDtoByEmail.getPassword());
   }
+
+
 
 }

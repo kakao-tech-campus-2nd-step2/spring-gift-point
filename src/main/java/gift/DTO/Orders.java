@@ -1,18 +1,14 @@
 package gift.DTO;
 
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @Entity
 @Table
@@ -30,19 +26,24 @@ public class Orders {
   private LocalDateTime orderDateTime;
   private String message;
 
-  public Orders(Option option, int quantity, String message) {
+  @Embedded
+  private Point point;
+
+  public Orders(Option option, int quantity, String message, Point point) {
     this.option = option;
     this.quantity = quantity;
     this.orderDateTime = LocalDateTime.now();
     this.message = message;
+    this.point = point;
   }
 
-  public Orders(Long id, Option option, int quantity, String message) {
+  public Orders(Long id, Option option, int quantity, String message, Point point) {
     this.id = id;
     this.option = option;
     this.quantity = quantity;
     this.orderDateTime = LocalDateTime.now();
     this.message = message;
+    this.point = point;
   }
 
   protected Orders() {
@@ -66,5 +67,9 @@ public class Orders {
 
   public String getMessage() {
     return message;
+  }
+
+  public Point getPointVo() {
+    return this.point;
   }
 }

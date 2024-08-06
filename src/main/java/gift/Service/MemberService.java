@@ -3,6 +3,7 @@ package gift.Service;
 import gift.DTO.JwtToken;
 import gift.DTO.Member;
 import gift.DTO.MemberDto;
+import gift.DTO.Point;
 import gift.Exception.ForbiddenException;
 import gift.Exception.UnauthorizedException;
 import gift.Repository.MemberRepository;
@@ -21,8 +22,9 @@ public class MemberService {
   }
 
   public JwtToken SignUp(MemberDto memberDtoInfo) {
+    Point point = new Point();
     Member member = new Member(memberDtoInfo.getId(), memberDtoInfo.getEmail(),
-      memberDtoInfo.getPassword());
+      memberDtoInfo.getPassword(), point);
     memberRepository.save(member);
     JwtToken jwtToken = jwtService.createAccessToken(memberDtoInfo);
     if (jwtService.isValidToken(jwtToken)) { //토큰이 만료되었다면

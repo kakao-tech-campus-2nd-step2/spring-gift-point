@@ -9,9 +9,8 @@ public class ResponseOrderDto {
   private final LocalDateTime orderDateTime;
   private final String message;
 
-
   public ResponseOrderDto(Long id, Long optionId, int quantity, LocalDateTime orderDateTime,
-    String message) {
+      String message) {
     this.id = id;
     this.optionId = optionId;
     this.quantity = quantity;
@@ -32,7 +31,7 @@ public class ResponseOrderDto {
   }
 
   public LocalDateTime getOrderDateTime() {
-  public String getOrderDateTime() {
+    return orderDateTime;
   }
 
   public String getMessage() {

@@ -31,7 +31,7 @@ public class WishController {
 
   @GetMapping
   public ResponseEntity<Page<WishListDto>> getWishList(
-    @PageableDefault(size = 10, sort = "wishId", direction = Direction.DESC) Pageable pageable) {
+      @PageableDefault(size = 10, sort = "wishId", direction = Direction.DESC) Pageable pageable) {
     Page<WishListDto> wishList = wishListService.getWishList(pageable);
 
     return ResponseEntity.ok(wishList);
@@ -39,7 +39,7 @@ public class WishController {
 
   @PostMapping
   public ResponseEntity<WishListDto> addProductToWishList(@RequestBody Long productId,
-    @LoginUser MemberDto memberDto) {
+      @LoginUser MemberDto memberDto) {
 
     wishListService.addProductToWishList(productId);
     return ResponseEntity.created(URI.create("/productId")).build();

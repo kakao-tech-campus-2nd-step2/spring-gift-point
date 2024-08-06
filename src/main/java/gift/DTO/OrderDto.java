@@ -1,7 +1,5 @@
 package gift.DTO;
 
-import java.util.List;
-
 public class OrderDto {
 
   private final Long id;
@@ -10,13 +8,16 @@ public class OrderDto {
   private final String orderDateTime;
   private final String message;
 
+  private final Point point;
+
   public OrderDto(Long id, OptionDto optionDto, int quantity, String orderDateTime,
-    String message) {
+    String message, Point point) {
     this.id = id;
     this.optionDto = optionDto;
     this.quantity = quantity;
     this.orderDateTime = orderDateTime;
     this.message = message;
+    this.point = point;
   }
 
   public Long getId() {
@@ -37,5 +38,9 @@ public class OrderDto {
 
   public String getMessage() {
     return message;
+  }
+
+  public Point getPointVo() {
+    return this.point;
   }
 }

@@ -229,3 +229,22 @@
          "message": "Please handle this order this care."
          }
       5. HttpStatus : CREATED 201
+
+
+7. 포인트 api
+   1. 포인트 충전
+      1. url : /api/points
+      2. Authorization : Bearer token
+      3. Require data :{
+         “point” : 1000
+         }
+      4. HttpStatus: Created 201
+   2. 포인트 조회
+      1. url : /api/points
+      2. Authorization : Bearer token
+      3. Response data : {
+         “point” : 1000
+         }
+      4. HttpStatus : OK 200
+   3. 포인트 차감
+      1. Authorization : Bearer token
