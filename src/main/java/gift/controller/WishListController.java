@@ -7,6 +7,7 @@ import gift.dto.betweenClient.ResponseDTO;
 import gift.dto.betweenClient.wish.WishRequestDTO;
 import gift.dto.betweenClient.wish.WishResponseDTO;
 import gift.dto.swagger.GetWishListResponse;
+import gift.exception.BadRequestExceptions.BadRequestException;
 import gift.service.WishListService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
@@ -94,9 +95,12 @@ public class WishListController {
                     content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseDTO.class))),
             @ApiResponse(responseCode = "500", description = "서버에 의한 오류입니다.",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class)))})
-    public ResponseEntity<ResponseDTO> deleteWishes(@PathVariable @Min(1) @NotNull Long id,
-            @Parameter(hidden = true) @LoginMember MemberDTO memberDTO) {
-        wishListService.removeWishListProduct(memberDTO, id);
+    public ResponseEntity<ResponseDTO> deleteWishes(@PathVariable @Min(1) @NotNull Long id, @Parameter(hidden = true) @LoginMember MemberDTO memberDTO) {
+        try {
+            wishListService.removeWishListProduct(memberDTO, id);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException(e.getMessage());
+        }
         return new ResponseEntity<>(new ResponseDTO(false, ResponseMsgConstants.WELL_DONE_MESSAGE), HttpStatus.NO_CONTENT);
     }
 

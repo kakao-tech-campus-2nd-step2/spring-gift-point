@@ -74,7 +74,7 @@ public class WishListService {
 
     @Transactional
     public void removeWishListProduct(MemberDTO memberDTO, Long id)
-            throws NoSuchProductIdException, EmptyResultDataAccessException {
+            throws BadRequestException, InternalServerException, IllegalArgumentException {
         try {
             Member member = memberRepository.findByEmail(memberDTO.getEmail())
                     .orElseThrow(() -> new UserNotFoundException("해당 사용자가 존재하지 않습니다."));

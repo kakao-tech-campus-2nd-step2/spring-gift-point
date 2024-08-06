@@ -1,6 +1,5 @@
 package gift.entity;
 
-import gift.exception.BadRequestExceptions.BadRequestException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -96,7 +95,7 @@ public class Member {
     public void substractPoint(Long point) {
         validatePoint(point);
         if (point > this.point)
-            throw new BadRequestException("포인트가 부족합니다.");
+            throw new IllegalArgumentException("포인트가 부족합니다.");
         this.point -= point;
     }
 
@@ -124,23 +123,23 @@ public class Member {
 
     private void validateEmail(String email) {
         if (email == null || !EMAIL_PATTERN.matcher(email).matches()) {
-            throw new BadRequestException("올바른 이메일 형식이 아닙니다.");
+            throw new IllegalArgumentException("올바른 이메일 형식이 아닙니다.");
         }
     }
 
     private void validatePassword(String password) {
         if (password == null || password.isBlank()) {
-            throw new BadRequestException("비밀번호를 입력해주세요.");
+            throw new IllegalArgumentException("비밀번호를 입력해주세요.");
         }
     }
 
     private void validateAccountType(String accountType) {
         if(!Objects.equals(accountType, "basic") && !Objects.equals(accountType, "social"))
-            throw new BadRequestException("계정 타입은 'basic' 또는 'social'이어야 합니다.");
+            throw new IllegalArgumentException("계정 타입은 'basic' 또는 'social'이어야 합니다.");
     }
 
     private void validatePoint(Long point) {
         if(point == null || point < 0)
-            throw new BadRequestException("올바르지 않은 포인트 입니다.");
+            throw new IllegalArgumentException("올바르지 않은 포인트 입니다.");
     }
 }

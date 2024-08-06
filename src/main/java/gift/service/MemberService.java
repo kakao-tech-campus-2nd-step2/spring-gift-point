@@ -31,12 +31,11 @@ public class MemberService {
             memberRepository.save(member);
         } catch (DataIntegrityViolationException e) {
             throw new EmailAlreadyHereException("이미 있는 이메일입니다.");
-        }
-
-        catch (BadRequestException e) {
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException(e.getMessage());
+        } catch (BadRequestException e) {
             throw e;
-        }
-        catch  (Exception e) {
+        } catch (Exception e) {
             throw new InternalServerException(e.getMessage());
         }
 
@@ -71,6 +70,8 @@ public class MemberService {
                 throw new DuplicatedUserException(email + "is Duplicated in DB");
             }
             throw new UserNotFoundException(email + "을(를) 가지는 유저를 찾을 수 없습니다.");
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException(e.getMessage());
         } catch (BadRequestException e) {
             throw e;
         } catch (Exception e) {
