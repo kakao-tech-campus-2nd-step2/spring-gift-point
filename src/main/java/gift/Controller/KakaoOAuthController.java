@@ -91,6 +91,8 @@ public class KakaoOAuthController {
 
         request.getSession().setAttribute("email", email);
 
+        request.getSession().setAttribute("kakaoId", id);
+
         //이미 가입된 회원인지 확인, 가입되지 않은 회원이라면 회원가입 진행
         if (memberService.findByEmail(email).isEmpty()) {
             MemberDto memberDto = new MemberDto();
