@@ -1,10 +1,12 @@
 package gift.service.user;
 
 
+import gift.domain.point.Point;
 import gift.domain.user.User;
 import gift.exception.user.InvalidCredentialsException;
 import gift.exception.user.UserAlreadyExistsException;
 import gift.exception.user.UserNotFoundException;
+import gift.repository.point.PointRepository;
 import gift.repository.user.UserRepository;
 import gift.util.JwtTokenUtil;
 import org.mindrot.jbcrypt.BCrypt;
@@ -20,12 +22,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final JwtTokenUtil jwtTokenUtil;
     private final PasswordEncoder passwordEncoder;
+    private final PointRepository pointRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, JwtTokenUtil jwtTokenUtil, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, JwtTokenUtil jwtTokenUtil, PasswordEncoder passwordEncoder, PointRepository pointRepository) {
         this.userRepository = userRepository;
         this.jwtTokenUtil = jwtTokenUtil;
         this.passwordEncoder = passwordEncoder;
+        this.pointRepository = pointRepository;
     }
 
     public String login(String email, String password) throws UserNotFoundException, InvalidCredentialsException {
@@ -55,19 +59,6 @@ public class UserService {
         return userRepository.findAll();
     }
 
-/*
-    @Transactional
-    public void registerUser(String email, String password) throws UserAlreadyExistsException {
-        if (userRepository.existsByEmail(email)) {
-            throw new UserAlreadyExistsException("User already exists");
-        }
-        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-        User newUser = new User(email, hashedPassword);
-        userRepository.save(newUser);
-
-    }
-
- */
     @Transactional
     public Map<String, String> registerUser(String email, String password) throws UserAlreadyExistsException {
         if (userRepository.existsByEmail(email)) {
@@ -77,6 +68,10 @@ public class UserService {
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
         User newUser = new User(email, hashedPassword);
         userRepository.save(newUser);
+
+        // 포인트 객체 생성
+        Point newPoint = new Point(newUser, 0L);
+        pointRepository.save(newPoint);
 
         // 토큰 생성
         return generateJwtToken(newUser);
@@ -95,7 +90,13 @@ public class UserService {
                     String encodedPassword = passwordEncoder.encode(randomPassword);
 
                     User newUser = new User(id, emailToUse, encodedPassword);
-                    return userRepository.save(newUser);
+                    User savedUser = userRepository.save(newUser);
+
+                    // 포인트 객체 생성
+                    Point newPoint = new Point(savedUser, 0L);
+                    pointRepository.save(newPoint);
+
+                    return savedUser;
                 });
     }
 

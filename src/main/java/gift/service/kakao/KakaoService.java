@@ -11,6 +11,8 @@ import gift.domain.user.UserInfoDto;
 import gift.repository.order.OrderRepository;
 import gift.repository.product.option.ProductOptionRepository;
 import gift.repository.wish.WishRepository;
+import gift.service.order.OrderProcessingService;
+import gift.service.point.PointService;
 import gift.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -21,6 +23,7 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestClientResponseException;
 import gift.util.JwtTokenUtil;
+import org.springframework.beans.factory.annotation.Value;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +38,9 @@ import java.util.Map;
 public class KakaoService {
     private static final Logger logger = LoggerFactory.getLogger(KakaoService.class);
 
+    @Value("${point.earn.rate}")
+    private double pointEarnRate;
+
     private final RestClient client;
     private final ObjectMapper objectMapper;
     private final KakaoProperties kakaoProperties;
@@ -43,6 +49,8 @@ public class KakaoService {
     private final WishRepository wishRepository;
     private final OrderRepository orderRepository;
     private final JwtTokenUtil jwtTokenUtil;
+    private final PointService pointService;
+    private final OrderProcessingService orderProcessingService;
 
     @Autowired
     public KakaoService(KakaoProperties kakaoProperties,
@@ -50,7 +58,9 @@ public class KakaoService {
                         ProductOptionRepository productOptionRepository,
                         WishRepository wishRepository,
                         OrderRepository orderRepository,
-                        JwtTokenUtil jwtTokenUtil) {
+                        JwtTokenUtil jwtTokenUtil,
+                        PointService pointService,
+                        OrderProcessingService orderProcessingService) {
         this.client = RestClient.builder().build();
         this.objectMapper = new ObjectMapper();
         this.kakaoProperties = kakaoProperties;
@@ -59,6 +69,8 @@ public class KakaoService {
         this.wishRepository = wishRepository;
         this.orderRepository = orderRepository;
         this.jwtTokenUtil = jwtTokenUtil;
+        this.pointService = pointService;
+        this.orderProcessingService = orderProcessingService;
     }
 
     public UserInfoDto kakaoLogin(String authorizationCode) {
@@ -176,27 +188,14 @@ public class KakaoService {
     }
 
     @Transactional
-    public Map<String, Object> createOrder(User user, String accessToken, OrderRequest orderRequest) {
-        ProductOption productOption = productOptionRepository.findById(orderRequest.getOptionId())
-                .orElseThrow(() -> new IllegalArgumentException("옵션을 찾을 수 없음"));
+    public Map<String, Object> createKakaoOrder(User user, String accessToken, OrderRequest orderRequest) {
+        Order order = orderProcessingService.processOrder(user, orderRequest);
 
-        productOption.subtract(orderRequest.getQuantity());
-        productOptionRepository.save(productOption);
-
-        wishRepository.findByUserIdAndProductIdAndIsDeletedFalse(user.getId(), productOption.getProduct().getId())
-                .ifPresent(wish -> {
-                    wish.setIsDeleted(true);
-                    wishRepository.save(wish);
-                });
-
-        sendKakaoMessage(user, accessToken, orderRequest.getMessage(), productOption.getName(), orderRequest.getQuantity());
+        sendKakaoMessage(user, accessToken, orderRequest.getMessage(), order.getProductOption().getName(), orderRequest.getQuantity());
 
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         String formattedNow = now.format(formatter);
-
-        Order order = new Order(user, productOption, orderRequest.getQuantity(), orderRequest.getMessage(), now);
-        orderRepository.save(order);
 
         Map<String, Object> response = new HashMap<>();
         response.put("id", order.getId());
@@ -204,7 +203,11 @@ public class KakaoService {
         response.put("quantity", orderRequest.getQuantity());
         response.put("orderDateTime", formattedNow);
         response.put("message", orderRequest.getMessage());
+        response.put("remainingCashAmount", order.getRemainingCashAmount());
+        response.put("pointsToUse", order.getPointsToUse());
+        response.put("totalPoints", pointService.getUserPoints(user));
 
+        logger.info("주문 완료: {}", response);
         return response;
     }
 

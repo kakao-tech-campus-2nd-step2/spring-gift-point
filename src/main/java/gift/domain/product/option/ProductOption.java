@@ -85,4 +85,8 @@ public class ProductOption {
         this.quantity = quantity;
         return this;
     }
+
+    public Long getPrice() {
+        return product.getPrice(); // Product 객체에서 가격을 가져옴
+    }
 }
