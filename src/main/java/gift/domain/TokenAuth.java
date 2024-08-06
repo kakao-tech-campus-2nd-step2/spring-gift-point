@@ -2,6 +2,8 @@ package gift.domain;
 
 import jakarta.persistence.*;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "token_auth")
 public class TokenAuth {
@@ -14,19 +16,28 @@ public class TokenAuth {
 
     private String refreshToken;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false)
+    private Date accessTokenExpiry;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date refreshTokenExpiry;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     public TokenAuth(String accessToken, Member member) {
-        this(accessToken, null, member);
+        this(accessToken, null, null, null, member);
     }
 
     public TokenAuth() { }
 
-    public TokenAuth(String accessToken, String refreshToken, Member member) {
+    public TokenAuth(String accessToken, String refreshToken, Date accessTokenExpiry, Date refreshTokenExpiry, Member member) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
+        this.accessTokenExpiry = accessTokenExpiry;
+        this.refreshTokenExpiry = refreshTokenExpiry;
         setMember(member);
     }
 
@@ -63,6 +74,22 @@ public class TokenAuth {
 
     public String getRefreshToken() {
         return refreshToken;
+    }
+
+    public Date getAccessTokenExpiry() {
+        return accessTokenExpiry;
+    }
+
+    public void setAccessTokenExpiry(Date accessTokenExpiry) {
+        this.accessTokenExpiry = accessTokenExpiry;
+    }
+
+    public Date getRefreshTokenExpiry() {
+        return refreshTokenExpiry;
+    }
+
+    public void setRefreshTokenExpiry(Date refreshTokenExpiry) {
+        this.refreshTokenExpiry = refreshTokenExpiry;
     }
 
     @PreRemove

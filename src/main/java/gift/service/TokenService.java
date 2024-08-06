@@ -4,19 +4,19 @@ import gift.domain.Member;
 import gift.domain.TokenAuth;
 import gift.exception.UnAuthorizationException;
 import gift.repository.token.TokenSpringDataJpaRepository;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.Optional;
 
 import static gift.exception.ErrorCode.UNAUTHORIZED;
-
 
 @Service
 @Transactional(readOnly = true)
@@ -49,9 +49,7 @@ public class TokenService {
         TokenAuth tokenAuth = tokenRepository.findByMember(member)
                 .orElse(new TokenAuth());
 
-        tokenAuth.setMember(member);
-        tokenAuth.setAccessToken(accessToken);
-        tokenAuth.setRefreshToken(refreshToken);
+        updateTokenAuth(tokenAuth, member, accessToken, refreshToken);
 
         tokenRepository.save(tokenAuth);
     }
@@ -61,7 +59,6 @@ public class TokenService {
         return Jwts.builder()
                 .setSubject(member.getId().toString())
                 .claim("email", member.getEmail())
-                .setExpiration(new Date(System.currentTimeMillis() + accessTokenValidityInMillis))
                 .signWith(getSecretKey())
                 .compact();
     }
@@ -71,7 +68,6 @@ public class TokenService {
         return Jwts.builder()
                 .setSubject(member.getId().toString())
                 .claim("email", member.getEmail())
-                .setExpiration(new Date(System.currentTimeMillis() + refreshTokenValidityInMillis))
                 .signWith(getSecretKey())
                 .compact();
     }
@@ -100,43 +96,58 @@ public class TokenService {
     }
 
     public boolean isAccessTokenValid(String accessToken) {
-        try {
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
-                    .build()
-                    .parseClaimsJws(accessToken)
-                    .getBody();
-            Date expiration = claims.getExpiration();
-            return expiration.after(new Date());
-        } catch (Exception e) {
+        Optional<TokenAuth> tokenAuthOpt = tokenRepository.findByAccessToken(accessToken);
+        if (tokenAuthOpt.isEmpty()) {
             return false;
         }
+
+        TokenAuth tokenAuth = tokenAuthOpt.get();
+        Date now = new Date();
+        return now.before(tokenAuth.getAccessTokenExpiry());
     }
 
     public boolean isRefreshTokenValid(String refreshToken) {
-        try {
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
-                    .build()
-                    .parseClaimsJws(refreshToken)
-                    .getBody();
-            Date expiration = claims.getExpiration();
-            return expiration.after(new Date());
-        } catch (Exception e) {
+        Optional<TokenAuth> tokenAuthOpt = tokenRepository.findByRefreshToken(refreshToken);
+        if (tokenAuthOpt.isEmpty()) {
             return false;
         }
+
+        TokenAuth tokenAuth = tokenAuthOpt.get();
+        Date now = new Date();
+        return now.before(tokenAuth.getRefreshTokenExpiry());
     }
 
     @Transactional
     public String refreshAccessToken(String refreshToken) {
         TokenAuth tokenAuth = findTokenByRefreshToken(refreshToken);
         Member member = tokenAuth.getMember();
-        return generateAccessToken(member);
+
+        String newAccessToken = generateAccessToken(member);
+        String newRefreshToken = generateRefreshToken(member);
+
+        updateTokenAuth(tokenAuth, member, newAccessToken, newRefreshToken);
+        tokenRepository.save(tokenAuth);
+
+        return newAccessToken;
+    }
+
+    private void updateTokenAuth(TokenAuth tokenAuth, Member member, String accessToken, String refreshToken) {
+        tokenAuth.setMember(member);
+        tokenAuth.setAccessToken(accessToken);
+        tokenAuth.setRefreshToken(refreshToken);
+        tokenAuth.setAccessTokenExpiry(new Date(System.currentTimeMillis() + accessTokenValidityInMillis));
+        tokenAuth.setRefreshTokenExpiry(new Date(System.currentTimeMillis() + refreshTokenValidityInMillis));
     }
 
     private SecretKey getSecretKey() {
         return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
+    @Scheduled(cron = "0 0 0 * * ?") // 매일 자정에 스케쥴링 실행
+    @Transactional
+    public void deleteExpiredTokens() {
+        Date now = new Date();
+        tokenRepository.deleteAllExpiredSince(now);
+    }
 }
 
