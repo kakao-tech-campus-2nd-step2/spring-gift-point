@@ -41,13 +41,17 @@ public class MemberService {
     }
 
     public String login(MemberDto memberDto) {
-        Member member = new Member(memberDto);
-        Member queriedMember = findMemberByEmail(member.getEmail());
+        Member queriedMember = findMemberByEmail(memberDto.getEmail());
 
-        if (!queriedMember.isCorrectPassword(member.getPassword())) {
+        if (!queriedMember.isCorrectPassword(memberDto.getPassword())) {
             throw new IllegalArgumentException(ErrorMessage.INVALID_PASSWORD_MSG);
         }
-        return jwtUtil.createJwt(member.getEmail(), 1000 * 60 * 30);
+        return jwtUtil.createJwt(queriedMember.getEmail(), 1000 * 60 * 30);
+    }
+
+    public long getPoint(String email) {
+        return findMemberByEmail(email)
+            .getPoint();
     }
 
     public Page<WishlistResponse> getAllWishlist(String email, Pageable pageable) {
