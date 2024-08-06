@@ -21,7 +21,7 @@ public class KakaoTokenService {
                     newToken.setEmail(email);
                     return newToken;
 
-        });
+                });
 
         kakaoToken.setAccessToken(accessToken);
 

@@ -1,10 +1,8 @@
 package gift.controller;
 
 import gift.domain.Option;
-import gift.domain.Product;
-import gift.dto.OptionDTO;
+import gift.dto.OptionResponse;
 import gift.service.OptionService;
-import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -29,12 +27,12 @@ public class OptionController {
 
     @GetMapping
     @Operation(summary = "상품 옵션 목록 조회", description = "특정 상품의 옵션을 조회합니다.")
-    public ResponseEntity<List<OptionDTO>> getOptions(@PathVariable("productId") Long productId) {
+    public ResponseEntity<List<OptionResponse>> getOptions(@PathVariable("productId") Long productId) {
         List<Option> options = optionService.getOptionsByProductId(productId);
         if (options == null) {
             return ResponseEntity.notFound().build();
         }
-        List<OptionDTO> optionDTOs = options.stream().map(OptionDTO::convertToDto).collect(Collectors.toList());
+        List<OptionResponse> optionDTOs = options.stream().map(OptionResponse::convertToDto).collect(Collectors.toList());
         return ResponseEntity.ok(optionDTOs);
     }
 

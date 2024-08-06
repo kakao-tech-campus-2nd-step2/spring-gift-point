@@ -19,13 +19,15 @@ public class OrderService {
     private final KakaoService kakaoService;
     private final OptionService optionService;
     private final OptionRepository optionRepository;
+    private final PointService pointService;
 
-    public OrderService(OrderRepository orderRepository, WishRepository wishRepository, KakaoService kakaoService, OptionService optionService, OptionRepository optionRepository) {
+    public OrderService(OrderRepository orderRepository, WishRepository wishRepository, KakaoService kakaoService, OptionService optionService, OptionRepository optionRepository, PointService pointService) {
         this.orderRepository = orderRepository;
         this.wishRepository = wishRepository;
         this.kakaoService = kakaoService;
         this.optionService = optionService;
         this.optionRepository = optionRepository;
+        this.pointService = pointService;
     }
 
     @Transactional
@@ -40,6 +42,15 @@ public class OrderService {
         optionService.subtractOptionQuantity(option.getProduct().getId(), option.getName(), orderRequest.getQuantity());
 
         optionRepository.save(option);
+
+        int productPrice = (int) (option.getProduct().getPrice() * orderRequest.getQuantity());
+        int memberPoints = member.getPoint();
+
+        if (memberPoints >= productPrice) {
+            pointService.subtractPoint(member.getId(), productPrice);
+        } else {
+            pointService.subtractPoint(member.getId(), memberPoints);
+        }
 
         Order order = new Order(member, option, orderRequest.getQuantity(), LocalDateTime.now(), orderRequest.getMessage());
         orderRepository.save(order);
