@@ -41,7 +41,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @PropertySource("classpath:application-secret.properties")
 @PropertySource("classpath:application-kakao-login.properties")
 @Validated
-@RequestMapping("api/members")
+@RequestMapping("/api/members")
 public class MemberController {
 
     private final MemberService memberService;
