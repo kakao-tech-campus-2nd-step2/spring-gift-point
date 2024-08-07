@@ -1,9 +1,13 @@
 package gift;
 
 import gift.domain.KakaoLoginProperties;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -22,5 +26,16 @@ public class Application {
         var user = "sa";
         var password = "";
         return DriverManager.getConnection(url,user,password);
+    }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**").allowedOrigins("https://dandamdandam.github.io/react-deploy/");
+                registry.addMapping("/**").allowedOrigins("https://codus1718.github.io/react-deploy/");
+            }
+        };
     }
 }
