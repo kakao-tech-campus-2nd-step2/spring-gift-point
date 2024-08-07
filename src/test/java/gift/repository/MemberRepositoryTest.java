@@ -20,25 +20,25 @@ class MemberRepositoryTest {
     @Test
     void findMemberById() {
         Optional<Member> actualMember = memberRepository.findMemberById(1L);
-        if(actualMember.isEmpty()) {
+        if (actualMember.isEmpty()) {
             fail("memberRepository.findMemberById Test Fail");
         }
         assertAll(
                 () -> assertThat(actualMember.get().getId()).isNotNull(),
-                () -> assertThat(actualMember.get().getEmail()).isEqualTo("member1.com"),
+                () -> assertThat(actualMember.get().getEmail()).isEqualTo("member@kakao.com"),
                 () -> assertThat(actualMember.get().getPassword()).isEqualTo("asdf")
         );
     }
 
     @Test
     void findMemberByEmail() {
-        Optional<Member> actualMember = memberRepository.findMemberByEmail("member1.com");
-        if(actualMember.isEmpty()) {
+        Optional<Member> actualMember = memberRepository.findMemberByEmail("member@kakao.com");
+        if (actualMember.isEmpty()) {
             fail("memberRepository.findMemberByEmail Test Fail");
         }
         assertAll(
                 () -> assertThat(actualMember.get().getId()).isNotNull(),
-                () -> assertThat(actualMember.get().getEmail()).isEqualTo("member1.com"),
+                () -> assertThat(actualMember.get().getEmail()).isEqualTo("member@kakao.com"),
                 () -> assertThat(actualMember.get().getPassword()).isEqualTo("asdf")
         );
     }

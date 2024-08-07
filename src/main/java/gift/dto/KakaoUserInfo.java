@@ -1,11 +1,21 @@
 package gift.dto;
 
-public record KakaoUserInfo(Long id, String connected_at, KakaoAccount kakao_account) {
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record KakaoUserInfo(Long id,
+                            @JsonProperty("connected_at")
+                            String connectedAt,
+                            @JsonProperty("kakao_account")
+                            KakaoAccount kakaoAccount) {
     public static class KakaoAccount {
-        public Boolean has_email;
-        public Boolean email_needs_agreement;
-        public Boolean is_email_valid;
-        public Boolean is_email_verified;
+        @JsonProperty("has_email")
+        public Boolean hasEmail;
+        @JsonProperty("email_needs_agreement")
+        public Boolean emailNeedsAgreement;
+        @JsonProperty("is_email_valid")
+        public Boolean isEmailValid;
+        @JsonProperty("is_email_verified")
+        public Boolean isEmailVerified;
         public String email;
     }
 }

@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
-import static gift.constant.Message.*;
+import static gift.constant.ErrorMessage.*;
 
 public record UpdateProductRequest(
 

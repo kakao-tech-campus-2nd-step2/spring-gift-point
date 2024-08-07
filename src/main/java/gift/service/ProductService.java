@@ -7,6 +7,8 @@ import gift.dto.request.AddOptionRequest;
 import gift.dto.request.AddProductRequest;
 import gift.dto.request.UpdateProductRequest;
 import gift.dto.response.MessageResponse;
+import gift.dto.response.ProductOptionResponse;
+import gift.dto.response.ProductResponse;
 import gift.exception.CustomException;
 import gift.repository.CategoryRepository;
 import gift.repository.ProductRepository;
@@ -16,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static gift.constant.Message.*;
+import static gift.constant.SuccessMessage.*;
 import static gift.exception.ErrorCode.DATA_NOT_FOUND;
 
 @Service
@@ -33,12 +35,14 @@ public class ProductService {
         this.optionService = optionService;
     }
 
-    public Product getProduct(Long productId) {
-        return productRepository.findProductById(productId).orElseThrow(() -> new CustomException(DATA_NOT_FOUND));
+    public ProductResponse getProduct(Long productId) {
+        Product product = productRepository.findProductById(productId).orElseThrow(() -> new CustomException(DATA_NOT_FOUND));
+        return new ProductResponse(product);
     }
 
-    public Page<Product> getAllProducts(Pageable pageable) {
-        return productRepository.findAll(pageable);
+    public Page<ProductResponse> getAllProducts(Pageable pageable) {
+        Page<Product> products = productRepository.findAll(pageable);
+        return products.map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl()));
     }
 
     public MessageResponse addProduct(AddProductRequest request) {
@@ -60,7 +64,7 @@ public class ProductService {
         return new MessageResponse(DELETE_SUCCESS_MSG);
     }
 
-    public List<Option> getOptions(Long productId) {
+    public List<ProductOptionResponse> getOptions(Long productId) {
         Product product = productRepository.findProductById(productId).orElseThrow(() -> new CustomException(DATA_NOT_FOUND));
         return optionService.getOptions(product);
     }

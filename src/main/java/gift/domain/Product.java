@@ -8,7 +8,7 @@ import jakarta.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static gift.constant.Message.*;
+import static gift.constant.ErrorMessage.*;
 
 @Entity
 @Table(name = "product")
@@ -47,8 +47,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(long id, String name, int price, String imageUrl) {
-        this.id = id;
+    public Product(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

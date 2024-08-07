@@ -28,10 +28,10 @@ class OptionRepositoryTest {
     @Transactional
     void notUniqueOptionNameExceptionTest_sameProduct() {
         // given
-        Category category = new Category(1L, "뷰티");
+        Category category = new Category(1L, "test_뷰티");
         categoryRepository.save(category);
 
-        Product product1 = new Product(1L, "product1", 500, "image");
+        Product product1 = new Product("product1", 500, "image");
         product1.setCategory(category);
         productRepository.save(product1);
 
@@ -53,11 +53,11 @@ class OptionRepositoryTest {
     @Transactional
     void notUniqueOptionNameExceptionTest_diffProduct() {
         // given
-        Category category = new Category(1L, "뷰티");
+        Category category = new Category(1L, "test_뷰티");
         categoryRepository.save(category);
 
-        Product product1 = new Product(1L, "product1", 500, "image");
-        Product product2 = new Product(2L, "product2", 500, "image");
+        Product product1 = new Product("product1", 500, "image");
+        Product product2 = new Product("product2", 500, "image");
         product1.setCategory(category);
         product2.setCategory(category);
         productRepository.save(product1);

@@ -19,8 +19,8 @@ class ProductRepositoryTest {
 
     @Test
     void findProductById() {
-        Optional<Product> actualProduct = productRepository.findProductById(1L);
-        if(actualProduct.isEmpty()) {
+        Optional<Product> actualProduct = productRepository.findProductById(1000L);
+        if (actualProduct.isEmpty()) {
             fail("memberRepository.findMemberById Test Fail");
         }
         assertAll(

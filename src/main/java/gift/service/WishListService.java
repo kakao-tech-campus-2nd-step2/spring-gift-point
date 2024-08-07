@@ -17,8 +17,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static gift.constant.Message.ADD_SUCCESS_MSG;
-import static gift.constant.Message.DELETE_SUCCESS_MSG;
+import static gift.constant.SuccessMessage.ADD_SUCCESS_MSG;
+import static gift.constant.SuccessMessage.DELETE_SUCCESS_MSG;
 import static gift.exception.ErrorCode.DATA_NOT_FOUND;
 
 @Service
@@ -46,9 +46,8 @@ public class WishListService {
         return new MessageResponse(ADD_SUCCESS_MSG);
     }
 
-    public MessageResponse deleteWishProduct(WishProduct wishProduct) {
-        wishRepository.delete(wish(wishProduct.getMemberId(), wishProduct.getProductId()));
-        return new MessageResponse(DELETE_SUCCESS_MSG);
+    public void deleteWishProduct(Long wishId) {
+        wishRepository.deleteById(wishId);
     }
 
     private Wish wish(Long memberId, Long productId) {
@@ -60,6 +59,6 @@ public class WishListService {
     private List<WishProductResponse> getWishProducts(Long memberId) {
         List<Wish> wishes = wishRepository.findWishByMemberId(memberId);
         return wishes.stream()
-                .map(wish -> new WishProductResponse(wish.getProduct())).toList();
+                .map(wish -> new WishProductResponse(wish.getId(), wish.getProduct())).toList();
     }
 }
