@@ -36,9 +36,6 @@
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Option> options = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Wish> wishes = new ArrayList<>();
-
     private Product(Builder builder) {
         this.id = builder.id;
         this.name = builder.name;

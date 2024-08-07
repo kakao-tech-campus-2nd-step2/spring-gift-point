@@ -46,7 +46,7 @@ public class WishService {
         return wishRepository.save(wish);
     }
 
-    public Wish createWish(Member member,Product product, int quantity) {
+    public Wish createWish(Member member,Product product, int quantity) throws CustomException.EntityAlreadyExistException {
         Optional<Wish> existingWish = wishRepository.findByMemberAndProduct(member, product);
         if(existingWish.isPresent()) {
             throw new CustomException.EntityAlreadyExistException("Wish already exist for this product");
