@@ -50,7 +50,8 @@ public class Options {
 
     // 요소를 추가할 때 사용할 중복 검사.
     private void verifyDuplication(Option newOption) {
-        boolean alreadyExists = options.stream().anyMatch(option -> option.getName().equals(newOption.getName()));
+        boolean alreadyExists = options.stream()
+            .anyMatch(option -> option.getName().equals(newOption.getName()));
 
         if (alreadyExists) {
             throw new IllegalArgumentException("중복된 옵션명입니다.");

@@ -1,24 +1,17 @@
 package gift.option.controller;
 
-import static gift.global.dto.ApiResponseDto.SUCCESS;
 import static org.springframework.http.ResponseEntity.ok;
 
-import gift.global.dto.ApiResponseDto;
-import gift.option.dto.OptionRequestDto;
 import gift.option.dto.OptionResponseDto;
 import gift.option.service.OptionService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -35,8 +28,8 @@ public class OptionApiController {
 
     // 관리자 권한으로 존재하는 모든 옵션을 볼 수 있는 핸들러.
     @GetMapping("/admin/options")
-    public ApiResponseDto<List<OptionResponseDto>> readOptions() {
-        return SUCCESS(optionService.selectOptions());
+    public ResponseEntity<List<OptionResponseDto>> readOptions() {
+        return ok(optionService.selectOptions());
     }
 
     // 제품에 종속되는 옵션 조회 핸들러.

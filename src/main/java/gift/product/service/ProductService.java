@@ -3,19 +3,16 @@ package gift.product.service;
 import gift.category.service.CategoryService;
 import gift.global.dto.PageInfoDto;
 import gift.option.dto.OptionRequestDto;
-import gift.option.dto.OptionResponseDto;
 import gift.option.service.OptionService;
 import gift.product.dto.CreateProductRequestDto;
 import gift.product.dto.FullOptionsProductResponseDto;
 import gift.product.dto.ProductRequestDto;
 import gift.product.dto.ProductResponseDto;
-import gift.product.entity.Options;
 import gift.product.entity.Product;
 import gift.product.repository.ProductRepository;
-import jakarta.validation.Valid;
-import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -77,11 +74,11 @@ public class ProductService {
 
     // 전체 제품 정보를 반환하는 함수
     @Transactional(readOnly = true)
-    public List<ProductResponseDto> selectProducts(PageInfoDto pageInfoDto) {
+    public Page<ProductResponseDto> selectProducts(PageInfoDto pageInfoDto) {
         var pageable = pageInfoDto.toPageInfo().toPageRequest();
         var products = productRepository.findAll(pageable);
 
-        return products.stream().map(ProductResponseDto::fromProduct).toList();
+        return products.map(ProductResponseDto::fromProduct);
     }
 
     // repository를 호출해서 특정 로우를 파라메터로 전달된 DTO로 교체하는 함수

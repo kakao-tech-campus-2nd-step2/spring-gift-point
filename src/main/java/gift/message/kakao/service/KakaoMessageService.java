@@ -1,13 +1,9 @@
 package gift.message.kakao.service;
 
-import static gift.global.utility.MultiValueMapConverter.bodyConvert;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import gift.global.client.ServerClient;
-import gift.global.utility.MultiValueMapConverter;
 import gift.message.kakao.dto.KakaoMessageForMeResponseDto;
-import gift.order.kakao.dto.MessageRequestDto;
 import gift.order.kakao.model.Link;
 import gift.order.kakao.model.TemplateObject;
 import gift.permission.user.service.UserService;

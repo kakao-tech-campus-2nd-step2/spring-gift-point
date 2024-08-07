@@ -54,16 +54,17 @@ public final class MultiValueMapConverter {
             });
             var dtoMultiValueMap = new LinkedMultiValueMap<String, Object>();
 
-            dtoMultiValueMap.setAll(dtoMap.entrySet().stream().collect(Collectors.toMap(Entry::getKey, entry -> {
-                // value 내부에 변환 가능한 dto가 추가로 존재한다면 해당 dto에 대해 메서드 재호출
-                var value = entry.getValue();
-                if (value instanceof String) {
-                    return bodyConvert(value);
-                }
+            dtoMultiValueMap.setAll(
+                dtoMap.entrySet().stream().collect(Collectors.toMap(Entry::getKey, entry -> {
+                    // value 내부에 변환 가능한 dto가 추가로 존재한다면 해당 dto에 대해 메서드 재호출
+                    var value = entry.getValue();
+                    if (value instanceof String) {
+                        return bodyConvert(value);
+                    }
 
-                // 아니라면 그냥 반환. 만약 MultiValueMapConvertibleDto도 아니면서 dto인 경우라면 요청 중 알아서 예외 처리가 될 것.
-                return entry.getValue();
-            })));
+                    // 아니라면 그냥 반환. 만약 MultiValueMapConvertibleDto도 아니면서 dto인 경우라면 요청 중 알아서 예외 처리가 될 것.
+                    return entry.getValue();
+                })));
 
             return dtoMultiValueMap;
         } catch (Exception e) {

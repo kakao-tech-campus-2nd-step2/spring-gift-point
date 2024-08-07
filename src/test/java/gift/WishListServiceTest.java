@@ -170,13 +170,15 @@ public class WishListServiceTest {
 
         // when, then
         // 정상적인 경우
-        Assertions.assertThatCode(() -> wishListService.deleteWishProductWithVerification(wishListId, userId))
+        Assertions.assertThatCode(
+                () -> wishListService.deleteWishProductWithVerification(wishListId, userId))
             .doesNotThrowAnyException();
 
         // 존재하지 않는 위시리스트 제거하는 경우
         Assertions.assertThatThrownBy(
-            () -> wishListService.deleteWishProductWithVerification(invalidWishListId, userId)).isInstanceOf(
-            NoSuchElementException.class);
+                () -> wishListService.deleteWishProductWithVerification(invalidWishListId, userId))
+            .isInstanceOf(
+                NoSuchElementException.class);
 
         // 타인의 위시리스트 조작하는 경우
         Assertions.assertThatThrownBy(

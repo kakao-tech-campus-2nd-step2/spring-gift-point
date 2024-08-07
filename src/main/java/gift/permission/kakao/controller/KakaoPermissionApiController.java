@@ -1,11 +1,11 @@
 package gift.permission.kakao.controller;
 
-import static gift.global.dto.ApiResponseDto.SUCCESS;
+import static org.springframework.http.ResponseEntity.ok;
 
-import gift.global.dto.ApiResponseDto;
 import gift.global.dto.TokenDto;
 import gift.permission.kakao.service.KakaoPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +23,7 @@ public class KakaoPermissionApiController {
 
     // 302 redirect url
     @GetMapping("/api/login/kakao/authorization")
-    public ApiResponseDto<TokenDto> kakaoLogin(@RequestParam(name = "code") String code) {
-        return SUCCESS(kakaoPermissionService.kakaoLogin(code));
+    public ResponseEntity<TokenDto> kakaoLogin(@RequestParam(name = "code") String code) {
+        return ok(kakaoPermissionService.kakaoLogin(code));
     }
 }

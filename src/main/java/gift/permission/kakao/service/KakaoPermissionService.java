@@ -1,13 +1,11 @@
 package gift.permission.kakao.service;
 
-import static gift.global.utility.MultiValueMapConverter.bodyConvert;
 import static gift.global.utility.MultiValueMapConverter.paramConvert;
 import static gift.permission.util.PlatformCodeUtil.KAKAO_CODE;
 
 import gift.global.client.ServerClient;
 import gift.global.component.KakaoProperties;
 import gift.global.dto.TokenDto;
-import gift.global.utility.MultiValueMapConverter;
 import gift.permission.kakao.dto.KaKaoTokenRequestBodyDto;
 import gift.permission.kakao.dto.KakaoAuthRequestDto;
 import gift.permission.kakao.dto.KakaoIdResponseDto;

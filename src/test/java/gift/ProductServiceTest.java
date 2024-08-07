@@ -68,7 +68,8 @@ public class ProductServiceTest {
         given(categoryService.selectCategory(1L)).willReturn(categoryResponseDto1);
         given(productRepository.save(any())).willReturn(product);
         given(productRepository.findById(productId)).willReturn(Optional.of(product));
-        given(optionService.insertOption(any(OptionRequestDto.class), any(Long.class))).willReturn(optionResponseDto1.toOption());
+        given(optionService.insertOption(any(OptionRequestDto.class), any(Long.class))).willReturn(
+            optionResponseDto1.toOption());
 
         // when, then
         Assertions.assertThatCode(() -> productService.insertProduct(createProductRequestDto1))

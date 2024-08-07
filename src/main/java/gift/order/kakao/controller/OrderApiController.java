@@ -1,5 +1,7 @@
 package gift.order.kakao.controller;
 
+import static org.springframework.http.ResponseEntity.ok;
+
 import gift.global.annotation.UserId;
 import gift.order.kakao.dto.OrderRequestDto;
 import gift.order.kakao.service.OrderService;
@@ -28,6 +30,6 @@ public class OrderApiController {
         @UserId Long userId) {
         orderService.order(orderRequestDto, userId);
 
-        return ResponseEntity.ok("");
+        return ok().build();
     }
 }

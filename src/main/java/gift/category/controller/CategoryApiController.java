@@ -1,12 +1,10 @@
 package gift.category.controller;
 
-import static gift.global.dto.ApiResponseDto.SUCCESS;
 import static org.springframework.http.ResponseEntity.ok;
 
 import gift.category.dto.CategoryRequestDto;
 import gift.category.dto.CategoryResponseDto;
 import gift.category.service.CategoryService;
-import gift.global.dto.ApiResponseDto;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

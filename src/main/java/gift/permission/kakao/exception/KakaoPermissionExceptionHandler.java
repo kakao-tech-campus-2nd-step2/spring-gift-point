@@ -1,9 +1,10 @@
 package gift.permission.kakao.exception;
 
-import static gift.global.dto.ApiResponseDto.FAILURE;
+import static org.springframework.http.ResponseEntity.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.global.dto.ApiResponseDto;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
@@ -14,17 +15,17 @@ import org.springframework.web.client.HttpClientErrorException;
 public class KakaoPermissionExceptionHandler {
 
     @ExceptionHandler(HttpClientErrorException.class)
-    public ApiResponseDto<Void> handler(HttpClientErrorException httpClientErrorException) {
+    public ResponseEntity<String> handler(HttpClientErrorException httpClientErrorException) {
         var response = httpClientErrorException.getResponseBodyAsString();
         var objectMapper = new ObjectMapper();
 
         try {
             var jsonNode = objectMapper.readTree(response);
             var errorCode = jsonNode.path("error_code").asText();
-            return FAILURE(getMessageFromErrorCode(errorCode));
+            return status(HttpStatus.BAD_REQUEST).body(getMessageFromErrorCode(errorCode));
         } catch (Exception e) {
             // kakao에서 반환하는 에러 메시지에 error_code가 없으면 알 수 없는 에러
-            return FAILURE("알 수 없는 에러입니다.");
+            return status(HttpStatus.BAD_REQUEST).body("알 수 없는 에러입니다.");
         }
     }
 
