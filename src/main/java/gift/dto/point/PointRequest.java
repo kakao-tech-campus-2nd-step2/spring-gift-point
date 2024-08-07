@@ -7,5 +7,23 @@ import lombok.Setter;
 @Setter
 public class PointRequest {
     private Long memberId;
-    private int point;
+    private Long productId;
+    private Long optionId;
+    private int quantity;
+    private String email;
+    private int points;
+
+    public PointRequest() {}
+
+    public PointRequest(Long memberId, int points) {
+        this.memberId = memberId;
+        this.points = points;
+    }
+
+    public PointRequest(Long productId, Long optionId, int quantity, String email) {
+        this.productId = productId;
+        this.optionId = optionId;
+        this.quantity = quantity;
+        this.email = email;
+    }
 }

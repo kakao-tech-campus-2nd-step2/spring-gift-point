@@ -2,7 +2,10 @@ package gift.controller;
 
 import gift.dto.order.OrderRequest;
 import gift.dto.order.OrderResponse;
+import gift.dto.point.PointRequest;
+import gift.dto.point.PointResponse;
 import gift.service.OrderService;
+import gift.service.PointService;
 import gift.util.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,13 +27,16 @@ import io.swagger.v3.oas.annotations.Parameter;
 @Tag(name = "Order Management System", description = "Operations related to order management")
 public class OrderController {
     private final OrderService orderService;
+    private final PointService pointService;
     private final JwtUtil jwtUtil;
     private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
-    public OrderController(OrderService orderService, JwtUtil jwtUtil) {
+    public OrderController(OrderService orderService, PointService pointService, JwtUtil jwtUtil) {
         this.orderService = orderService;
+        this.pointService = pointService;
         this.jwtUtil = jwtUtil;
     }
+
     @GetMapping
     @Operation(summary = "Get all orders for the logged-in user", description = "Fetches all orders made by the logged-in user", tags = {"Order Management System"})
     public ResponseEntity<Page<OrderResponse>> getOrders(
@@ -61,12 +67,10 @@ public class OrderController {
     }
 
     @PostMapping
-    @Operation(summary = "Place an order", description = "Places a new order in the system", tags = { "Order Management System" })
+    @Operation(summary = "Place an order", description = "Places a new order in the system", tags = {"Order Management System"})
     public ResponseEntity<OrderResponse> placeOrder(
-            @Parameter(description = "Order details", required = true)
-            @RequestBody OrderRequest orderRequest,
-            @Parameter(description = "Authorization token", required = true)
-            @RequestHeader("Authorization") String authorizationHeader) {
+            @Parameter(description = "Order details", required = true) @RequestBody OrderRequest orderRequest,
+            @Parameter(description = "Authorization token", required = true) @RequestHeader("Authorization") String authorizationHeader) {
         logger.info("Received request to place order");
         logger.info("Server current time: {}", Instant.now().getEpochSecond());
 
@@ -97,11 +101,20 @@ public class OrderController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new OrderResponse("Failed to extract email from token"));
             }
 
+            // Check if points should be used
+            if (orderRequest.isUsePoints()) {
+                PointRequest pointRequest = new PointRequest(orderRequest.getProductId(), orderRequest.getOptionId(), orderRequest.getQuantity(), email);
+                PointResponse pointResponse = pointService.usePoints(pointRequest);
+                if (pointResponse.getMessage() != null && pointResponse.getMessage().contains("Insufficient points")) {
+                    return ResponseEntity.badRequest().body(new OrderResponse("Insufficient points to complete the order"));
+                }
+            }
+
             OrderRequest newOrderRequest = new OrderRequest(
                     orderRequest.getProductId(),
                     orderRequest.getOptionId(),
                     orderRequest.getQuantity(),
-                    orderRequest.getPoint(),
+                    orderRequest.isUsePoints(),
                     orderRequest.getMessage(),
                     LocalDateTime.now(),
                     email

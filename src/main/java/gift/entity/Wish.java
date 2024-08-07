@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 @Entity
 public class Wish {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne

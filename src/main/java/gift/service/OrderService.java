@@ -59,7 +59,7 @@ public class OrderService {
         int pointsToAdd = (int) (orderRequest.getQuantity() * productService.getProductPrice(orderRequest.getProductId()) * 0.03);
         PointRequest pointRequest = new PointRequest();
         pointRequest.setMemberId(memberService.getMemberIdByEmail(orderRequest.getEmail()));
-        pointRequest.setPoint(pointsToAdd);
+        pointRequest.setPoints(pointsToAdd);
         pointService.addPoint(pointRequest);
 
         wishService.deleteByProductId(orderRequest.getProductId());

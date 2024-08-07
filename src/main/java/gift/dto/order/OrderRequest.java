@@ -1,5 +1,7 @@
 package gift.dto.order;
 
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 public class OrderRequest {
@@ -10,6 +12,8 @@ public class OrderRequest {
     private LocalDateTime orderTime;
     private String email;
     private int point;
+    @Setter
+    private boolean usePoints;
 
     public OrderRequest() {}
 
@@ -17,10 +21,21 @@ public class OrderRequest {
         this.productId = productId;
         this.optionId = optionId;
         this.quantity = quantity;
+        this.point = point;
         this.message = message;
         this.orderTime = orderTime;
         this.email = email;
-        this.point = point;
+    }
+
+    public OrderRequest(Long productId, Long optionId, int quantity, boolean usePoints, String message, LocalDateTime orderTime, String email) {
+        this.productId = productId;
+        this.optionId = optionId;
+        this.quantity = quantity;
+        this.usePoints = usePoints;
+        this.message = message;
+        this.orderTime = orderTime;
+        this.email = email;
+        this.point = 0;
     }
 
     public Long getProductId() {
@@ -50,4 +65,9 @@ public class OrderRequest {
     public int getPoint() {
         return point;
     }
+
+    public boolean isUsePoints() {
+        return usePoints;
+    }
+
 }
