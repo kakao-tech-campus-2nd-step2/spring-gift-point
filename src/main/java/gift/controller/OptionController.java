@@ -5,10 +5,8 @@ import gift.dto.option.OptionRequest;
 import gift.dto.option.OptionResponse;
 import gift.dto.option.OptionUpdateResponse;
 import gift.entity.Option;
-import gift.exception.CustomException;
 import gift.service.OptionService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,7 +47,8 @@ public class OptionController {
             UriComponentsBuilder uriBuilder) {
         Option option = optionService.addOptionToProduct(productId, optionRequest);
         OptionResponse response = new OptionResponse(option.getId(), option.getName(), option.getQuantity());
-        URI location = uriBuilder.path("/api/products/{productId}/options/{optionId}").buildAndExpand(productId, option.getId()).toUri();
+        URI location = uriBuilder.path("/api/products/{productId}/options/{optionId}")
+                .buildAndExpand(productId, option.getId()).toUri();
         return ResponseEntity.created(location).body(response);
     }
 
@@ -73,15 +72,8 @@ public class OptionController {
             @PathVariable Long optionId,
             @Parameter(description = "ID of the product", required = true)
             @RequestBody DeleteOptionRequest deleteOptionRequest) {
-        try {
-            optionService.deleteOption(optionId, deleteOptionRequest.getEmail(), deleteOptionRequest.getPassword());
-            return ResponseEntity.ok("Option successfully deleted.");
-        } catch (CustomException.EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (CustomException.InvalidPasswordException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
-        }
+        optionService.deleteOption(optionId, deleteOptionRequest.getEmail(), deleteOptionRequest.getPassword());
+        return ResponseEntity.ok("Option successfully deleted.");
     }
 }
+
