@@ -1,9 +1,10 @@
 package gift.member.controller;
 
 import gift.global.argumentresolver.LoginMember;
-import gift.member.dto.MemberResponse;
 import gift.member.dto.MemberDto;
 import gift.member.dto.MemberPasswordRequest;
+import gift.member.dto.MemberResponse;
+import gift.member.entity.Member;
 import gift.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -42,9 +43,9 @@ public class MemberController {
     @Operation(summary = "비밀번호 변경", description = "해당 회원의 비밀번호를 변경합니다.")
     @PostMapping("/password")
     public ResponseEntity<MemberResponse> changePassword(
-        @LoginMember MemberDto memberDto,
+        @LoginMember Member member,
         @Valid @RequestBody MemberPasswordRequest memberPasswordRequest
     ) {
-        return ResponseEntity.ok().body(memberService.changePassword(memberDto, memberPasswordRequest));
+        return ResponseEntity.ok().body(memberService.changePassword(member, memberPasswordRequest));
     }
 }

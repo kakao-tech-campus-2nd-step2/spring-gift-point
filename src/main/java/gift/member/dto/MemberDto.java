@@ -10,10 +10,12 @@ public record MemberDto(
     String email,
 
     @NotBlank
-    String password
+    String password,
+
+    int point
 ) {
 
     public Member toEntity() {
-        return new Member(email, password);
+        return new Member(email, password, point);
     }
 }

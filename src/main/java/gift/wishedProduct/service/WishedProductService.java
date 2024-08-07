@@ -1,14 +1,14 @@
 package gift.wishedProduct.service;
 
+import gift.member.entity.Member;
 import gift.product.entity.Product;
-import gift.wishedProduct.entity.WishedProduct;
-import gift.member.dto.MemberDto;
+import gift.product.exception.NoSuchProductException;
+import gift.product.repository.ProductRepository;
 import gift.wishedProduct.dto.AddWishedProductRequest;
 import gift.wishedProduct.dto.GetWishedProductResponse;
 import gift.wishedProduct.dto.WishedProductDto;
-import gift.product.exception.NoSuchProductException;
+import gift.wishedProduct.entity.WishedProduct;
 import gift.wishedProduct.exception.NoSuchWishedProductException;
-import gift.product.repository.ProductRepository;
 import gift.wishedProduct.repository.WishedProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,15 +27,15 @@ public class WishedProductService {
         this.productRepository = productRepository;
     }
 
-    public Page<GetWishedProductResponse> getWishedProducts(MemberDto memberDto, Pageable pageable) {
-        return wishedProductRepository.findByMember(memberDto.toEntity(), pageable)
+    public Page<GetWishedProductResponse> getWishedProducts(Member member, Pageable pageable) {
+        return wishedProductRepository.findByMember(member, pageable)
             .map(wishedProduct -> wishedProduct.toGetWishedProductResponse());
     }
 
-    public WishedProductDto addWishedProduct(MemberDto memberDto, AddWishedProductRequest addWishedProductRequest) {
+    public WishedProductDto addWishedProduct(Member member, AddWishedProductRequest addWishedProductRequest) {
         Product product = productRepository.findById(addWishedProductRequest.productId())
             .orElseThrow(NoSuchProductException::new);
-        WishedProduct wishedProduct = new WishedProduct(memberDto.toEntity(), product);
+        WishedProduct wishedProduct = new WishedProduct(member, product);
         return wishedProductRepository.save(wishedProduct).toDto();
     }
 

@@ -8,7 +8,7 @@
     <link href="/css/main.css" rel="stylesheet" />
 </head>
 <body>
-    <a th:href="@{https://kauth.kakao.com/oauth/authorize(client_id=${kakaoClientId}, redirect_uri=${kakaoRedirectUri}, response_type='code')}">
+    <a th:href="@{/api/members/kakao/login}">
         <img src="/images/kakao_login_medium_narrow.png">
     </a>
 </body>

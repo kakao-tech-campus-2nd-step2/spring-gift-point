@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/admin/products")
-public class AdminController {
+public class AdminProductController {
 
     private final ProductService productService;
     private final OptionService optionService;
     private final CategoryService categoryService;
 
     @Autowired
-    public AdminController(ProductService productService, CategoryService categoryService, OptionService optionService) {
+    public AdminProductController(ProductService productService, CategoryService categoryService, OptionService optionService) {
         this.productService = productService;
         this.optionService = optionService;
         this.categoryService = categoryService;
@@ -29,7 +29,7 @@ public class AdminController {
     @GetMapping
     public String getProducts(Model model, Pageable pageable) {
         model.addAttribute("pages", productService.getProducts(null, pageable));
-        return "index";
+        return "products";
     }
 
     @GetMapping("/{id}")

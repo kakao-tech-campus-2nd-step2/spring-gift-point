@@ -1,4 +1,4 @@
-package gift.kakao.exception;
+package gift.member.exception;
 
 public class NoKakaoTokenException extends RuntimeException {
 

@@ -1,6 +1,6 @@
-package gift.kakao.dto;
+package gift.member.dto;
 
-import gift.kakao.entity.KakaoToken;
+import gift.member.entity.KakaoToken;
 
 public record KakaoTokenDto(
     String access_token,

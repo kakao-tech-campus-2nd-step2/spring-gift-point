@@ -218,11 +218,34 @@ function handleMemberFormSubmit(event, url, method) {
     })
     .then(response => {
         if (response.ok) {
-            // 임시 로그인 화면
-            window.location.href = '/kakao/login';
+            window.location.href = '/admin/members';
         } else {
             return response.json().then(errorData => {
                 throw new Error(errorData.message || '회원가입을 처리하지 못하였습니다.');
+            });
+        }
+    })
+    .catch(error => {
+        alert('Error: ' + error.message);
+    });
+}
+
+function addPoint(email) {
+    fetch(`/admin/members/${email}/points`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            point: 10
+        })
+    })
+    .then(response => {
+        if (response.ok) {
+            location.reload();
+        } else {
+            return response.json().then(errorData => {
+                throw new Error(errorData.message || '포인트를 처리하지 못하였습니다.');
             });
         }
     })

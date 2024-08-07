@@ -1,14 +1,13 @@
-package gift.kakao.service;
+package gift.member.service;
 
 import gift.member.dto.MemberResponse;
-import gift.kakao.dto.KakaoProfileDto;
-import gift.kakao.dto.KakaoTokenDto;
+import gift.member.dto.KakaoProfileDto;
+import gift.member.dto.KakaoTokenDto;
 import gift.member.dto.MemberDto;
-import gift.kakao.exception.InvalidKakaoTokenException;
-import gift.member.service.MemberService;
-import gift.kakao.repository.KakaoTokenRepository;
+import gift.member.exception.InvalidKakaoTokenException;
+import gift.member.repository.KakaoTokenRepository;
 import gift.global.util.JwtProvider;
-import gift.kakao.KakaoProperties;
+import gift.member.KakaoProperties;
 import java.net.URI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;

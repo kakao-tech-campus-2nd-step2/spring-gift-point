@@ -10,14 +10,14 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
-import gift.kakao.entity.KakaoToken;
-import gift.kakao.service.KakaoLoginService;
+import gift.member.entity.KakaoToken;
+import gift.member.service.KakaoLoginService;
 import gift.member.dto.MemberResponse;
 import gift.member.dto.MemberDto;
 import gift.member.service.MemberService;
-import gift.kakao.repository.KakaoTokenRepository;
+import gift.member.repository.KakaoTokenRepository;
 import gift.global.util.JwtProvider;
-import gift.kakao.KakaoProperties;
+import gift.member.KakaoProperties;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;

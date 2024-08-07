@@ -1,4 +1,4 @@
-package gift.kakao.dto;
+package gift.member.dto;
 
 public record KakaoProfileDto(
     String id,

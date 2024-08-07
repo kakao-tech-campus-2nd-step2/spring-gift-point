@@ -9,6 +9,6 @@ public class MemberFixture {
     }
 
     public static Member createMember(String password) {
-        return new Member("admin@gmail.com", password);
+        return new Member("admin@gmail.com", password, 0);
     }
 }
