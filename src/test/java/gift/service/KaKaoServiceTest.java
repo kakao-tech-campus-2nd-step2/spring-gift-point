@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -20,6 +22,7 @@ import java.io.IOException;
 
 @ExtendWith(SpringExtension.class)
 @RestClientTest(KaKaoService.class)
+@MockBean(JpaMetamodelMappingContext.class)
 class KaKaoServiceTest {
 
     @Autowired
@@ -44,11 +47,11 @@ class KaKaoServiceTest {
     @Test
     void sendMessageTest() throws JSONException {
         // given
-        String message = "test_message";
-        String token = "test_token";
+        String message = "testMessage";
+        String token = "testToken";
 
         JSONObject sendMessageResponse = new JSONObject();
-        sendMessageResponse.put("result_code", 0);
+        sendMessageResponse.put("resultCode", 0);
 
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(HttpStatus.OK.value())
@@ -84,11 +87,11 @@ class KaKaoServiceTest {
         KakaoTokenInfo kakaoTokenInfo = kaKaoService.getKakaoTokenInfo(code);
 
         // then
-        Assertions.assertThat(kakaoTokenInfo.token_type()).isEqualTo("bearer");
-        Assertions.assertThat(kakaoTokenInfo.access_token()).isEqualTo("test_access_token");
-        Assertions.assertThat(kakaoTokenInfo.expires_in()).isEqualTo(43199);
-        Assertions.assertThat(kakaoTokenInfo.refresh_token()).isEqualTo("test_refresh_token");
-        Assertions.assertThat(kakaoTokenInfo.refresh_token_expires_in()).isEqualTo(5184000);
+        Assertions.assertThat(kakaoTokenInfo.tokenType()).isEqualTo("bearer");
+        Assertions.assertThat(kakaoTokenInfo.accessToken()).isEqualTo("test_access_token");
+        Assertions.assertThat(kakaoTokenInfo.expiresIn()).isEqualTo(43199);
+        Assertions.assertThat(kakaoTokenInfo.refreshToken()).isEqualTo("test_refresh_token");
+        Assertions.assertThat(kakaoTokenInfo.refreshTokenExpiresIn()).isEqualTo(5184000);
     }
 
     @Test

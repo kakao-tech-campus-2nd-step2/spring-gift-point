@@ -59,7 +59,7 @@ public class KaKaoService {
         }
 
         try {
-            return objectMapper.readValue(response.getBody(), KakaoUserInfo.class).kakao_account().email;
+            return objectMapper.readValue(response.getBody(), KakaoUserInfo.class).kakaoAccount().email;
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

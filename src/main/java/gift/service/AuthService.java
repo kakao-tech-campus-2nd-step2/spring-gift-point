@@ -48,9 +48,9 @@ public class AuthService {
 
     public AuthResponse kakaoLogin(String code) {
         KakaoTokenInfo kakaoTokenInfo = kaKaoService.getKakaoTokenInfo(code);
-        String email = kaKaoService.getKakaoAccountEmail(kakaoTokenInfo.access_token());
+        String email = kaKaoService.getKakaoAccountEmail(kakaoTokenInfo.accessToken());
 
-        Member member = findOrSaveMember(email, kakaoTokenInfo.access_token(), kakaoTokenInfo.refresh_token());
+        Member member = findOrSaveMember(email, kakaoTokenInfo.accessToken(), kakaoTokenInfo.refreshToken());
         if (member.getLoginType().equals(EMAIL)) {
             throw new CustomException(ALREADY_REGISTERED_ERROR);
         }
