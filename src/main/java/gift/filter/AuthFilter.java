@@ -1,6 +1,8 @@
 package gift.filter;
 
+import gift.domain.TokenAuth;
 import gift.repository.token.TokenSpringDataJpaRepository;
+import gift.service.TokenService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,11 +14,11 @@ import java.io.IOException;
 @Component
 public class AuthFilter implements Filter {
 
-    private final TokenSpringDataJpaRepository tokenRepository;
+    private final TokenService tokenService;
 
     @Autowired
-    public AuthFilter(TokenSpringDataJpaRepository tokenRepository) {
-        this.tokenRepository = tokenRepository;
+    public AuthFilter( TokenService tokenService) {
+        this.tokenService = tokenService;
     }
 
     @Override
@@ -42,14 +44,30 @@ public class AuthFilter implements Filter {
             return;
         }
 
-        String token = authHeader.substring(7);
+        String accessToken = authHeader.substring(7);
 
-        if (!isTokenValid(token)) {
+        if (tokenService.isAccessTokenValid(accessToken)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        TokenAuth tokenAuth = tokenService.findTokenByAccessToken(accessToken);
+
+        if (tokenAuth == null) {
             httpResponse.sendRedirect("/home");
             return;
         }
 
-        filterChain.doFilter(request, response);
+        String refreshToken = tokenAuth.getRefreshToken();
+
+        if (refreshToken != null && tokenService.isRefreshTokenValid(refreshToken)) {
+            String newAccessToken = tokenService.refreshAccessToken(refreshToken);
+            httpResponse.setHeader("Authorization", "Bearer " + newAccessToken);
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        httpResponse.sendRedirect("/home");
     }
 
     @Override
@@ -57,13 +75,11 @@ public class AuthFilter implements Filter {
     }
 
     private boolean isUnauthenticatedPath(String path) {
-        return path.equals("/home") || path.startsWith("/api/members")
+        return path.equals("/home") || (path.startsWith("/api/members") && !path.equals("/api/members/point"))
                 || path.startsWith("/h2-console") || path.startsWith("/api/products")
                 || path.startsWith("/api/kakao") || path.startsWith("/api/categories")
-                || path.startsWith("/swagger-ui") || path.startsWith("/api-docs");
+                || path.startsWith("/swagger-ui") || path.startsWith("/api-docs")
+                || path.startsWith("/api/orders/price");
     }
 
-    private boolean isTokenValid(String token) {
-        return tokenRepository.findByToken(token).isPresent();
-    }
 }

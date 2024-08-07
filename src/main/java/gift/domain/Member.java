@@ -23,11 +23,17 @@ public class Member {
     @Column(nullable = false)
     private LoginType loginType;
 
+    @Column(nullable = false)
+    private int point;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<WishlistItem> wishlistItems = new ArrayList<>();
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private TokenAuth tokenAuth;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> orders = new ArrayList<>();
 
     public Member() {
     }
@@ -54,11 +60,27 @@ public class Member {
         return password;
     }
 
+    public int getPoint() {
+        return point;
+    }
+
     public void setTokenAuth(TokenAuth tokenAuth) {
         this.tokenAuth = tokenAuth;
     }
 
     public TokenAuth getTokenAuth() {
         return tokenAuth;
+    }
+
+    public LoginType getLoginType() {
+        return loginType;
+    }
+
+    public void setPoint(int point) {
+        this.point = point;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
     }
 }

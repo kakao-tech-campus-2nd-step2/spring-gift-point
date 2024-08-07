@@ -13,7 +13,7 @@ import java.util.Map;
 public class KakaoMessageService {
 
     private static final String SEND_MESSAGE_SUFFIX = "/v2/api/talk/memo/default/send";
-    private static final String WEB_URL = "http://localhost:8080";
+    private static final String WEB_URL = "http://43.203.234.144:8080";
 
     @Value("${kakao.api.url}")
     private String kakaoApiUrl;

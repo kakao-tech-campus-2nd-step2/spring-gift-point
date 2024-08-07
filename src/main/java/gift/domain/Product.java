@@ -56,7 +56,7 @@ public class Product {
         category.getProducts().add(this);
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -84,5 +84,9 @@ public class Product {
 
     public List<Option> getOptions() {
         return options;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 }

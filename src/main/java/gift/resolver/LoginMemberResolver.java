@@ -27,6 +27,6 @@ public class LoginMemberResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest httpServletRequest = (HttpServletRequest) webRequest.getNativeRequest();
         String key = httpServletRequest.getHeader("Authorization").substring(7);
-        return tokenService.findToken(key);
+        return tokenService.findTokenByAccessToken(key);
     }
 }

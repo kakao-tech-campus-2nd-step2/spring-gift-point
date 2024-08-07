@@ -11,15 +11,19 @@ public class OrderResponse {
     private Integer quantity;
     private LocalDateTime orderDateTime;
     private String message;
-    private Long receiveMemberId;
+    private Integer price;
+    private boolean success;
+    private Long memberId;
 
-    public OrderResponse(Long id, Long optionId, Integer quantity, LocalDateTime orderDateTime, String message, Long receiveMemberId) {
+    public OrderResponse(Long id, Long optionId, Integer quantity, LocalDateTime orderDateTime, String message, Integer price, boolean success, Long memberId) {
         this.id = id;
         this.optionId = optionId;
         this.quantity = quantity;
         this.orderDateTime = orderDateTime;
         this.message = message;
-        this.receiveMemberId = receiveMemberId;
+        this.price = price;
+        this.success = success;
+        this.memberId = memberId;
     }
 
     public static OrderResponse fromOrder(Order order) {
@@ -29,8 +33,14 @@ public class OrderResponse {
                 order.getQuantity(),
                 order.getOrderDateTime(),
                 order.getMessage(),
-                order.getReceiveMemberId()
+                order.getPrice(),
+                order.isSuccess(),
+                order.getMemberId()
         );
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Long getOptionId() {
@@ -41,11 +51,24 @@ public class OrderResponse {
         return quantity;
     }
 
+    public LocalDateTime getOrderDateTime() {
+        return orderDateTime;
+    }
+
     public String getMessage() {
         return message;
     }
 
-    public Long getReceiveMemberId() {
-        return receiveMemberId;
+    public Integer getPrice() {
+        return price;
     }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public Long getMemberId() {
+        return memberId;
+    }
+
 }
