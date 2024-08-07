@@ -29,6 +29,12 @@ public class MemberService {
         memberRepository.delete(member);
     }
 
+    public void verifyPassword(Member member, String password) {
+        if(!member.getPassword().equals(password)) {
+            throw new CustomException.InvalidPasswordException("Invalid password");
+        }
+    }
+
     public Member updateMember(Long memberId, String email, String password) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new CustomException.EntityNotFoundException("Member not found"));
 

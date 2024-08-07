@@ -1,15 +1,19 @@
 package gift.controller;
 
+import gift.dto.member.LoginResponse;
+import gift.dto.member.MemberRequest;
+import gift.dto.member.MemberResponse;
 import gift.entity.Member;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import gift.service.MemberService;
 import gift.util.JwtUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
+
+import java.net.URI;
 import java.util.Optional;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,7 +21,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 
 @RestController
-@RequestMapping("/member")
+@RequestMapping("/api/members")
 @Tag(name = "Member Management System", description = "Operations related to member management")
 public class MemberController {
     private final MemberService memberService;
@@ -29,31 +33,36 @@ public class MemberController {
         this.jwtUtil = util;
     }
 
-    @PostMapping("/register")
+    @PostMapping(value ="/register")
     @Operation(summary = "Register a new member", description = "Registers a new member to the system", tags = { "Member Management System" })
-    public ResponseEntity<Map<String, String>> register(
+    public ResponseEntity<MemberResponse> register(
             @Parameter(description = "Member object to be registered", required = true)
-            @RequestBody Member member) {
-        memberService.save(member);
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "success");
-        return ResponseEntity.ok(response);
+            @RequestBody MemberRequest memberRequest) {
+        Member member = new Member.Builder()
+                .email(memberRequest.getEmail())
+                .password(memberRequest.getPassword())
+                .name(memberRequest.getName())
+                .build();
+        member = memberService.save(member);
+        String token = jwtUtil.generateToken(member.getEmail());
+        MemberResponse memberResponse = new MemberResponse(member.getId(), member.getEmail(), member.getName(), token);
+
+        return ResponseEntity.created(URI.create("/api/members/" + member.getId())).body(memberResponse);
     }
 
     @PostMapping("/login")
     @Operation(summary = "Login a member", description = "Logs in an existing member", tags = { "Member Management System" })
-    public ResponseEntity<Map<String, String>> login(
+    public ResponseEntity<LoginResponse> login(
             @Parameter(description = "Login request containing email and password", required = true)
-            @RequestBody Member loginRequest) {
+            @RequestBody MemberRequest loginRequest) {
         Optional<Member> memberOpt = memberService.findByEmail(loginRequest.getEmail());
         if (memberOpt.isPresent() && memberOpt.get().getPassword().equals(loginRequest.getPassword())) {
             String token = jwtUtil.generateToken(memberOpt.get().getEmail());
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "success");
-            response.put("token", token);
+            LoginResponse response = new LoginResponse(token);
+
             return ResponseEntity.ok(response);
         }
-        return ResponseEntity.status(401).body(null);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @GetMapping("/me")

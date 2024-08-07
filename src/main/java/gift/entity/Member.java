@@ -22,14 +22,14 @@ public class Member {
     private String kakaoId;
 
     @Column(length = 255)
-    private String nickname;
+    private String name;
 
     private Member(Builder builder) {
         this.id = builder.id;
         this.email = builder.email;
         this.password = builder.password;
         this.kakaoId = builder.kakaoId;
-        this.nickname = builder.nickname;
+        this.name = builder.name;
     }
 
     public Member() {}
@@ -50,8 +50,8 @@ public class Member {
         return kakaoId;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getName() {
+        return name;
     }
 
     public void update(String email, String password) {
@@ -59,9 +59,9 @@ public class Member {
         this.password = password;
     }
 
-    public void updateKakaoInfo(String kakaoId, String nickname) {
+    public void updateKakaoInfo(String kakaoId, String name) {
         this.kakaoId = kakaoId;
-        this.nickname = nickname;
+        this.name = name;
     }
 
     public static class Builder {
@@ -69,7 +69,7 @@ public class Member {
         private String email;
         private String password;
         private String kakaoId;
-        private String nickname;
+        private String name;
 
         public Builder id(Long id) {
             this.id = id;
@@ -91,8 +91,8 @@ public class Member {
             return this;
         }
 
-        public Builder nickname(String nickname) {
-            this.nickname = nickname;
+        public Builder name(String name) {
+            this.name = name;
             return this;
         }
 

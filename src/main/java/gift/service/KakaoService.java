@@ -122,7 +122,7 @@ public class KakaoService {
                 member = memberOpt.get();
                 member.updateKakaoInfo(kakaoId, nickname);
             } else {
-                member = new Member.Builder().email(email).password("").kakaoId(kakaoId).nickname(nickname).build();
+                member = new Member.Builder().email(email).password("").kakaoId(kakaoId).name(nickname).build();
             }
 
             logger.debug("Successfully retrieved member: {}", member);
