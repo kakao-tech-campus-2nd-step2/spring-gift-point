@@ -16,8 +16,7 @@ import java.util.Random;
 
 import static gift.LoginType.EMAIL;
 import static gift.LoginType.KAKAO;
-import static gift.exception.ErrorCode.ALREADY_REGISTERED_ERROR;
-import static gift.exception.ErrorCode.KAKAO_LOGIN_USER;
+import static gift.exception.ErrorCode.INVALID_LOGIN_TYPE;
 
 
 @Service
@@ -40,20 +39,19 @@ public class AuthService {
 
     public AuthResponse login(AuthRequest authRequest) {
         Member storedMember = memberRepository.findMemberByEmail(authRequest.email()).orElseThrow(() -> new CustomException(ErrorCode.DATA_NOT_FOUND));
-        if (storedMember.getLoginType().equals(KAKAO)) {
-            throw new CustomException(KAKAO_LOGIN_USER);
-        }
+
+        checkLoginType(EMAIL, storedMember.getLoginType());
+
         return new AuthResponse(jwtUtil.createJWT(storedMember.getId(), storedMember.getLoginType()));
     }
 
     public AuthResponse kakaoLogin(String code) {
         KakaoTokenInfo kakaoTokenInfo = kaKaoService.getKakaoTokenInfo(code);
-        String email = kaKaoService.getKakaoAccountEmail(kakaoTokenInfo.access_token());
+        String email = kaKaoService.getKakaoAccountEmail(kakaoTokenInfo.accessToken());
 
-        Member member = findOrSaveMember(email, kakaoTokenInfo.access_token(), kakaoTokenInfo.refresh_token());
-        if (member.getLoginType().equals(EMAIL)) {
-            throw new CustomException(ALREADY_REGISTERED_ERROR);
-        }
+        Member member = findOrSaveMember(email, kakaoTokenInfo.accessToken(), kakaoTokenInfo.refreshToken());
+
+        checkLoginType(KAKAO, member.getLoginType());
 
         return new AuthResponse(jwtUtil.createJWT(member.getId(), member.getLoginType()));
     }
@@ -68,4 +66,9 @@ public class AuthService {
         return String.valueOf(1000 + random.nextInt(9000));
     }
 
+    private void checkLoginType(LoginType validType, LoginType actualType) {
+        if (!actualType.equals(validType)) {
+            throw new CustomException(INVALID_LOGIN_TYPE);
+        }
+    }
 }
