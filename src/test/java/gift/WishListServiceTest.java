@@ -135,8 +135,8 @@ public class WishListServiceTest {
 
         // when, then
         Assertions.assertThat(wishListService.readWishProducts(userId, pageInfoDto))
-            .isEqualTo(wishListPage.stream().map(
-                WishListResponseDto::fromWishList).toList());
+            .isEqualTo(wishListPage.map(
+                WishListResponseDto::fromWishList));
 
         // 정상적인 경우
         then(wishListRepository).should().findByUserId(any(Long.class), any(PageRequest.class));

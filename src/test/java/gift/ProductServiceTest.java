@@ -183,7 +183,7 @@ public class ProductServiceTest {
 
         // when, then
         Assertions.assertThat(productService.selectProducts(pageInfoDto))
-            .isEqualTo(productPage.stream().map(ProductResponseDto::fromProduct).toList());
+            .isEqualTo(productPage.map(ProductResponseDto::fromProduct));
 
         then(productRepository).should().findAll(any(PageRequest.class));
     }
