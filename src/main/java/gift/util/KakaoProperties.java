@@ -9,4 +9,5 @@ public record KakaoProperties(
         String url,
         String code
 
-) {}
+) {
+}

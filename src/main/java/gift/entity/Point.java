@@ -1,36 +1,27 @@
 package gift.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import org.hibernate.validator.constraints.UniqueElements;
 
 @Entity
 @Table
 public class Point {
 
+    @OneToOne
+    Member member;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-
     private int point;
-
-
-    private Long memberId;
 
 
     public Point() {
     }
 
-    public Point(Member member, int point){
-        this.memberId = member.getId();
+    public Point(Member member, int point) {
+        this.member = member;
         this.point = point;
     }
 
-    public Point(Long memberId, int point){
-        this.memberId = memberId;
-        this.point = point;
-    }
 
     public Long getId() {
         return id;
@@ -40,20 +31,20 @@ public class Point {
         this.id = id;
     }
 
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
+    public void setMemberId(Member member) {
+        this.member = member;
     }
 
-    public Long getMemberId() {
-        return memberId;
-    }
-
-    public void setPoint(int point) {
-        this.point = point;
+    public Member getMember() {
+        return member;
     }
 
     public int getPoint() {
         return point;
+    }
+
+    public void setPoint(int point) {
+        this.point = point;
     }
 
     public void subtractPoint(int point) {
@@ -61,5 +52,9 @@ public class Point {
             throw new RuntimeException("Not enough point available");
         }
         this.point -= point;
+    }
+
+    public void addPoint(int point) {
+        this.point += point;
     }
 }

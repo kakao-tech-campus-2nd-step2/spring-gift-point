@@ -10,9 +10,8 @@ public class PaginationInfo {
     private boolean hasPrevious;
 
 
-
-    public PaginationInfo(Page<Product> productPage){
-        this.currentPage = productPage.getNumber()+1;
+    public PaginationInfo(Page<Product> productPage) {
+        this.currentPage = productPage.getNumber() + 1;
         this.totalPages = productPage.getTotalPages();
         this.hasNext = productPage.hasNext();
         this.hasPrevious = productPage.hasPrevious();

@@ -2,15 +2,8 @@ package gift.dto;
 
 import gift.entity.Option;
 import gift.entity.Product;
-
 import jakarta.validation.Valid;
-
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
-
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,12 +93,16 @@ public class ProductDto {
         return price;
     }
 
-    public String getCategoryName() { return categoryName; }
-
-    public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
-
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public String getImageUrl() {
@@ -133,7 +130,7 @@ public class ProductDto {
         this.options = options;
     }
 
-    public String getSelectOptionName(){
+    public String getSelectOptionName() {
         return selectOptionName;
     }
 

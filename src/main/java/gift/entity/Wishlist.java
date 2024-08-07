@@ -18,10 +18,11 @@ public class Wishlist {
     private Product product;
 
 
-    public Wishlist(){
+    public Wishlist() {
 
     }
-    public Wishlist(Member member, Product product){
+
+    public Wishlist(Member member, Product product) {
         this.member = member;
         this.product = product;
     }

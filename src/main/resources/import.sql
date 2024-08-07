@@ -77,3 +77,20 @@ INSERT INTO Wishlist (id, member_id, product_id) VALUES (17, 2, 7);
 INSERT INTO Wishlist (id, member_id, product_id) VALUES (18, 3, 8);
 INSERT INTO Wishlist (id, member_id, product_id) VALUES (19, 4, 9);
 INSERT INTO Wishlist (id, member_id, product_id) VALUES (20, 5, 10);
+
+INSERT INTO OrderItem (id, quantity, member_id, option_id, product_id, message) VALUES (1, 2, 1, 1, 1, 'No sugar');
+INSERT INTO OrderItem (id, quantity, member_id, option_id, product_id, message) VALUES (2, 1, 1, 2, 1, 'Extra hot');
+INSERT INTO OrderItem (id, quantity, member_id, option_id, product_id, message) VALUES (3, 3, 2, 4, 2, 'With soy milk');
+INSERT INTO OrderItem (id, quantity, member_id, option_id, product_id, message) VALUES (4, 1, 2, 5, 2, 'No foam');
+INSERT INTO OrderItem (id, quantity, member_id, option_id, product_id, message) VALUES (5, 2, 3, 7, 3, 'Decaf');
+INSERT INTO OrderItem (id, quantity, member_id, option_id, product_id, message) VALUES (6, 1, 3, 8, 3, 'With almond milk');
+INSERT INTO OrderItem (id, quantity, member_id, option_id, product_id, message) VALUES (7, 4, 4, 10, 4, 'Extra shot');
+INSERT INTO OrderItem (id, quantity, member_id, option_id, product_id, message) VALUES (8, 2, 4, 11, 4, 'Light ice');
+INSERT INTO OrderItem (id, quantity, member_id, option_id, product_id, message) VALUES (9, 1, 5, 13, 5, 'No cream');
+INSERT INTO OrderItem (id, quantity, member_id, option_id, product_id, message) VALUES (10, 3, 5, 14, 5, 'With cinnamon');
+
+INSERT INTO Point (id, point, member_id) VALUES (1, 100, 1);
+INSERT INTO Point (id, point, member_id) VALUES (2, 200, 2);
+INSERT INTO Point (id, point, member_id) VALUES (3, 300, 3);
+INSERT INTO Point (id, point, member_id) VALUES (4, 400, 4);
+INSERT INTO Point (id, point, member_id) VALUES (5, 500, 5);

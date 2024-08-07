@@ -1,10 +1,6 @@
 package gift.controller;
 
-import gift.dto.PaginationInfo;
-import gift.dto.ProductDto;
-import gift.dto.response.ProductResponse;
 import gift.dto.response.WishlistResponse;
-
 import gift.service.WishlistService;
 import gift.util.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,7 +21,7 @@ public class WishlistNewController {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    public WishlistNewController(WishlistService wishlistService,JwtTokenProvider jwtTokenProvider) {
+    public WishlistNewController(WishlistService wishlistService, JwtTokenProvider jwtTokenProvider) {
         this.wishlistService = wishlistService;
         this.jwtTokenProvider = jwtTokenProvider;
     }
@@ -34,7 +30,7 @@ public class WishlistNewController {
     @GetMapping
     @Operation(summary = "위시리스트 조회", description = "위시리스트 목록을 보여줍니다.")
     public Page<WishlistResponse> getWishes(@RequestAttribute("userId") Long userId,
-                                                           Pageable pageable){
+                                            Pageable pageable) {
         return wishlistService.getWishlistByMemberId(userId, pageable);
     }
 
@@ -52,7 +48,6 @@ public class WishlistNewController {
         wishlistService.deleteWishlistItemById(wishId);
         return ResponseEntity.ok().build();
     }
-
 
 
 }

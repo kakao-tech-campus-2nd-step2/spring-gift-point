@@ -8,8 +8,7 @@ public class OptionResponse {
     private int quantity;
 
 
-
-    public OptionResponse(Option option){
+    public OptionResponse(Option option) {
         this.optionId = option.getId();
         this.optionName = option.getName();
         this.quantity = option.getQuantity();
@@ -19,8 +18,16 @@ public class OptionResponse {
         return quantity;
     }
 
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     public Long getOptionId() {
         return optionId;
+    }
+
+    public void setOptionId(Long optionId) {
+        this.optionId = optionId;
     }
 
     public String getOptionName() {
@@ -29,13 +36,5 @@ public class OptionResponse {
 
     public void setOptionName(String optionName) {
         this.optionName = optionName;
-    }
-
-    public void setOptionId(Long optionId) {
-        this.optionId = optionId;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
     }
 }

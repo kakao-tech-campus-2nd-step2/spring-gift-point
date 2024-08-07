@@ -1,6 +1,5 @@
 package gift.service;
 
-import gift.dto.OptionDto;
 import gift.dto.response.OptionResponse;
 import gift.entity.Option;
 import gift.entity.Product;
@@ -10,10 +9,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,6 +43,9 @@ public class OptionService {
                 .orElseThrow(() -> new RuntimeException("Option not found with id " + id));
     }
 
+    public Product getProductById(Long id) {
+        return optionRepository.findById(id).get().getProduct();
+    }
 
     public Option saveOption(Option option) {
         return optionRepository.save(option);

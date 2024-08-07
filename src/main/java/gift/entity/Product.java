@@ -2,8 +2,9 @@ package gift.entity;
 
 import gift.exception.ProductNoConferredException;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 import java.util.HashSet;
 import java.util.List;
@@ -41,7 +42,7 @@ public class Product {
     private Category category;
 
 
-    public Product(){
+    public Product() {
     }
 
 
@@ -83,7 +84,9 @@ public class Product {
         this.category = category;
     }
 
-    public Set<Option> getOptions() { return options; }
+    public Set<Option> getOptions() {
+        return options;
+    }
 
     public void setOptions(Set<Option> options) {
 

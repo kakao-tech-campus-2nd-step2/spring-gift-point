@@ -44,4 +44,6 @@ public class AdminController {
         memberService.deleteMember(id);
         return "redirect:/admin";
     }
+
+
 }

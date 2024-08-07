@@ -1,7 +1,10 @@
 package gift.controller;
 
 import gift.dto.KakaoTokenDto;
-import gift.service.*;
+import gift.service.KakaoService;
+import gift.service.KakaoTokenService;
+import gift.service.OptionService;
+import gift.service.WishlistService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

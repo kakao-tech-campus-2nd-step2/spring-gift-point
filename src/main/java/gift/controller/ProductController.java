@@ -1,9 +1,11 @@
 package gift.controller;
 
-import gift.dto.response.CategoryResponse;
 import gift.dto.ProductDto;
+import gift.dto.response.CategoryResponse;
 import gift.entity.Product;
-import gift.service.*;
+import gift.service.CategoryService;
+import gift.service.OptionService;
+import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -11,7 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
