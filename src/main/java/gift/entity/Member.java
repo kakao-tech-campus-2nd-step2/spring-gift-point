@@ -5,8 +5,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
+import lombok.Data;
+import lombok.Getter;
 
 @Entity
+@Getter
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,6 +65,10 @@ public class Member {
     public void updateKakaoInfo(String kakaoId, String name) {
         this.kakaoId = kakaoId;
         this.name = name;
+    }
+
+    public boolean isPresent() {
+        return id != null;
     }
 
     public static class Builder {
