@@ -2,6 +2,7 @@ package gift.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gift.KakaoProperties;
 import gift.dto.KakaoTokenInfo;
 import gift.dto.KakaoUserInfo;
 import gift.dto.TemplateObject;
@@ -22,35 +23,25 @@ import static gift.exception.ErrorCode.SEND_MSG_FAILED_ERROR;
 @Service
 public class KaKaoService {
 
-    @Value("${kakao.clientId}")
-    private String clientId;
-
-    @Value("${kakao.redirectUrl}")
-    private String redirectUrl;
-
-    @Value("${kakao.grant-type}")
-    private String grantType;
-
-    @Value("${kakao.get-token.url}")
-    private String getTokenUrl;
-
-    @Value("${kakao.get-uerInfo.url}")
-    private String getUserInfoUrl;
-
-    @Value("${kakao.send-message.url}")
-    private String sendMessageUrl;
+    private final KakaoProperties properties;
+    private final KakaoProperties.Url url;
 
     @Value("${service.home.web_url}")
     private String homeUrl;
 
     private final RestClient client = RestClient.create();
 
+    public KaKaoService(KakaoProperties properties) {
+        this.properties = properties;
+        url = properties.getUrl();
+    }
+
     public String getKakaoAccountEmail(String accessToken) {
         ObjectMapper objectMapper = new ObjectMapper();
 
         ResponseEntity<String> response = clientWithAuthHeader(accessToken)
                 .get()
-                .uri(URI.create(getUserInfoUrl))
+                .uri(URI.create(url.getUserInfo()))
                 .retrieve()
                 .toEntity(String.class);
 
@@ -71,7 +62,7 @@ public class KaKaoService {
         LinkedMultiValueMap<String, String> body = createGetTokenBody(code);
 
         ResponseEntity<String> response = client.post()
-                .uri(URI.create(getTokenUrl))
+                .uri(URI.create(url.getToken()))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(body)
                 .retrieve()
@@ -90,9 +81,9 @@ public class KaKaoService {
 
     private LinkedMultiValueMap<String, String> createGetTokenBody(String code) {
         LinkedMultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("grant_type", grantType);
-        body.add("client_id", clientId);
-        body.add("redirect_url", redirectUrl);
+        body.add("grant_type", properties.getGrantType());
+        body.add("client_id", properties.getClientId());
+        body.add("redirect_url", properties.getClientId());
         body.add("code", code);
         return body;
     }
@@ -103,7 +94,7 @@ public class KaKaoService {
 
         ResponseEntity<String> response = clientWithAuthHeader(accessToken)
                 .post()
-                .uri(URI.create(sendMessageUrl))
+                .uri(URI.create(url.getSendMessage()))
                 .body(body)
                 .retrieve()
                 .toEntity(String.class);
@@ -133,18 +124,6 @@ public class KaKaoService {
 
     private RestClient clientWithAuthHeader(String accessToken) {
         return RestClient.builder().defaultHeader("Authorization", "Bearer " + accessToken).build();
-    }
-
-    public void setSendMessageUrl(String sendMessageUrl) {
-        this.sendMessageUrl = sendMessageUrl;
-    }
-
-    public void setGetTokenUrl(String getTokenUrl) {
-        this.getTokenUrl = getTokenUrl;
-    }
-
-    public void setGetUserInfoUrl(String getUserInfoUrl) {
-        this.getUserInfoUrl = getUserInfoUrl;
     }
 
 }

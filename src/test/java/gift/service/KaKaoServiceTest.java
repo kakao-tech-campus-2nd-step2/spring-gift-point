@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.KakaoProperties;
 import gift.dto.KakaoTokenInfo;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -10,7 +11,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
@@ -20,13 +21,17 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 @ExtendWith(SpringExtension.class)
 @RestClientTest(KaKaoService.class)
+@EnableConfigurationProperties(KakaoProperties.class)
 @MockBean(JpaMetamodelMappingContext.class)
 class KaKaoServiceTest {
 
-    @Autowired
     private KaKaoService kaKaoService;
+    private KakaoProperties properties;
     private MockWebServer mockWebServer;
 
     @BeforeEach
@@ -34,9 +39,17 @@ class KaKaoServiceTest {
         mockWebServer = new MockWebServer();
         mockWebServer.start();
 
-        kaKaoService.setSendMessageUrl(mockWebServer.url("/").toString());
-        kaKaoService.setGetTokenUrl(mockWebServer.url("/").toString());
-        kaKaoService.setGetUserInfoUrl(mockWebServer.url("/").toString());
+        properties = mock(KakaoProperties.class);
+        KakaoProperties.Url url = new KakaoProperties.Url();
+        String mockUrl = mockWebServer.url("/").toString();
+        url.setSendMessage(mockUrl);
+        url.setToken(mockUrl);
+        url.setUserInfo(mockUrl);
+        url.setGetCode(mockUrl);
+
+        when(properties.getUrl()).thenReturn(url);
+
+        kaKaoService = new KaKaoService(properties);
     }
 
     @AfterEach

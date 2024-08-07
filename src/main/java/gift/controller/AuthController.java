@@ -7,8 +7,6 @@ import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +18,7 @@ import org.springframework.web.servlet.view.RedirectView;
 @Tag(name = "Account", description = "회원가입, 로그인 등 사용자 계정과 관련된 API Controller")
 public class AuthController {
 
-    @Value("${kakao.get-code.url}")
+    @Value("${kakao.url.code}")
     private String getCodeUrl;
     private final AuthService authService;
 

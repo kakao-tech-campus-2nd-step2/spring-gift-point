@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.KakaoProperties;
 import gift.LoginType;
 import gift.domain.*;
 import gift.dto.LoginMember;
@@ -26,6 +27,7 @@ class OrderServiceTest {
     private OrderRepository orderRepository;
     private KaKaoService kaKaoService;
     private OrderService orderService;
+    private KakaoProperties properties;
 
     @BeforeEach
     void setUp() {
@@ -33,7 +35,8 @@ class OrderServiceTest {
         wishRepository = mock(WishRepository.class);
         memberRepository = mock(MemberRepository.class);
         orderRepository = mock(OrderRepository.class);
-        kaKaoService = new KaKaoService();
+        properties = mock(KakaoProperties.class);
+        kaKaoService = new KaKaoService(properties);
         orderService = new OrderService(optionRepository, wishRepository, memberRepository, orderRepository, kaKaoService);
     }
 
