@@ -5,7 +5,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
+import lombok.Data;
+import lombok.Getter;
 
+@Data
+@Getter
 @Entity
 public class Member {
     @Id
