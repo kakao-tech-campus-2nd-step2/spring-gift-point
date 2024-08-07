@@ -39,4 +39,10 @@ public class CustomException {
             super(message, cause);
         }
     }
+
+    public static class EntityAlreadyExistException extends Throwable {
+        public EntityAlreadyExistException(String s) {
+            super(s);
+        }
+    }
 }

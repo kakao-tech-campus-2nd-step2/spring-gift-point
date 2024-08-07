@@ -18,13 +18,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.List;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 
 @RestController
-@RequestMapping("/wishes")
+@RequestMapping("/api/wishes")
 @Tag(name = "Wish Management System", description = "Operations related to wish management")
 public class WishController {
     private final WishService wishService;
@@ -66,9 +67,9 @@ public class WishController {
         }
         Member member = memberRepository.findByEmail(email).orElseThrow(() -> new CustomException.EntityNotFoundException("Member not found"));
         Product product = productRepository.findById(wishRequest.getProductId()).orElseThrow(() -> new CustomException.EntityNotFoundException("Product not found"));
-        Wish wish = wishService.modifyWish(member, product, wishRequest.getQuantity());
-        WishModificationResponse wishResponse = new WishModificationResponse(wish.getId(), wish.getQuantity());
 
+        Wish newWish = wishService.createWish(member, product, wishRequest.getQuantity());
+        WishModificationResponse wishResponse = new WishModificationResponse(newWish.getId(), newWish.getQuantity());
         return ResponseEntity.ok(wishResponse);
     }
 
