@@ -9,9 +9,11 @@ import gift.category.dto.CategoryResponseDto;
 import gift.category.entity.Category;
 import gift.category.service.CategoryService;
 import gift.global.dto.PageInfoDto;
+import gift.option.dto.OptionRequestDto;
 import gift.option.dto.OptionResponseDto;
 import gift.option.entity.Option;
 import gift.option.service.OptionService;
+import gift.product.dto.CreateProductRequestDto;
 import gift.product.dto.FullOptionsProductResponseDto;
 import gift.product.dto.ProductRequestDto;
 import gift.product.dto.ProductResponseDto;
@@ -58,20 +60,21 @@ public class ProductServiceTest {
         var optionResponseDto1 = new OptionResponseDto(1L, "화이트초콜릿", 10000,
             productId);
         var categoryResponseDto1 = new CategoryResponseDto(1L, "간식", "gansik.png");
-        var options = new Options(List.of(optionResponseDto1.toOption()));
         var product = new Product(productId, name, price, imageUrl,
-            categoryResponseDto1.toCategory(), options);
-        var productRequestDto1 = new ProductRequestDto(name, price, imageUrl);
+            categoryResponseDto1.toCategory(), new Options());
+        var createProductRequestDto1 = new CreateProductRequestDto(name, price, imageUrl, 1L,
+            "화이트초콜릿", 10000);
 
-        given(optionService.selectOption(1L)).willReturn(optionResponseDto1);
         given(categoryService.selectCategory(1L)).willReturn(categoryResponseDto1);
         given(productRepository.save(any())).willReturn(product);
+        given(productRepository.findById(productId)).willReturn(Optional.of(product));
+        given(optionService.insertOption(any(OptionRequestDto.class), any(Long.class))).willReturn(
+            optionResponseDto1.toOption());
 
         // when, then
-        Assertions.assertThatCode(() -> productService.insertProduct(productRequestDto1, 1L, 1L))
+        Assertions.assertThatCode(() -> productService.insertProduct(createProductRequestDto1))
             .doesNotThrowAnyException();
 
-        then(optionService).should().selectOption(1L);
         then(categoryService).should().selectCategory(1L);
         then(productRepository).should().save(any());
     }
@@ -180,7 +183,7 @@ public class ProductServiceTest {
 
         // when, then
         Assertions.assertThat(productService.selectProducts(pageInfoDto))
-            .isEqualTo(productPage.stream().map(ProductResponseDto::fromProduct).toList());
+            .isEqualTo(productPage.map(ProductResponseDto::fromProduct));
 
         then(productRepository).should().findAll(any(PageRequest.class));
     }
@@ -240,33 +243,41 @@ public class ProductServiceTest {
         var dupOptionId = 2L;
         var optionId = 3L;
 
+        var option = new Option(1L, "화이트초콜릿", 10000, productId);
         var category = new Category(1L, "간식", "gansik.png");
-        var options = new Options(new Option(1L, "화이트초콜릿", 10000, productId));
+        var options = new Options(new ArrayList<>(List.of(option)));
         var product = new Product(productId, name, price, imageUrl, category, options);
         var dupOptionResponseDto = new OptionResponseDto(dupOptionId, "화이트초콜릿", 1000,
             productId);
         var optionResponseDto = new OptionResponseDto(optionId, "다크초콜릿", 1000, productId);
 
         given(productRepository.findById(productId)).willReturn(Optional.of(product));
-        given(optionService.selectOption(dupOptionId)).willReturn(dupOptionResponseDto);
-        given(optionService.selectOption(optionId)).willReturn(optionResponseDto);
+        given(optionService.insertOption(any(OptionRequestDto.class), any(Long.class))).willAnswer(
+            invocation -> {
+                OptionRequestDto optionRequestDto = invocation.getArgument(0);
+                if (optionRequestDto.name().equals(optionResponseDto.name())) {
+                    return optionResponseDto.toOption();
+                }
+                // 실제로는 반환하면 안되지만 테스트를 위해 반환
+                return dupOptionResponseDto.toOption();
+            }
+        );
 
         // when, then
         // 정상
-        productService.insertOption(productId, optionId);
+        productService.insertOption(productId, new OptionRequestDto("다크초콜릿", 1000));
         Assertions.assertThat(product.getOptions().getOption(optionId).getName())
             .isEqualTo("다크초콜릿");
 
         // 중복된 옵션명
-        Assertions.assertThatThrownBy(() -> productService.insertOption(productId, dupOptionId))
+        Assertions.assertThatThrownBy(
+                () -> productService.insertOption(productId, new OptionRequestDto("화이트초콜릿", 100)))
             .isInstanceOf(IllegalArgumentException.class);
 
         // 정상, 중복 옵션
         then(productRepository).should(times(2)).findById(1L);
-        // 정상
-        then(optionService).should().selectOption(optionId);
-        // 중복
-        then(optionService).should().selectOption(dupOptionId);
+        then(optionService).should(times(2))
+            .insertOption(any(OptionRequestDto.class), any(Long.class));
     }
 
     /*
@@ -316,7 +327,7 @@ public class ProductServiceTest {
 
         // 차감하려는 수량이 더 많음
         Assertions.assertThatThrownBy(
-                () -> productService.subtractOption(productId, zeroOptionId, 1000000))
+                () -> productService.subtractOption(productId, optionId, 1000000))
             .isInstanceOf(IllegalArgumentException.class);
 
         // 정상, 수량이 0개, 차감하려는 수량이 더 많음

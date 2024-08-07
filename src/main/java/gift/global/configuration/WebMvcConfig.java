@@ -39,11 +39,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
             .addInterceptor(loginInterceptor)
             .order(1)
 
-            // 모든 행동에 대해 검증
-            .addPathPatterns("/api/**")
+            // 어드민 관련 행위
+            .addPathPatterns("/api/admin/**")
+            .addPathPatterns("/admin/**")
 
-            // 로그인만 제외하고
-            .excludePathPatterns("/api/login/**");
+            // 주문은 로그인 필수
+            .addPathPatterns("/api/order")
+
+            // 위시리스트도 로그인 필수
+            .addPathPatterns("/api/wishes/**");
 
         // admin 인터셉터 추가
         interceptorRegistry

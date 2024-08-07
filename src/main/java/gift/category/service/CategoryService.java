@@ -28,7 +28,7 @@ public class CategoryService {
     }
 
     // 하나만 조회하는 핸들러
-    @Transactional
+    @Transactional(readOnly = true)
     public CategoryResponseDto selectCategory(Long categoryId) {
         var actualCategory = categoryRepository.findById(categoryId)
             .orElseThrow(() -> new NoSuchElementException("존재하지 않는 카테고리입니다."));

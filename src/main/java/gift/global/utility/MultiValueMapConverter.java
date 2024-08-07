@@ -11,10 +11,14 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 // dto를 MultiValueMap으로 변환해주는 클래스
-public class MultiValueMapConverter {
+public final class MultiValueMapConverter {
 
     // 재귀로 인해 쓸데없는 호출이 많이 일어나지 않도록 static으로 따로 빼주기
     private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    private MultiValueMapConverter() {
+
+    }
 
     // 파라미터를 convert (String, String 고정)
     public static MultiValueMap<String, String> paramConvert(Object dto) {
@@ -50,16 +54,17 @@ public class MultiValueMapConverter {
             });
             var dtoMultiValueMap = new LinkedMultiValueMap<String, Object>();
 
-            dtoMultiValueMap.setAll(dtoMap.entrySet().stream().collect(Collectors.toMap(Entry::getKey, entry -> {
-                // value 내부에 변환 가능한 dto가 추가로 존재한다면 해당 dto에 대해 메서드 재호출
-                var value = entry.getValue();
-                if (value instanceof String) {
-                    return bodyConvert(value);
-                }
+            dtoMultiValueMap.setAll(
+                dtoMap.entrySet().stream().collect(Collectors.toMap(Entry::getKey, entry -> {
+                    // value 내부에 변환 가능한 dto가 추가로 존재한다면 해당 dto에 대해 메서드 재호출
+                    var value = entry.getValue();
+                    if (value instanceof String) {
+                        return bodyConvert(value);
+                    }
 
-                // 아니라면 그냥 반환. 만약 MultiValueMapConvertibleDto도 아니면서 dto인 경우라면 요청 중 알아서 예외 처리가 될 것.
-                return entry.getValue();
-            })));
+                    // 아니라면 그냥 반환. 만약 MultiValueMapConvertibleDto도 아니면서 dto인 경우라면 요청 중 알아서 예외 처리가 될 것.
+                    return entry.getValue();
+                })));
 
             return dtoMultiValueMap;
         } catch (Exception e) {

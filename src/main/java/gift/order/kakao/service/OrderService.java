@@ -35,7 +35,7 @@ public class OrderService {
 
         // 위시리스트 제거
         var productResponseDto = productService.selectProduct(actualOption.productId());
-        wishListService.orderWishProduct(productResponseDto, userId);
+        wishListService.deleteWishProduct(productResponseDto, userId);
 
         // 카카오 메시지 보내기.
         kakaoMessageService.sendTextMessageForMe(userId, orderRequestDto.message());

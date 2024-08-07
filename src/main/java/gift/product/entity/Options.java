@@ -23,12 +23,10 @@ public class Options {
         this.options = options;
     }
 
-    public Options(Option option) {
-        options = new ArrayList<>();
-        options.add(option);
-    }
-
-    protected Options() {
+    // 하나 이상의 옵션을 넣어야 한다는 조건을 entity에서 설정하지 못한 다는 것은 아쉽습니다.
+    // 하지만 옵션은 productId가 필요하고, product(options)는 하나 이상의 옵션이 필요하므로 하나는 포기해야 했고,
+    // service에서라도 하나 이상의 옵션을 넣어주도록 하기로 했습니다. 불가능하다고 생각되지만, 혹시라도 둘 다 챙길 수 있었는지는 궁금합니다.
+    public Options() {
         options = new ArrayList<>();
     }
 
@@ -46,15 +44,14 @@ public class Options {
 
     // 요소 검색
     public Option getOption(long optionId) {
-        System.out.println(optionId);
-        System.out.println(options.get(0));
         return options.stream().filter(option -> option.getOptionId() == optionId).findFirst()
             .orElseThrow(() -> new NoSuchElementException("존재하지 않는 옵션입니다."));
     }
 
     // 요소를 추가할 때 사용할 중복 검사.
     private void verifyDuplication(Option newOption) {
-        boolean alreadyExists = options.contains(newOption);
+        boolean alreadyExists = options.stream()
+            .anyMatch(option -> option.getName().equals(newOption.getName()));
 
         if (alreadyExists) {
             throw new IllegalArgumentException("중복된 옵션명입니다.");

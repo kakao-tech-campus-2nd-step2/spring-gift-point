@@ -2,19 +2,23 @@ package gift.product.service;
 
 import gift.category.service.CategoryService;
 import gift.global.dto.PageInfoDto;
+import gift.option.dto.OptionRequestDto;
 import gift.option.service.OptionService;
+import gift.product.dto.CreateProductRequestDto;
 import gift.product.dto.FullOptionsProductResponseDto;
 import gift.product.dto.ProductRequestDto;
 import gift.product.dto.ProductResponseDto;
 import gift.product.entity.Product;
 import gift.product.repository.ProductRepository;
-import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 @Service
+@Validated
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -29,17 +33,23 @@ public class ProductService {
         this.categoryService = categoryService;
     }
 
-    // repository를 호출해서 productDTO를 DB에 넣는 함수
+    // 로직을 변경했습니다. 옵션 추가를 무조건 product에서만 가능하게 해서 종속적인 관계로 구성합니다.
+    // entity 단에서 강제로 options에 최소 하나 이상의 원소를 넣게 하려고 하였는데,
+    // 그렇게 되면 option이 존재하지 않는 product의 id를 추가할 수도 있어서 entity 단에서 강제로 options에 최소 하나 이상의 원소를 넣게 하는 것을 포기하고
+    // 제품을 추가하는 service에서 무조건 하나 이상을 넣도록 하였습니다.
     @Transactional
-    public void insertProduct(ProductRequestDto productRequestDto, long categoryId, long optionId) {
-        var optionResponseDto = optionService.selectOption(optionId);
-        var categoryResponseDto = categoryService.selectCategory(categoryId);
+    public void insertProduct(CreateProductRequestDto createProductRequestDto) {
+        var actualCategory = categoryService.selectCategory(createProductRequestDto.categoryId())
+            .toCategory();
 
-        var option = optionResponseDto.toOption();
-        var product = Product.of(productRequestDto.name(), productRequestDto.price(),
-            productRequestDto.imageUrl(), categoryResponseDto.toCategory(), option);
+        var product = Product.of(createProductRequestDto.name(), createProductRequestDto.price(),
+            createProductRequestDto.imageUrl(), actualCategory);
+        var actualProduct = productRepository.save(product);
 
-        productRepository.save(product);
+        var optionRequestDto = new OptionRequestDto(createProductRequestDto.optionName(),
+            createProductRequestDto.optionQuantity());
+
+        insertOption(actualProduct.getProductId(), optionRequestDto);
     }
 
     // repository를 호출해서 DB에 담긴 로우를 반환하는 함수
@@ -64,11 +74,11 @@ public class ProductService {
 
     // 전체 제품 정보를 반환하는 함수
     @Transactional(readOnly = true)
-    public List<ProductResponseDto> selectProducts(PageInfoDto pageInfoDto) {
+    public Page<ProductResponseDto> selectProducts(PageInfoDto pageInfoDto) {
         var pageable = pageInfoDto.toPageInfo().toPageRequest();
         var products = productRepository.findAll(pageable);
 
-        return products.stream().map(ProductResponseDto::fromProduct).toList();
+        return products.map(ProductResponseDto::fromProduct);
     }
 
     // repository를 호출해서 특정 로우를 파라메터로 전달된 DTO로 교체하는 함수
@@ -87,13 +97,14 @@ public class ProductService {
 
     // option을 넣는 함수. product 입장에서는 변경
     @Transactional
-    public void insertOption(long productId, long optionId) {
-        var product = productRepository.findById(productId)
+    public void insertOption(long productId, OptionRequestDto optionRequestDto) {
+        var actualProduct = productRepository.findById(productId)
             .orElseThrow(() -> new NoSuchElementException("존재하지 않는 제품입니다."));
-        var optionResponseDto = optionService.selectOption(optionId);
 
-        var option = optionResponseDto.toOption();
-        product.addNewOption(option);
+        // 옵션 테이블에 옵션 추가
+        var actualOption = optionService.insertOption(optionRequestDto, productId);
+        // options에도 옵션 추가
+        actualProduct.addNewOption(actualOption);
     }
 
     // option의 개수를 하나 차감시키는 메서드

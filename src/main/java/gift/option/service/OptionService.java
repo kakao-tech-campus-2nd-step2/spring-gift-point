@@ -20,13 +20,17 @@ public class OptionService {
         this.optionRepository = optionRepository;
     }
 
-    // 여기에서는 종속된 옵션을 만들지만, 실제로 제품에 추가하지는 않습니다. 제품에 추가하는 과정은 Product에서 시행합니다.
+    // 종속된 옵션을 만들면서 제품에 추가합니다. (로직 변경). productService에서만 호출 가능
     @Transactional
-    public void insertOption(OptionRequestDto optionRequestDto, long productId) {
+    public Option insertOption(OptionRequestDto optionRequestDto, long productId) {
         var option = new Option(optionRequestDto.name(), optionRequestDto.quantity(),
             productId);
 
-        optionRepository.save(option);
+        if (optionRepository.existsByNameAndProductId(option.getName(), productId)) {
+            throw new IllegalArgumentException("옵션명이 중복됩니다.");
+        }
+
+        return optionRepository.save(option);
     }
 
     // 전체 옵션을 조회하는 메서드 (관리자 권한 필요)
@@ -44,5 +48,12 @@ public class OptionService {
             .orElseThrow(() -> new NoSuchElementException("존재하지 않는 옵션입니다."));
 
         return OptionResponseDto.fromOption(option);
+    }
+
+    // 제품에 종속된 옵션들을 조회하는 메서드
+    @Transactional(readOnly = true)
+    public List<OptionResponseDto> selectProductOptions(long productId) {
+        var options = optionRepository.findByProductId(productId);
+        return options.stream().map(OptionResponseDto::fromOption).toList();
     }
 }

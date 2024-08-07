@@ -8,4 +8,10 @@ public record KakaoMessageForMeResponseDto(
     Integer resultCode
 ) {
 
+    public boolean isSuccess() {
+        if (resultCode != null) {
+            return resultCode == 0;
+        }
+        return false;
+    }
 }

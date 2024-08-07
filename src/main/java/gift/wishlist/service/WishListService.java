@@ -52,7 +52,7 @@ public class WishListService {
     // 위시리스트에서 제품을 삭제하는 핸들러
     // 자신의 위시리스트인지 검증하는 로직을 추가하였습니다.
     @Transactional
-    public void deleteWishProduct(long id, long userId) {
+    public void deleteWishProductWithVerification(long id, long userId) {
         WishList actualWishList = wishListRepository.findById(id)
             .orElseThrow(() -> new NoSuchElementException("위시 리스트에 존재하지 않는 제품입니다."));
         verifyDeleteOwnWishProduct(actualWishList, userId);
@@ -60,20 +60,11 @@ public class WishListService {
         wishListRepository.deleteById(id);
     }
 
-    // 주문 후 제품을 삭제하는 핸들러 (주문에서 사용)
-    // 이렇게 사용하는 것이 맞는지, 아니면 existence만 만들어서 호출하고 delete를 호출하는 것이 맞는지 궁금합니다.
+    // 검증하지 않고 바로 삭제 (== deleteByUserIdAndProduct)
     @Transactional
-    public void orderWishProduct(ProductResponseDto productResponseDto, long userId) {
-        var wishList = wishListRepository.findByUserIdAndProduct(userId,
+    public void deleteWishProduct(ProductResponseDto productResponseDto, long userId) {
+        wishListRepository.deleteByUserIdAndProduct(userId,
             productResponseDto.toProduct());
-
-        // 위시리스트에 없다면 바로 반환
-        if (wishList.isEmpty()) {
-            return;
-        }
-
-        // 있으면 삭제하기
-        deleteWishProduct(wishList.get().getId(), userId);
     }
 
     // 위시리스트에 제품이 존재하는지 검증

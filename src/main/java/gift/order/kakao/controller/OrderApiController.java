@@ -1,5 +1,7 @@
 package gift.order.kakao.controller;
 
+import static org.springframework.http.ResponseEntity.ok;
+
 import gift.global.annotation.UserId;
 import gift.order.kakao.dto.OrderRequestDto;
 import gift.order.kakao.service.OrderService;
@@ -26,10 +28,8 @@ public class OrderApiController {
     @PostMapping("/api/order")
     public ResponseEntity<String> order(@RequestBody @Valid OrderRequestDto orderRequestDto,
         @UserId Long userId) {
-        System.out.println(userId);
-        System.out.println();
         orderService.order(orderRequestDto, userId);
 
-        return ResponseEntity.ok("");
+        return ok().build();
     }
 }
