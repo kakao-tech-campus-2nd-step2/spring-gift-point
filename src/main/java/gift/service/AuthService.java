@@ -45,7 +45,7 @@ public class AuthService {
         return new AuthResponse(jwtUtil.createJWT(storedMember.getId(), storedMember.getLoginType()));
     }
 
-    public String kakaoLogin(String code) {
+    public AuthResponse kakaoLogin(String code) {
         KakaoTokenInfo kakaoTokenInfo = kaKaoService.getKakaoTokenInfo(code);
         String email = kaKaoService.getKakaoAccountEmail(kakaoTokenInfo.accessToken());
 
@@ -53,7 +53,7 @@ public class AuthService {
 
         checkLoginType(KAKAO, member.getLoginType());
 
-        return jwtUtil.createJWT(member.getId(), member.getLoginType());
+        return new AuthResponse(jwtUtil.createJWT(member.getId(), member.getLoginType()));
     }
 
     private Member findOrSaveMember(String email, String accessToken, String refreshToken) {
