@@ -9,16 +9,18 @@ public class OrderRequest {
     private String message;
     private LocalDateTime orderTime;
     private String email;
+    private int point;
 
     public OrderRequest() {}
 
-    public OrderRequest(Long productId, Long optionId, int quantity, String message, LocalDateTime orderTime, String email) {
+    public OrderRequest(Long productId, Long optionId, int quantity, int point, String message, LocalDateTime orderTime, String email) {
         this.productId = productId;
         this.optionId = optionId;
         this.quantity = quantity;
         this.message = message;
         this.orderTime = orderTime;
         this.email = email;
+        this.point = point;
     }
 
     public Long getProductId() {
@@ -43,5 +45,9 @@ public class OrderRequest {
 
     public String getEmail() {
         return email;
+    }
+
+    public int getPoint() {
+        return point;
     }
 }

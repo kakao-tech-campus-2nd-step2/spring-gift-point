@@ -78,5 +78,10 @@ public class ProductService {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CustomException.EntityNotFoundException("Category not found"));
     }
+
+    public int getProductPrice(Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow(()-> new CustomException.EntityNotFoundException("Product not found"));
+        return product.getPrice();
+    }
 }
 

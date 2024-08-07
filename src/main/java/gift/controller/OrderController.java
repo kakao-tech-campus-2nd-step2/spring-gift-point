@@ -101,6 +101,7 @@ public class OrderController {
                     orderRequest.getProductId(),
                     orderRequest.getOptionId(),
                     orderRequest.getQuantity(),
+                    orderRequest.getPoint(),
                     orderRequest.getMessage(),
                     LocalDateTime.now(),
                     email
