@@ -33,13 +33,20 @@ public class ProductOptionService {
   }
 
   public ProductOptionDto updateOption(Long productId, Long optionId, ProductOptionDto optionDto) {
-    ProductOption option = productOptionRepository.findById(optionId)
+    ProductOption existingOption = productOptionRepository.findById(optionId)
             .orElseThrow(() -> new CustomNotFoundException("Option not found"));
     Product product = productRepository.findById(productId)
             .orElseThrow(() -> new CustomNotFoundException("Product not found"));
-    ProductOption updatedOption = new ProductOption(optionDto.getName(), optionDto.getValue(), product);
-    updatedOption = productOptionRepository.save(updatedOption);
-    return convertToDto(updatedOption);
+
+    ProductOption updatedOption = new ProductOption(
+            optionId,
+            optionDto.getName() != null ? optionDto.getName() : existingOption.getName(),
+            optionDto.getValue() != null ? optionDto.getValue() : existingOption.getValue(),
+            product
+    );
+
+    ProductOption savedOption = productOptionRepository.save(updatedOption);
+    return convertToDto(savedOption);
   }
 
   public void deleteOption(Long productId, Long optionId) {

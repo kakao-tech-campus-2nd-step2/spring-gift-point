@@ -25,6 +25,13 @@ public class ProductOption {
     this.product = product;
   }
 
+  public ProductOption(Long id, String name, String value, Product product) {
+    this.id = id;
+    this.name = name;
+    this.value = value;
+    this.product = product;
+  }
+
   public ProductOption() {}
 
   public Long getId() {
