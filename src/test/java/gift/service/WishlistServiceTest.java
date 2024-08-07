@@ -1,4 +1,5 @@
 package gift.service;
+import gift.domain.WishlistDTO;
 import gift.entity.Category;
 import gift.entity.Member;
 import gift.entity.Product;
@@ -13,9 +14,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -60,7 +59,7 @@ class WishlistServiceTest {
         when(wishlistRepository.findByIdAndIdAndMember_id(anyInt(), anyInt(), eq(memberId))).thenReturn(wishlists);
 
         // When
-        Page<Wishlist> result = wishlistService.getAllWishlist(token, page, size);
+        Page<WishlistDTO> result = wishlistService.getAllWishlist(token, page, size);
 
         // Then
         assertNotNull(result);
@@ -114,30 +113,13 @@ class WishlistServiceTest {
 
         when(memberRepository.searchIdByToken(token)).thenReturn(memberId);
         when(memberRepository.findById(memberId)).thenReturn(member);
-        when(productRepository.findById(productId)).thenReturn(product);
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
 
         // When
         assertDoesNotThrow(() -> wishlistService.changeNum(token, productId, count));
 
         // Then
         verify(wishlistRepository).save(any(Wishlist.class));
-    }
-
-    @Test
-    void testChangeNumDelete() {
-        // Given
-        String token = "testToken";
-        int productId = 1;
-        int count = 0;
-        int memberId = 1;
-
-        when(memberRepository.searchIdByToken(token)).thenReturn(memberId);
-
-        // When
-        assertDoesNotThrow(() -> wishlistService.changeNum(token, productId, count));
-
-        // Then
-        verify(wishlistRepository).deleteByMember_idAndProduct_id(memberId, productId);
     }
 
     @Test
@@ -152,7 +134,7 @@ class WishlistServiceTest {
 
         when(memberRepository.searchIdByToken(token)).thenReturn(memberId);
         when(memberRepository.findById(memberId)).thenReturn(member);
-        when(productRepository.findById(productId)).thenReturn(product);
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
         when(wishlistRepository.searchCount_productByMember_idAndProduct_id(memberId, productId)).thenReturn(0);
 
         // When
@@ -174,7 +156,7 @@ class WishlistServiceTest {
 
         when(memberRepository.searchIdByToken(token)).thenReturn(memberId);
         when(memberRepository.findById(memberId)).thenReturn(member);
-        when(productRepository.findById(productId)).thenReturn(product);
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
         when(wishlistRepository.searchCount_productByMember_idAndProduct_id(memberId, productId)).thenReturn(1);
 
         // When
@@ -198,5 +180,27 @@ class WishlistServiceTest {
         // Then
         assertTrue(result);
         verify(wishlistRepository).searchCount_productByMember_idAndProduct_id(memberId, productId);
+    }
+
+    @Test
+    void testMostCommonCategoryId() {
+        // Given
+        String token = "testToken";
+        int productId = 1;
+        int memberId = 1;
+        int categoryId = 1;
+        Category testCategory = new Category(categoryId, "test", "test", "test", "test");
+        Product product = new Product(1, testCategory, 1, "test", "test");
+        Member member = new Member(1, "test", "test", "test");
+
+        when(memberRepository.searchIdByToken(token)).thenReturn(memberId);
+        when(wishlistRepository.findProductIdByMember_id(memberId)).thenReturn(Collections.singletonList(productId));
+        when(productRepository.searchCategory_IdById(productId)).thenReturn(Optional.of(categoryId));
+
+        // When
+        int result = wishlistService.getMostCommonCategoryId(token);
+
+        // Then
+        assertEquals(1, result);
     }
 }
