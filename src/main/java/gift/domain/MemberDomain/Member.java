@@ -37,9 +37,13 @@ public class Member {
     public Member(String id, String password, LinkedList<WishList> wishLists,MemberPoint memberPoint) {
         this.id = id;
         this.password = password;
-        this.wishList = wishList;
+        this.wishList = wishLists;
         this.name = null;
         this.memberPoint = memberPoint;
+    }
+
+    public Member(String email, String password, LinkedList<WishList> wishLists) {
+        this(email,password,wishLists,new MemberPoint(1000));
     }
 
 

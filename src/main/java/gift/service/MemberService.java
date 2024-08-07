@@ -26,7 +26,7 @@ public class MemberService {
 
     public MemberResponse join(MemberRequest memberRequest) throws BadRequestException {
         if (!memberRepository.existsById(memberRequest.email())) {
-            memberRepository.save(new Member(memberRequest.email(), memberRequest.password(),new LinkedList<WishList>(),new MemberPoint(1000)));
+            memberRepository.save(new Member(memberRequest.email(), memberRequest.password(),new LinkedList<WishList>()));
             return new MemberResponse(memberRequest.email(),memberRequest.password());
         }
         throw new BadRequestException("이미 존재하는 회원입니다.");
