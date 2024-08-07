@@ -2,6 +2,8 @@ package gift.service;
 
 import gift.domain.AuthDomain.LoginRequest;
 import gift.domain.MemberDomain.Member;
+import gift.domain.MemberDomain.MemberPoint;
+
 import gift.domain.MemberDomain.MemberRequest;
 import gift.domain.MemberDomain.MemberResponse;
 import gift.domain.WishListDomain.WishList;

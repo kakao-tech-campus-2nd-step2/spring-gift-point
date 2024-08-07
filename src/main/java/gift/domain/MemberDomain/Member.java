@@ -21,6 +21,9 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<WishList> wishList;
 
+    @Embedded
+    private MemberPoint memberPoint;
+
     public Member() {
     }
 
@@ -30,12 +33,17 @@ public class Member {
         this.wishList = wishList;
         this.name = name;
     }
-
-    public Member(String id, String password, LinkedList<WishList> wishLists) {
+  
+    public Member(String id, String password, LinkedList<WishList> wishLists,MemberPoint memberPoint) {
         this.id = id;
         this.password = password;
-        this.wishList = wishList;
+        this.wishList = wishLists;
         this.name = null;
+        this.memberPoint = memberPoint;
+    }
+
+    public Member(String email, String password, LinkedList<WishList> wishLists) {
+        this(email,password,wishLists,new MemberPoint(1000));
     }
 
 
@@ -49,6 +57,15 @@ public class Member {
 
     public String getName() {
         return name;
+    }
+
+    public Integer getPoint() {
+        return memberPoint.getPoint();
+    }
+
+    public Integer subtractPoint(int usePoint) throws IllegalAccessException {
+        memberPoint.subtract(usePoint);
+        return memberPoint.getPoint();
     }
 
     public List<WishList> getWishList() {

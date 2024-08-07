@@ -2,6 +2,7 @@ package gift.ServiceTest;
 
 import gift.domain.AuthDomain.LoginRequest;
 import gift.domain.MemberDomain.Member;
+import gift.domain.MemberDomain.MemberPoint;
 import gift.domain.MemberDomain.MemberRequest;
 import gift.domain.WishListDomain.WishList;
 import gift.repository.MemberRepository;
@@ -66,7 +67,7 @@ public class MemberServiceTest {
     @DisplayName("로그인 성공 테스트")
     public void testLogin_Success() {
         MemberRequest memberRequest = new MemberRequest("testId", "testPassword");
-        Member member = new Member("testId", "testPassword", new LinkedList<WishList>());
+        Member member = new Member("testId", "testPassword", new LinkedList<WishList>(),new MemberPoint(1000));
 
         Mockito.when(memberRepository.findById(memberRequest.email())).thenReturn(Optional.of(member));
         Mockito.when(jwtService.createJWT(memberRequest.email())).thenReturn("token");
