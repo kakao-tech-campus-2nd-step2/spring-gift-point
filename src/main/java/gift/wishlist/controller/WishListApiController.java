@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 // 개인의 wish list db를 조작해서 결과를 가져오는 api 컨트롤러
 
 @RestController
-@RequestMapping("/api/users/")
+@RequestMapping("/api")
 @SecurityRequirement(name = HttpHeaders.AUTHORIZATION)
 public class WishListApiController {
 
@@ -35,24 +35,24 @@ public class WishListApiController {
     }
 
     // 전체 목록에서 제품 추가 시
-    @PostMapping("/wishlist")
-    public ApiResponseDto<Void> addWishProduct(@RequestParam(name = "product-id") Long productId,
+    @PostMapping("/wishes/{productId}")
+    public ApiResponseDto<Void> addWishProduct(@PathVariable(name = "productId") Long productId,
         @UserId Long userId) {
         wishListService.insertWishProduct(productId, userId);
         return SUCCESS();
     }
 
     // 나의 위시 페이지 가져오기
-    @GetMapping("/wishlist")
+    @GetMapping("/wishes")
     public ApiResponseDto<List<WishListResponseDto>> getWishProducts(@UserId Long userId,
         @ModelAttribute PageInfoDto pageInfoDto) {
         return SUCCESS(wishListService.readWishProducts(userId, pageInfoDto));
     }
 
     // 삭제 버튼 눌러서 삭제
-    @DeleteMapping("/wishlist/{wishlist-id}")
+    @DeleteMapping("/wishes/{wishId}")
     public ApiResponseDto<Void> deleteWishProduct(
-        @PathVariable(name = "wishlist-id") Long wishListId,
+        @PathVariable(name = "wishId") Long wishListId,
         @UserId Long userId) {
         wishListService.deleteWishProductWithVerification(wishListId, userId);
         return SUCCESS();

@@ -49,4 +49,11 @@ public class OptionService {
 
         return OptionResponseDto.fromOption(option);
     }
+
+    // 제품에 종속된 옵션들을 조회하는 메서드
+    @Transactional(readOnly = true)
+    public List<OptionResponseDto> selectProductOptions(long productId) {
+        var options = optionRepository.findByProductId(productId);
+        return options.stream().map(OptionResponseDto::fromOption).toList();
+    }
 }
