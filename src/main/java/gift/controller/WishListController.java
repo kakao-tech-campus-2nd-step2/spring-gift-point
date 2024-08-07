@@ -38,7 +38,8 @@ public class WishListController {
     @Operation(summary = "위시 상품 추가 api")
     @ApiResponse(responseCode = "201", description = "위시 리스트에 위시 상품 추가 성공")
     public ResponseEntity<MessageResponse> addWishProduct(@Login LoginMember member, @PathVariable("productId") Long productId) {
-        return new ResponseEntity<>(wishListService.addWishProduct(new WishProduct(member.getId(), productId)), HttpStatus.CREATED);
+        WishProduct newWishProduct = new WishProduct(member.getId(), productId);
+        return new ResponseEntity<>(wishListService.addWishProduct(newWishProduct), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{wishId}")

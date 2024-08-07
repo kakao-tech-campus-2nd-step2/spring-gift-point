@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.KakaoProperties;
 import gift.LoginType;
 import gift.domain.*;
 import gift.dto.LoginMember;
@@ -26,6 +27,7 @@ class OrderServiceTest {
     private OrderRepository orderRepository;
     private KaKaoService kaKaoService;
     private OrderService orderService;
+    private KakaoProperties properties;
 
     @BeforeEach
     void setUp() {
@@ -33,14 +35,15 @@ class OrderServiceTest {
         wishRepository = mock(WishRepository.class);
         memberRepository = mock(MemberRepository.class);
         orderRepository = mock(OrderRepository.class);
-        kaKaoService = new KaKaoService();
+        properties = mock(KakaoProperties.class);
+        kaKaoService = new KaKaoService(properties);
         orderService = new OrderService(optionRepository, wishRepository, memberRepository, orderRepository, kaKaoService);
     }
 
     @Test
     void order_subtractOptionQuantity() {
         // given
-        Product product = new Product(1L, "name", 500, "image.image");
+        Product product = new Product("name", 500, "image.image");
         Category category1 = new Category(1L, "상품권");
         Option option = new Option("optionName", 100, product);
         int initQuantity = option.getQuantity();
