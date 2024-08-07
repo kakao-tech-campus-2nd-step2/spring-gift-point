@@ -33,7 +33,7 @@ public class Member {
         this.wishList = wishList;
         this.name = name;
     }
-
+  
     public Member(String id, String password, LinkedList<WishList> wishLists,MemberPoint memberPoint) {
         this.id = id;
         this.password = password;
