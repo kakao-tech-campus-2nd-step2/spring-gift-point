@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
@@ -38,7 +40,7 @@ public class ProductTest {
     @Test
     void testFindById() {
         categoryRepository.save(testCategory);
-        Product foundProduct = productRepository.findById(testProduct.getId());
+        Product foundProduct = productRepository.findById(testProduct.getId()).orElse(null);
         assertEquals(testProduct.getId(), foundProduct.getId());
     }
 

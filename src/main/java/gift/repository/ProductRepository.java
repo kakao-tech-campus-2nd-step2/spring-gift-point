@@ -15,4 +15,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByProductIdBetween(@Param("startId") int startId, @Param("endId") int endId);
     Product save(Product product);
     void deleteById(int Id);
+    Optional<Integer> searchCategory_IdById(int product_id);
+    Optional<Integer> searchProduct_IdByCategory_Id(int category_id);
 }

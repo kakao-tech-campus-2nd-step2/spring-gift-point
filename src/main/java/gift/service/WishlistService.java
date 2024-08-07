@@ -11,6 +11,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+import java.util.Optional;
+
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -103,5 +106,20 @@ public class WishlistService {
         dto.id = wishlist.getId();
         dto.product = wishlist.getProduct();
         return dto;
+    }
+
+    public Integer getMostCommonCategoryId(String token) {
+        var memberId = memberRepository.searchIdByToken(token);
+        List<Integer> productIds = wishlistRepository.findProductIdByMember_id(memberId);
+
+        return productIds.stream()
+                .map(productRepository::searchCategory_IdById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.groupingBy(id -> id, Collectors.counting()))
+                .entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse(null);
     }
 }

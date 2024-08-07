@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -62,5 +61,9 @@ public class ProductService {
         catch (Exception e) {
             throw new NoSuchElementException();
         }
+    }
+
+    public int getProductByCategory(int categoryId) {
+        return productRepository.searchProduct_IdByCategory_Id(categoryId).orElseThrow(NoSuchElementException::new);
     }
 }

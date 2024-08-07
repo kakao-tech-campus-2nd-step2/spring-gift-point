@@ -34,14 +34,14 @@ public class MemberTest {
     }
 
     @Test
-    void testAddProduct() {
+    void testSaveMember() {
         Member savedMember = memberRepository.save(testMember);
         assertNotNull(savedMember);
         assertEquals(testMember.getToken(), savedMember.getToken());
     }
 
     @Test
-    void testUpdateProduct() {
+    void testUpdateMember() {
         memberRepository.save(testMember);
         var updateMember = new Member(1, "updateEmail", "updatePassword", "updateToken");
         Member updatedMember = memberRepository.save(updateMember);
