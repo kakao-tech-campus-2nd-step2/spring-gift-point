@@ -2,7 +2,6 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.1'
     id 'io.spring.dependency-management' version '1.1.5'
-    id 'war'
 }
 
 group = 'camp.nextstep.edu'
@@ -40,10 +39,12 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
+
+    runtimeOnly 'com.mysql:mysql-connector-j'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.mockito:mockito-core'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    providedCompile 'jakarta.servlet:jakarta.servlet-api:4.0.4'
+
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 }
 

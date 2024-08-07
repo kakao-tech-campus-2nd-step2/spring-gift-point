@@ -21,7 +21,8 @@ public class OrderResponse {
         this.message = message;
     }
 
-    public OrderResponse(String s) {
+    public OrderResponse(String message) {
+        this.message = message;
     }
 
     public Long getId() {

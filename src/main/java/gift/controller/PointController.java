@@ -10,8 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
-@Tag(name = "Point Management System", description = "Operation related to point management")
+@RequestMapping("/api/members")
+@Tag(name = "Point Management System", description = "Operations related to point management")
 public class PointController {
     private final PointService pointService;
 
@@ -20,23 +20,17 @@ public class PointController {
         this.pointService = pointService;
     }
 
-    @GetMapping("/members/points")
-    @Operation(summary = "Get member's point", description = "Fetches the points balance for a member")
+    @GetMapping("/points")
+    @Operation(summary = "Get member's points", description = "Fetches the points balance for a member")
     public ResponseEntity<PointResponse> getPoints(@RequestParam Long memberId) {
         PointResponse pointResponse = pointService.getPoints(memberId);
         return ResponseEntity.ok(pointResponse);
     }
 
-    @PostMapping("/members/points")
+    @PostMapping("/points")
     @Operation(summary = "Add points to a member", description = "Adds points to a member")
     public ResponseEntity<PointResponse> addPoints(@RequestBody PointRequest pointRequest) {
         PointResponse pointResponse = pointService.addPoint(pointRequest);
         return ResponseEntity.ok(pointResponse);
-    }
-
-    @PostMapping("/orders")
-    @Operation(summary = "Use points to an order", description = "Use points to an order")
-    public ResponseEntity<PointResponse> usePoints(@RequestBody PointRequest pointRequest) {
-
     }
 }
