@@ -26,6 +26,10 @@ public class OptionService {
         var option = new Option(optionRequestDto.name(), optionRequestDto.quantity(),
             productId);
 
+        if (optionRepository.existsByNameAndProductId(option.getName(), productId)) {
+            throw new IllegalArgumentException("옵션명이 중복됩니다.");
+        }
+
         return optionRepository.save(option);
     }
 
