@@ -71,7 +71,9 @@ class OrderServiceTest {
         product.setOption(option);
 
         OrderRequest orderRequest = new OrderRequest(1L, 9, "Please handle this order with care.", 0);
-        given(orderRepository.save(any())).willReturn(new Order(option, member, orderRequest));
+        int pointToSave = (int) (product.getPrice() * orderRequest.quantity() * 0.1);
+
+        given(orderRepository.save(any())).willReturn(new Order(option, member, orderRequest, pointToSave));
 
         int initQuantity = option.getQuantity();
 
@@ -92,10 +94,11 @@ class OrderServiceTest {
         product.setOption(option);
 
         OrderRequest orderRequest = new OrderRequest(1L, 9, "Please handle this order with care.", 5);
-        given(orderRepository.save(any())).willReturn(new Order(option, member, orderRequest));
 
         int originalPoint = member.getPoint();
         int pointToSave = (int) (product.getPrice() * orderRequest.quantity() * 0.1);
+
+        given(orderRepository.save(any())).willReturn(new Order(option, member, orderRequest, pointToSave));
 
 
         // when
@@ -115,8 +118,9 @@ class OrderServiceTest {
         product.setOption(option);
 
         OrderRequest orderRequest = new OrderRequest(option.getId(), 1, "Please handle this order with care.", 5);
+        int pointToSave = (int) (product.getPrice() * orderRequest.quantity() * 0.1);
 
-        given(orderRepository.save(any())).willReturn(new Order(option, member, orderRequest));
+        given(orderRepository.save(any())).willReturn(new Order(option, member, orderRequest, pointToSave));
 
 
         // when
@@ -162,8 +166,9 @@ class OrderServiceTest {
         product.setOption(option);
 
         OrderRequest orderRequest = new OrderRequest(option.getId(), 100, "Please handle this order with care.", 5);
+        int pointToSave = (int) (product.getPrice() * orderRequest.quantity() * 0.1);
 
-        given(orderRepository.save(any())).willReturn(new Order(option, member, orderRequest));
+        given(orderRepository.save(any())).willReturn(new Order(option, member, orderRequest, pointToSave));
 
         // when
         assertThrows(RuntimeException.class, () -> {
@@ -188,8 +193,9 @@ class OrderServiceTest {
         product.setOption(option);
 
         OrderRequest orderRequest = new OrderRequest(option.getId(), 5, "Please handle this order with care.", 101);
+        int pointToSave = (int) (product.getPrice() * orderRequest.quantity() * 0.1);
 
-        given(orderRepository.save(any())).willReturn(new Order(option, member, orderRequest));
+        given(orderRepository.save(any())).willReturn(new Order(option, member, orderRequest, pointToSave));
 
         // when
         assertThrows(RuntimeException.class, () -> {

@@ -38,15 +38,19 @@ public class Order {
     @Column(nullable = false)
     private String message;
 
+    @Column(nullable = false)
+    private Integer savedPoint;
+
     public Order() {
 
     }
 
-    public Order(Option option, Member member, OrderRequest orderRequest) {
+    public Order(Option option, Member member, OrderRequest orderRequest, Integer savedPoint) {
         this.option = option;
         this.member = member;
         this.quantity = orderRequest.quantity();
         this.message = orderRequest.message();
+        this.savedPoint = savedPoint;
     }
 
     public Long getId() {
@@ -71,5 +75,9 @@ public class Order {
 
     public String getMessage() {
         return message;
+    }
+
+    public Integer getSavedPoint() {
+        return savedPoint;
     }
 }

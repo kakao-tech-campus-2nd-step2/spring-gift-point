@@ -46,8 +46,11 @@ public class OrderService {
         option.subtract(orderRequest.quantity());
         deleteFromWishList(loginMember.getId(), option.getProduct());
         member.deductPoint(orderRequest.point());
-        member.savePoint(pointToSave(option.getProduct(), orderRequest.quantity()));
-        Order savedOrder = orderRepository.save(new Order(option, member, orderRequest));
+
+        int pointToSave = calculatePoint(option.getProduct(), orderRequest.quantity());
+        member.savePoint(pointToSave);
+
+        Order savedOrder = orderRepository.save(new Order(option, member, orderRequest, pointToSave));
         sendKaKaoTalkToMe(member, orderRequest.message());
 
         return new OrderResponse(savedOrder);
@@ -69,7 +72,7 @@ public class OrderService {
         return new PointResponse(member.getPoint());
     }
 
-    private int pointToSave(Product product, Integer quantity) {
+    private int calculatePoint(Product product, Integer quantity) {
         int totalPrice = product.getPrice() * quantity;
         return (int) (totalPrice * 0.1);
     }
