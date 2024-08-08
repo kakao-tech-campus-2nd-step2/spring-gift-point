@@ -47,6 +47,10 @@ public class Order {
         return email;
     }
 
+    public LocalDateTime getOrderTime() {
+        return orderDateTime;
+    }
+
     public static class Builder {
         private Long id;
         private Long optionId;

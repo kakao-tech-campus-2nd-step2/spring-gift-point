@@ -47,21 +47,21 @@ public class KakaoController {
     @GetMapping("/login")
     @Operation(summary = "Redirect to Kakao login", description = "Redirects the user to Kakao login page", tags = { "Kakao Authentication System" })
     public void redirectKakaoLogin(HttpServletResponse response) throws IOException {
-        String encodedRedirectUri = URLEncoder.encode(redirectUri, StandardCharsets.UTF_8.toString());
-        String encodedScope = URLEncoder.encode(scope, StandardCharsets.UTF_8.toString());
-        StringBuilder kakaoLoginUrl = new StringBuilder(authBaseUrl)
-                .append("?response_type=code")
-                .append("&client_id=").append(clientId)
-                .append("&redirect_uri=").append(encodedRedirectUri)
-                .append("&scope=").append(encodedScope);
+        String encodedRedirectUri = URLEncoder.encode(redirectUri, StandardCharsets.UTF_8);
+        String encodedScope = URLEncoder.encode(scope, StandardCharsets.UTF_8);
+        String kakaoLoginUrl = authBaseUrl +
+                "?response_type=code" +
+                "&client_id=" + clientId +
+                "&redirect_uri=" + encodedRedirectUri +
+                "&scope=" + encodedScope;
 
-        response.sendRedirect(kakaoLoginUrl.toString());
+        response.sendRedirect(kakaoLoginUrl);
     }
 
     @GetMapping("/callback")
     @Operation(summary = "Kakao login callback", description = "Handles the callback after Kakao login", tags = { "Kakao Authentication System" })
     public ResponseEntity<String> callback(
-            @Parameter(description = "Authorization code from Kakao", required = false)
+            @Parameter(description = "Authorization code from Kakao")
             @RequestParam(required = false) String code) {
         if (code == null || code.isEmpty()) {
             return ResponseEntity.badRequest().body("Authorization code is missing");

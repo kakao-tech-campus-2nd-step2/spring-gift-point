@@ -1,12 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Form</title>
+    <title>로그인</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-<button id="loginButton">Login with Kakao</button>
+<div class="login-container">
+    <h2>로그인</h2>
+    <form action="/login" method="post">
+        <div class="form-group">
+            <label for="email">이메일:</label>
+            <input type="email" id="email" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="password">비밀번호:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit">로그인</button>
+    </form>
+    <button id="loginButton">카카오로 로그인</button>
+    <a href="/register">회원가입</a>
+</div>
 
 <form id="orderForm" style="display:none;">
     <label for="optionId">Option ID:</label>
@@ -22,8 +38,8 @@
 </form>
 
 <script>
-    const clientId = '647c6bf223e4001f71ab7910b12738d4'; // 카카오 개발자 콘솔에서 발급받은 REST API 키
-    const redirectUri = 'http://localhost:8080';
+    const clientId = 'YOUR_KAKAO_REST_API_KEY'; // 카카오 개발자 콘솔에서 발급받은 REST API 키
+    const redirectUri = 'http://localhost:8080'; // 리디렉션 URI
 
     // 로그인 버튼 클릭 시 카카오 로그인 페이지로 이동
     document.getElementById('loginButton').addEventListener('click', function() {
