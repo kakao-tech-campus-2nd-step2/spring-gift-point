@@ -1,7 +1,11 @@
 package gift.config;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+@Getter
+@Setter
 @ConfigurationProperties(prefix = "kakao")
 public class KakaoProperties {
 
@@ -27,39 +31,4 @@ public class KakaoProperties {
         this.authBaseUrl = authBaseUrl;
     }
 
-    public String getAdminKey() {
-        return adminKey;
-    }
-
-    public String getClientId() {
-        return clientId;
-    }
-
-    public String getRedirectUri() {
-        return redirectUri;
-    }
-
-    public String getTokenRequestUri() {
-        return tokenRequestUri;
-    }
-
-    public String getMemberInfoRequestUri() {
-        return memberInfoRequestUri;
-    }
-
-    public String getApiUrl() {
-        return apiUrl;
-    }
-
-    public String getLoginUrl() {
-        return loginUrl;
-    }
-
-    public String getScope() {
-        return scope;
-    }
-
-    public String getAuthBaseUrl() {
-        return authBaseUrl;
-    }
 }

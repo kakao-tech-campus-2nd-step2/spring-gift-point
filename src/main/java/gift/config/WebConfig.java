@@ -28,9 +28,9 @@ public class WebConfig implements WebMvcConfigurer {
     // 전역 CORS 설정 추가
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**") // 모든 경로에 대해
-                .allowedOrigins("http://example.com") // 허용할 출처를 설정
+        registry.addMapping("/**")
+                .allowedOrigins("http://54.180.238.108:8080")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*"); // 모든 헤더 허용
+                .allowedHeaders("*");
     }
 }
