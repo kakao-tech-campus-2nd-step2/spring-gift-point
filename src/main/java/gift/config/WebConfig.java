@@ -23,6 +23,17 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final JwtResolver jwtResolver;
 
+    private final List<String> IgnoreFilterPaths = List.of(
+        "/api/members/login",
+        "/api/members/register",
+        "/api/login/oauth2/kakao");
+
+    private final List<String> ignorePathsOnlyMethodGet = List.of(
+        "/api/categories",
+        "/api/products",
+        "/api/products/\\d+",
+        "/api/products/\\d+/options");
+
     public WebConfig(CorsConfigurationProperties corsProperties, LoginMemberArgumentResolver loginUserArgumentResolver, JwtResolver jwtResolver) {
         this.corsProperties = corsProperties;
         this.loginUserArgumentResolver = loginUserArgumentResolver;
@@ -40,7 +51,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public FilterRegistrationBean authenticationFilter() {
         FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
-        filterRegistrationBean.setFilter(new AuthenticationFilter(jwtResolver));
+        filterRegistrationBean.setFilter(new AuthenticationFilter(jwtResolver, IgnoreFilterPaths, ignorePathsOnlyMethodGet));
         filterRegistrationBean.addUrlPatterns("/api/*");
         filterRegistrationBean.setOrder(2);
         return filterRegistrationBean;
