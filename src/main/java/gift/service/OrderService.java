@@ -12,6 +12,7 @@ import gift.repository.MemberRepository;
 import gift.repository.OptionRepository;
 import gift.repository.OrderRepository;
 import gift.repository.WishRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -37,21 +38,17 @@ public class OrderService {
         this.kaKaoService = kaKaoService;
     }
 
+    @Transactional
     public OrderResponse order(LoginMember loginMember, OrderRequest orderRequest) {
         Option option = optionRepository.findById(orderRequest.optionId()).orElseThrow(() -> new CustomException(DATA_NOT_FOUND));
-        option.subtract(orderRequest.quantity());
-
-        deleteFromWishList(loginMember.getId(), option.getProduct());
-
         Member member = memberRepository.findMemberById(loginMember.getId()).get();
-        if (member.getLoginType().equals(LoginType.KAKAO)) {
-            kaKaoService.sendMessage(orderRequest.message(), member.getKakaoAccessToken());
-        }
 
+        option.subtract(orderRequest.quantity());
+        deleteFromWishList(loginMember.getId(), option.getProduct());
         member.deductPoint(orderRequest.point());
         member.savePoint(pointToSave(option.getProduct(), orderRequest.quantity()));
-
         Order savedOrder = orderRepository.save(new Order(option, member, orderRequest));
+        sendKaKaoTalkToMe(member, orderRequest.message());
 
         return new OrderResponse(savedOrder);
     }
@@ -75,5 +72,11 @@ public class OrderService {
     private int pointToSave(Product product, Integer quantity) {
         int totalPrice = product.getPrice() * quantity;
         return (int) (totalPrice * 0.1);
+    }
+
+    private void sendKaKaoTalkToMe(Member member, String message) {
+        if (member.getLoginType().equals(LoginType.KAKAO)) {
+            kaKaoService.sendMessage(message, member.getKakaoAccessToken());
+        }
     }
 }

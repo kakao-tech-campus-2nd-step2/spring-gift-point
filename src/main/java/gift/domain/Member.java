@@ -128,7 +128,7 @@ public class Member {
     }
 
     private void checkPointToDeduct(int point) {
-        if (point < 1 || point > this.point) {
+        if (point < 0 || point > this.point) {
             throw new CustomException(INVALID_AMOUNT_ERROR);
         }
     }
