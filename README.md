@@ -20,5 +20,11 @@
 
 ### 구현 내용
 - 포인트 적립
+  - `calculatePoint`, `savePoint`
 - 포인트 조회
+  - `/api/members/point`
 - 포인트 차감
+  - `deductPoint`
+- 동시 주문에 대한 테스트
+- 주문 취소된 경우에 대한 테스트
+- 어떤 주문에서 얼마의 포인트 적립되었는지 저장
