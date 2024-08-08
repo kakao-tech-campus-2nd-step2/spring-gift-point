@@ -69,7 +69,7 @@ class OrderServiceTest {
     @Test
     void order_deductPoint() {
         // given
-        Product product = new Product(1L, "name", 500, "image.image");
+        Product product = new Product("name", 500, "image.image");
         Category category1 = new Category(1L, "상품권");
         Option option = new Option("optionName", 100, product);
         product.setCategory(category1);
