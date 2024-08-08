@@ -19,6 +19,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -109,8 +110,6 @@ class OrderServiceTest {
     @Transactional
     void order_concurrencyTest() throws InterruptedException {
         // given
-        member.setPoint(100);
-
         Option option = new Option("optionName", 1, product);
         given(optionRepository.findById(any())).willReturn(Optional.of(option));
         product.setOption(option);
@@ -149,6 +148,58 @@ class OrderServiceTest {
         Assertions.assertThat(option.getQuantity()).isZero();
 
         executorService.shutdown();
+    }
+
+    @Test
+    @Transactional
+    void order_canceledOrderTest_invalidQuantity() {
+        // given
+        int initialPoint = member.getPoint();
+
+        Option option = new Option("optionName", 10, product);
+        int initialQuantity = option.getQuantity();
+        given(optionRepository.findById(any())).willReturn(Optional.of(option));
+        product.setOption(option);
+
+        OrderRequest orderRequest = new OrderRequest(option.getId(), 100, "Please handle this order with care.", 5);
+
+        given(orderRepository.save(any())).willReturn(new Order(option, member, orderRequest));
+
+        // when
+        assertThrows(RuntimeException.class, () -> {
+            orderService.order(new LoginMember(member.getId()), orderRequest);
+        });
+
+        // then
+        Assertions.assertThat(member.getPoint()).as("포인트").isEqualTo(initialPoint);
+        Assertions.assertThat(option.getQuantity()).as("상품 수량").isEqualTo(initialQuantity);
+
+    }
+
+    @Test
+    @Transactional
+    void order_canceledOrderTest_invalidPoint() {
+        // given
+        int initialPoint = member.getPoint();
+
+        Option option = new Option("optionName", 10, product);
+        int initialQuantity = option.getQuantity();
+        given(optionRepository.findById(any())).willReturn(Optional.of(option));
+        product.setOption(option);
+
+        OrderRequest orderRequest = new OrderRequest(option.getId(), 5, "Please handle this order with care.", 101);
+
+        given(orderRepository.save(any())).willReturn(new Order(option, member, orderRequest));
+
+        // when
+        assertThrows(RuntimeException.class, () -> {
+            orderService.order(new LoginMember(member.getId()), orderRequest);
+        });
+
+        // then
+        Assertions.assertThat(member.getPoint()).as("포인트").isEqualTo(initialPoint);
+        Assertions.assertThat(option.getQuantity()).as("상품 수량").isEqualTo(initialQuantity);
+
     }
 
 }
