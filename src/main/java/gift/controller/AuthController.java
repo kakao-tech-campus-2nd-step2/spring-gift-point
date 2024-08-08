@@ -1,10 +1,18 @@
 package gift.controller;
 
+import gift.Login;
+import gift.dto.LoginMember;
+import gift.Login;
+import gift.dto.LoginMember;
 import gift.dto.request.AuthRequest;
 import gift.dto.response.AuthResponse;
+import gift.dto.response.PointResponse;
+import gift.dto.response.PointResponse;
 import gift.service.AuthService;
+import gift.service.OrderService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,11 +29,11 @@ public class AuthController {
     @Value("${kakao.url.code}")
     private String getCodeUrl;
     private final AuthService authService;
+    private final OrderService orderService;
 
-    private String baseUrl;
-
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, OrderService orderService) {
         this.authService = authService;
+        this.orderService = orderService;
     }
 
     @PostMapping("/register")
@@ -42,7 +50,7 @@ public class AuthController {
         return new ResponseEntity<>(authService.login(authRequest), HttpStatus.OK);
     }
 
-    @PostMapping("/kakao")
+    @GetMapping("/kakao")
     @Operation(summary = "카카오 회원가입 및 로그인 api")
     @ApiResponse(responseCode = "200", description = "카카오 로그인 성공")
     public RedirectView kakaoLoginRedirect() {
@@ -57,4 +65,10 @@ public class AuthController {
         return new ResponseEntity<>(authService.kakaoLogin(code), HttpStatus.OK);
     }
 
+    @GetMapping("/point")
+    @Operation(summary = "회원 포인트 조회 api")
+    @ApiResponse(responseCode = "200", description = "회원 포인트 조회 성공")
+    public ResponseEntity<PointResponse> getPoint(@Login LoginMember member) {
+        return new ResponseEntity<>(orderService.getMemberPoint(member.getId()), HttpStatus.OK);
+    }
 }

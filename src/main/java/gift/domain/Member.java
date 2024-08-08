@@ -1,6 +1,7 @@
 package gift.domain;
 
 import gift.LoginType;
+import gift.exception.CustomException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -9,6 +10,7 @@ import java.util.List;
 
 import static gift.constant.ErrorMessage.EMAIL_PATTERN_ERROR_MSG;
 import static gift.constant.ErrorMessage.REQUIRED_FIELD_MSG;
+import static gift.exception.ErrorCode.INVALID_AMOUNT_ERROR;
 
 @Entity
 @Table(name = "member")
@@ -32,6 +34,7 @@ public class Member {
 
     private String kakaoAccessToken;
     private String kakaoRefreshToken;
+    private Integer point;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wish> wishes;
@@ -45,6 +48,7 @@ public class Member {
         this.loginType = loginType;
         this.kakaoAccessToken = kakaoAccessToken;
         this.kakaoRefreshToken = kakaoRefreshToken;
+        this.point = 0;
     }
 
     public Member(String email, String password, LoginType loginType) {
@@ -82,6 +86,10 @@ public class Member {
         return kakaoRefreshToken;
     }
 
+    public Integer getPoint() {
+        return point;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -104,5 +112,24 @@ public class Member {
 
     public void setKakaoRefreshToken(String kakaoRefreshToken) {
         this.kakaoRefreshToken = kakaoRefreshToken;
+    }
+
+    public void setPoint(Integer point) {
+        this.point = point;
+    }
+
+    public void deductPoint(Integer point) {
+        checkPointToDeduct(point);
+        this.point -= point;
+    }
+
+    public void savePoint(Integer point) {
+        this.point += point;
+    }
+
+    private void checkPointToDeduct(int point) {
+        if (point < 0 || point > this.point) {
+            throw new CustomException(INVALID_AMOUNT_ERROR);
+        }
     }
 }
