@@ -11,11 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
-import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -108,8 +105,7 @@ public class WishlistService {
         return dto;
     }
 
-    public Integer getMostCommonCategoryId(String token) {
-        var memberId = memberRepository.searchIdByToken(token);
+    public Integer getMostCommonCategoryId(int memberId) {
         List<Integer> productIds = wishlistRepository.findProductIdByMember_id(memberId);
 
         return productIds.stream()
@@ -121,5 +117,16 @@ public class WishlistService {
                 .max(Map.Entry.comparingByValue())
                 .map(Map.Entry::getKey)
                 .orElse(null);
+    }
+
+    public Map<String, Integer> getRecommendations(String token) {
+        Map<String, Integer> body = new HashMap<>();
+        var memberId = memberRepository.searchIdByToken(token);
+        var categoryId = getMostCommonCategoryId(memberId);
+        body.put("Most Frequent Category", categoryId);
+        var productId = productRepository.searchProduct_IdByCategory_Id(categoryId).orElseThrow(NoSuchElementException::new);
+        body.put("Recommended Product", productId);
+
+        return body;
     }
 }

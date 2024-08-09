@@ -62,8 +62,4 @@ public class ProductService {
             throw new NoSuchElementException();
         }
     }
-
-    public int getProductByCategory(int categoryId) {
-        return productRepository.searchProduct_IdByCategory_Id(categoryId).orElseThrow(NoSuchElementException::new);
-    }
 }

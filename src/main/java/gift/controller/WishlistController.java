@@ -56,11 +56,7 @@ public class WishlistController {
 
     @GetMapping("/recommend")
     public ResponseEntity<Map<String, Integer>> getCommonCategory(@RequestHeader("Authorization") String token) {
-        Map<String, Integer> body = new HashMap<>();
-        var categoryId = wishlistService.getMostCommonCategoryId(token);
-        body.put("Most Frequent Category", categoryId);
-        var productId = productService.getProductByCategory(categoryId);
-        body.put("Recommended Product", productId);
+        var body = wishlistService.getRecommendations(token);
         return ResponseEntity.ok().body(body);
     }
 }

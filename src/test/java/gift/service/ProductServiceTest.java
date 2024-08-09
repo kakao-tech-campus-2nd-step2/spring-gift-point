@@ -151,19 +151,4 @@ class ProductServiceTest {
         // When & Then
         assertThrows(NoSuchElementException.class, () -> productService.deleteProduct(id));
     }
-
-    @Test
-    void testGetProductByCategory() {
-        // Given
-        int productId = 1;
-        int categoryId = 1;
-        Category testCategory = new Category(categoryId, "test", "test", "test", "test");
-        Product product = new Product(productId, testCategory, 1, "test", "testURL");
-
-        // When
-        when(productRepository.searchProduct_IdByCategory_Id(categoryId)).thenReturn(Optional.of(productId));
-
-        // Then
-        assertEquals(productId, productService.getProductByCategory(categoryId));
-    }
 }

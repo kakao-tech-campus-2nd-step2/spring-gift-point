@@ -193,14 +193,16 @@ class WishlistServiceTest {
         Product product = new Product(1, testCategory, 1, "test", "test");
         Member member = new Member(1, "test", "test", "test");
 
+        // When
         when(memberRepository.searchIdByToken(token)).thenReturn(memberId);
         when(wishlistRepository.findProductIdByMember_id(memberId)).thenReturn(Collections.singletonList(productId));
         when(productRepository.searchCategory_IdById(productId)).thenReturn(Optional.of(categoryId));
+        when(productRepository.searchProduct_IdByCategory_Id(categoryId)).thenReturn(Optional.of(productId));
 
-        // When
-        int result = wishlistService.getMostCommonCategoryId(token);
+        var result = wishlistService.getRecommendations(token);
 
         // Then
-        assertEquals(1, result);
+        assertEquals(categoryId, result.get("Most Frequent Category"));
+        assertEquals(productId, result.get("Recommended Product"));
     }
 }
