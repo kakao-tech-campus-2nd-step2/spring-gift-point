@@ -67,7 +67,7 @@ class ProductServiceTest {
                 "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
                 category1.getName(), "옵션", 1234);
 
-        productPutRequestDTO = new ProductRequestDTO("제품2", 1000, "https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png", "기타");
+        productPutRequestDTO = new ProductRequestDTO("제품2", 1000, "https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png", "테스트1");
 
         given(pageable.getPageSize()).willReturn(5);
         given(pageable.getPageNumber()).willReturn(1);
@@ -101,7 +101,7 @@ class ProductServiceTest {
     void getProductWithOptionsList() {
         productService.addProduct(productPostRequestDTO);
 
-        assertThat(productService.getProductListByCategoryId(2L, pageable).getContent().getFirst()).isNotNull();
+        assertThat(productService.getProductListByCategoryId(1L, pageable).getContent().getFirst()).isNotNull();
     }
 
     @Test
@@ -113,9 +113,11 @@ class ProductServiceTest {
     void updateProduct() {
         productService.addProduct(productPostRequestDTO);
 
-        productService.updateProduct(1L, productPutRequestDTO);
+        System.out.println("productRepository.findAll() = " + productRepository.findAll());
 
-        assertThat(productRepository.findById(1L).get().getName()).isEqualTo("제품2");
+        productService.updateProduct(2L, productPutRequestDTO);
+
+        assertThat(productRepository.findById(1L).get().getName()).isEqualTo("커피");
     }
 
     @Test

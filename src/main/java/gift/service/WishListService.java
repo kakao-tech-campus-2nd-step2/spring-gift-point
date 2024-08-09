@@ -15,7 +15,6 @@ import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -74,7 +73,7 @@ public class WishListService {
 
     @Transactional
     public void removeWishListProduct(MemberDTO memberDTO, Long id)
-            throws NoSuchProductIdException, EmptyResultDataAccessException {
+            throws BadRequestException, InternalServerException, IllegalArgumentException {
         try {
             Member member = memberRepository.findByEmail(memberDTO.getEmail())
                     .orElseThrow(() -> new UserNotFoundException("해당 사용자가 존재하지 않습니다."));

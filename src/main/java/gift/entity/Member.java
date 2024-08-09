@@ -1,6 +1,5 @@
 package gift.entity;
 
-import gift.exception.BadRequestExceptions.BadRequestException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -44,19 +43,27 @@ public class Member {
     @Column(nullable = true)
     private String accessToken;
 
-    protected Member() {
-    }
+    @Column(nullable = false)
+    private Long point;
+
+    protected Member() { }
 
     public Member(String email, String password, String accountType, String name, String role) {
         validateEmail(email);
         validatePassword(password);
         validateAccountType(accountType);
 
+        this.name = name;
+        this.role = role;
         this.email = email;
         this.password = password;
         this.accountType = accountType;
-        this.name = name;
-        this.role = role;
+    }
+
+    public Member(String email, String password, String accountType, String name, String role, Long point) {
+        this(email, password, accountType, name, role);
+        validatePoint(point);
+        this.point = point;
     }
 
     public String getEmail() {
@@ -75,44 +82,64 @@ public class Member {
     public Long getId() {
         return id;
     }
+    public Long getPoint() { return point; }
 
     public String getAccessToken() { return accessToken;}
     public void setAccessToken(String accessToken) { this.accessToken = accessToken; }
 
+    public void addPoint(Long point) {
+        validatePoint(point);
+        this.point += point;
+    }
+
+    public void substractPoint(Long point) {
+        validatePoint(point);
+        if (point > this.point)
+            throw new IllegalArgumentException("포인트가 부족합니다.");
+        this.point -= point;
+    }
+
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
+    public boolean equals(Object object) {
+        if (this == object) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (object == null || getClass() != object.getClass()) {
             return false;
         }
-        Member member = (Member) o;
-        return Objects.equals(id, member.id) && Objects.equals(email, member.email)
-                && Objects.equals(password, member.password) && Objects.equals(
-                accountType, member.accountType) && Objects.equals(name, member.name)
-                && Objects.equals(role, member.role);
+        Member member = (Member) object;
+        return Objects.equals(getId(), member.getId()) && Objects.equals(getEmail(),
+                member.getEmail()) && Objects.equals(getPassword(), member.getPassword())
+                && Objects.equals(getAccountType(), member.getAccountType())
+                && Objects.equals(getName(), member.getName()) && Objects.equals(
+                getRole(), member.getRole());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, password, accountType, name, role);
+        return Objects.hash(getId(), getEmail(), getPassword(), getAccountType(), getName(),
+                getRole());
     }
 
     private void validateEmail(String email) {
         if (email == null || !EMAIL_PATTERN.matcher(email).matches()) {
-            throw new BadRequestException("올바른 이메일 형식이 아닙니다.");
+            throw new IllegalArgumentException("올바른 이메일 형식이 아닙니다.");
         }
     }
 
     private void validatePassword(String password) {
         if (password == null || password.isBlank()) {
-            throw new BadRequestException("비밀번호를 입력해주세요.");
+            throw new IllegalArgumentException("비밀번호를 입력해주세요.");
         }
     }
 
     private void validateAccountType(String accountType) {
         if(!Objects.equals(accountType, "basic") && !Objects.equals(accountType, "social"))
-            throw new BadRequestException("계정 타입은 'basic' 또는 'social'이어야 합니다.");
+            throw new IllegalArgumentException("계정 타입은 'basic' 또는 'social'이어야 합니다.");
+    }
+
+    private void validatePoint(Long point) {
+        if(point == null || point < 0)
+            throw new IllegalArgumentException("올바르지 않은 포인트 입니다.");
     }
 }

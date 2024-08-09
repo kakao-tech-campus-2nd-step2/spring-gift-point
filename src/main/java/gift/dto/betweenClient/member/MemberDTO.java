@@ -1,5 +1,6 @@
 package gift.dto.betweenClient.member;
 
+import gift.constants.MemberContants;
 import gift.entity.Member;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.constraints.Email;
@@ -26,16 +27,16 @@ public class MemberDTO {
     private String role;
 
     public MemberDTO() {
-        this.name = "default_user";
-        this.role = "USER";
+        this.name = MemberContants.DEFAULT_USER_NAME;
+        this.role = MemberContants.DEFAULT_USER_ROLE;
     }
 
     public MemberDTO(String email, String password, String accountType) {
-        this(email, password, accountType, "default_user", "USER");
+        this(email, password, accountType, MemberContants.DEFAULT_USER_NAME, MemberContants.DEFAULT_USER_ROLE);
     }
 
     public MemberDTO(String email, String password, String accountType, String name) {
-        this(email, password, accountType, name, "USER");
+        this(email, password, accountType, name, MemberContants.DEFAULT_USER_ROLE);
     }
 
     public MemberDTO(String email, String password, String accountType, String name, String role) {
@@ -64,6 +65,10 @@ public class MemberDTO {
 
     public Member convertToMember() {
         return new Member(this.email, this.password, this.accountType, this.name, this.role);
+    }
+
+    public Member convertToMember(Long point) {
+        return new Member(this.email, this.password, this.accountType, this.name, this.role, point);
     }
 
     public static MemberDTO convertToMemberDTO(Member member) {

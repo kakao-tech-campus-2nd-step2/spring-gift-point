@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="/addPoint.js"></script>
+</head>
+<body>
+  <div class="userBox">
+    이름 : <span th:text="${name}"></span> <br>
+    이메일 : <span th:text="${email}"></span> <br>
+    포인트 : <span th:text="${point}"></span> <br>
+    <button type="button" onclick="putPointAdd()"> 포인트 충전하기 </button>
+  </div>
+</body>
+</html>

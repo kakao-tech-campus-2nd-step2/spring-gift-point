@@ -32,7 +32,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtInterceptor)
                 .addPathPatterns("/api/products/**")
-                .addPathPatterns("/api/orders/**");
+                .addPathPatterns("/api/orders/**")
+                .addPathPatterns("/api/members/point")
+                .addPathPatterns("/api/members/info");
+
     }
 
     @Override
@@ -43,8 +46,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("*")
+                .allowedOrigins("https://minji2219.github.io")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("Content-Type", "Authorization")
+                .allowCredentials(true)
                 .exposedHeaders(HttpHeaders.LOCATION);
     }
 }

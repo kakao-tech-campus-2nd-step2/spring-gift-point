@@ -46,6 +46,8 @@ public class OrderHistoryService {
             return OrderResponseDTO.convertToDTO(orderHistoryRepository.save(orderHistory));
         } catch (BadRequestException e) {
             throw e;
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException(e.getMessage());
         } catch (Exception e) {
             throw new InternalServerException(e.getMessage());
         }

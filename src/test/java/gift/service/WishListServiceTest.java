@@ -60,7 +60,9 @@ class WishListServiceTest {
 
         productRepository.deleteAll();
 
-        Category category = categoryRepository.findByName("기타").get();
+        Category category = new Category("기타", "#000000", "https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png", "adsaf");
+        categoryRepository.save(category);
+
         productRepository.save(new Product( "제품", 1000,
                 "https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png", category));
 

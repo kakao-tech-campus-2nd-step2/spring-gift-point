@@ -1,19 +1,22 @@
 package gift.service;
 
-import gift.annotation.LoginMember;
+import static gift.constants.OrderConstants.*;
+
 import gift.dto.betweenClient.member.MemberDTO;
 import gift.dto.betweenClient.order.OrderRequestDTO;
 import gift.dto.betweenClient.order.OrderResponseDTO;
 import gift.entity.Option;
-import io.swagger.v3.oas.annotations.Parameter;
+import gift.exception.BadRequestExceptions.BadRequestException;
+import gift.exception.InternalServerExceptions.InternalServerException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 public class OrderService {
+
 
     private final KakaoTokenService kakaoTokenService;
     private final MemberService memberService;
@@ -34,17 +37,30 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderResponseDTO order(@Parameter(hidden = true) @LoginMember MemberDTO memberDTO, @RequestBody OrderRequestDTO orderRequestDTO) {
+    public OrderResponseDTO order(MemberDTO memberDTO, OrderRequestDTO orderRequestDTO) throws BadRequestException, InternalServerException {
         String accessToken = memberService.getMemberAccessToken(memberDTO.getEmail());
-        optionService.subtractOptionQuantity(orderRequestDTO.optionId(),
-                orderRequestDTO.quantity());
-
         Option option = optionService.getOption(orderRequestDTO.optionId());
+        Long totalPrice = Long.valueOf(discountFilter(option.getProduct().getPrice() * orderRequestDTO.quantity()));
+
+        memberService.subtractPoint(memberDTO, totalPrice);
+        optionService.subtractOptionQuantity(orderRequestDTO.optionId(), orderRequestDTO.quantity());
         wishListService.removeWishListProduct(memberDTO, option.getProduct().getId());
 
-        if(accessToken != null && !accessToken.isBlank())
-            kakaoTokenService.sendMsgToMe(accessToken, option, orderRequestDTO.message());
+        asyncSendKakaoMsg(accessToken, option, orderRequestDTO.message());
 
         return orderHistoryService.saveOrderHistory(orderRequestDTO);
+    }
+
+    private Integer discountFilter(Integer price){
+        if(price >= DISCOUNT_THRESHOLD)
+            price = (int) (price * DISCOUNT_RATIO);
+
+        return price;
+    }
+
+    @Async
+    protected void asyncSendKakaoMsg(String accessToken, Option option, String msg){
+        if(accessToken != null && !accessToken.isBlank())
+            kakaoTokenService.sendMsgToMe(accessToken, option, msg);
     }
 }
