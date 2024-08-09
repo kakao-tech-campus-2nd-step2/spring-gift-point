@@ -18,6 +18,7 @@ import gift.entity.Order;
 import gift.entity.User;
 import gift.entity.Wishlist;
 import gift.exception.InvalidOptionException;
+import gift.exception.InvalidPointException;
 import gift.exception.InvalidTokenFormatException;
 import gift.exception.InvalidUserException;
 import gift.repository.OptionRepository;
@@ -34,11 +35,12 @@ public class OrderService {
     private final WishlistService wishlistService;
     private final UserService userService;
     private final RetryTemplate retryTemplate;
+    private final PointService pointService;
 
     public OrderService(OptionRepository optionRepository, OrderRepository orderRepository,
                         WishlistRepository wishlistRepository, KakaoMessageService kakaoMessageService,
                         WishlistService wishlistService, UserService userService,
-                        RetryTemplate retryTemplate) {
+                        RetryTemplate retryTemplate, PointService pointService) {
         this.optionRepository = optionRepository;
         this.orderRepository = orderRepository;
         this.wishlistRepository = wishlistRepository;
@@ -46,6 +48,7 @@ public class OrderService {
         this.wishlistService = wishlistService;
         this.retryTemplate = retryTemplate;
         this.userService = userService;
+        this.pointService = pointService;
     }
     
     public Page<OrderResponse> getOrders(String token, Pageable pageable){
@@ -60,10 +63,33 @@ public class OrderService {
     		validateBindingResult(bindingResult);
 	        Option option = updateOptionQuantity(request);
 	        User user = userService.getUserFromToken(token);
-	        Order order = saveOrder(user, request, option);
-	        orderTasks(token, user, option, request, bindingResult);
+	        
+	        int totalPrice = calculateTotalPriceWithDiscount(request, option);
+            int pointsToUse = processPayment(user, totalPrice);;
+	        
+            Order order = saveOrder(user, request, option, totalPrice - pointsToUse); 
+            orderTasks(token, user, option, request, bindingResult);
 	        return order.toDto();
 	    });
+    }
+    
+    private int calculateTotalPriceWithDiscount(OrderRequest request, Option option) {
+        int totalPrice = request.getTotalPrice(option);
+        return applyDiscount(totalPrice);
+    }
+    
+    private int applyDiscount(int totalPrice) {
+        if (totalPrice >= 50000) {
+            totalPrice -= (int) (totalPrice * 0.1);
+        }
+        return totalPrice;
+    }
+    
+    private int processPayment(User user, int totalPrice) {
+        if (!pointService.hasSufficientPoints(user.getId(), totalPrice)) {
+            throw new InvalidPointException("Not enough points.");
+        }
+        return pointService.deductPoints(user.getId(), totalPrice);
     }
     
     private void orderTasks(String token, User user, Option option, OrderRequest request,
@@ -79,12 +105,13 @@ public class OrderService {
     	return option;
     }
     
-    private Order saveOrder(User user, OrderRequest request, Option option) {
-    	Order order = request.toEntity(user, option);
-    	order.setOrderDateTime(LocalDateTime.now());
-    	orderRepository.save(order);
-    	return order;
+    private Order saveOrder(User user, OrderRequest request, Option option, int finalPrice) {
+        Order order = request.toEntity(user, option);
+        order.setOrderDateTime(LocalDateTime.now());
+        order.setFinalPrice(finalPrice);
+        return orderRepository.save(order);
     }
+
 
     private Option findOption(Long optionId) {
         return optionRepository.findById(optionId)
