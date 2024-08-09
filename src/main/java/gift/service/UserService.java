@@ -1,5 +1,7 @@
 package gift.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import gift.entity.User;
@@ -25,5 +27,14 @@ public class UserService {
 	public User getUserFromToken(String token) {
     	String email = tokenService.extractionEmail(token);
     	return findByEmail(email);
+    }
+	
+	 public User findById(Long userId) {
+	        return userRepository.findById(userId)
+	                .orElseThrow(() -> new UserNotFoundException("user not found."));
+	    }
+	
+	public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 }
