@@ -35,12 +35,15 @@ public class OrderService {
     @Transactional
     public Order addOrder(String token, OrderDTO orderDTO) {
         var option = optionRepository.findById(orderDTO.optionId()).orElseThrow(NoSuchElementException::new);
+        var product = productRepository.findById(orderDTO.productId()).orElseThrow(NoSuchElementException::new);
         var timeStamp = new Timestamp(System.currentTimeMillis());
-        var order = orderRepository.save(new Order(option, orderDTO.quantity(), timeStamp.toString(), orderDTO.message()));
+        var order = orderRepository.save(new Order(option, product, orderDTO.quantity(), timeStamp.toString(), orderDTO.message()));
+
         optionService.deductQuantity(orderDTO.optionId(), orderDTO.quantity());
         deleteWishlist(token, orderDTO.optionId());
         kakaoLoginService.sendMessage(token, orderDTO.message());
-        memberRepository.updatePointByToken(getPoint(orderDTO), token);
+        memberRepository.updatePointByToken(order.getPoint(), token);
+
         return order;
     }
 
@@ -53,19 +56,5 @@ public class OrderService {
     public Order findOrderById(int id) {
         return orderRepository.findById(id)
                 .orElseThrow(NoSuchElementException::new);
-    }
-
-    public int getPoint(OrderDTO orderDTO) {
-        int pointBound = 50000;
-
-        var option = optionRepository.findById(orderDTO.optionId()).orElseThrow(NoSuchElementException::new);
-        var productId = optionsRepository.findProductIdByOptionListContaining(option).orElseThrow(NoSuchElementException::new);
-        var product = productRepository.findById(productId).orElseThrow(NoSuchElementException::new);
-        var totalPrice = product.getPrice() * orderDTO.quantity();
-
-        if(totalPrice > pointBound) {
-            return (int) (totalPrice / 10);
-        }
-        return 0;
     }
 }

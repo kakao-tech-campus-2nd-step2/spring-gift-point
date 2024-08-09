@@ -13,6 +13,7 @@ public class OrderTest {
 
     private Option option;
     private Order order;
+    private Product product;
     private final String timestamp = "2023-07-29 10:00:00";
     private final String message = "Test message";
 
@@ -20,7 +21,7 @@ public class OrderTest {
     void setUp() {
         option = new Option();
         option.setId(1);
-        order = new Order(option, 2, timestamp, message);
+        order = new Order(option, product, 2, timestamp, message);
     }
 
     @Test

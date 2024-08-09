@@ -55,8 +55,8 @@ class OrderServiceTest {
         Product product = new Product(1, testCategory, 1, "test", "test");
         Member member = new Member(1, "test", "test", "test");
 
-        OrderDTO orderDTO = new OrderDTO(1, 2, "Test message");
-        Order order = new Order(option, 2, "timestamp", "Test message");
+        OrderDTO orderDTO = new OrderDTO(1, productId, 2, "Test message");
+        Order order = new Order(option, product,2, "timestamp", "Test message");
 
         option.setId(1);
 
@@ -82,7 +82,7 @@ class OrderServiceTest {
     void testAddOrderOptionNotFound() {
         // Given
         String token = "testToken";
-        OrderDTO orderDTO = new OrderDTO(1, 2, "Test message");
+        OrderDTO orderDTO = new OrderDTO(1, 1, 2, "Test message");
 
         when(optionRepository.findById(1)).thenReturn(Optional.empty());
 
@@ -98,8 +98,10 @@ class OrderServiceTest {
         int orderId = 0;
         OptionDTO optionDTO = new OptionDTO("test", 1);
         Option option = new Option(optionDTO);
+        Category testCategory = new Category(1, "test", "test", "test", "test");
+        Product product = new Product(1, testCategory, 1, "test", "test");
 
-        Order order = new Order(option, 2, "timestamp", "Test message");
+        Order order = new Order(option, product,1, "timestamp", "Test message");
 
         option.setId(orderId);
 
