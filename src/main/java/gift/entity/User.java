@@ -2,6 +2,7 @@ package gift.entity;
 
 import org.springframework.http.HttpStatus;
 
+import gift.exception.InvalidPointException;
 import gift.exception.InvalidUserException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,6 +30,8 @@ public class User {
 	@Column(nullable = false)
 	private String password;
 	
+	private int points = 0;
+	
 	public User() {}
 	
 	public User(String email, String password) {
@@ -52,9 +55,29 @@ public class User {
 		return password;
 	}
 	
+	public int getPoints() {
+        return points;
+    }
+	
+	public void setPoints(int points) {
+	    if (points < 0) {
+	        throw new InvalidPointException("Not enough points.");
+	    }
+	    this.points = points;
+	}
+	
 	public void validatePassword(String inputPassword) {
 		if (!inputPassword.equals(this.password)) {
 			throw new InvalidUserException("The email doesn't or thr password is incorrect.", HttpStatus.FORBIDDEN);
 		}
+	}
+	
+	public void addPoints(int points) {
+        this.points += points;
+    }
+	
+	public void deductPoints(int pointsToDeduct) {
+	    int newPoints = this.points - pointsToDeduct;
+	    setPoints(newPoints);
 	}
 }
