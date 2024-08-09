@@ -18,6 +18,7 @@ import gift.domain.vo.Email;
 import gift.mock.MockLoginMemberArgumentResolver;
 import gift.service.OrderService;
 import gift.web.dto.request.order.CreateOrderRequest;
+import gift.web.dto.response.order.CreateOrderResponse;
 import gift.web.dto.response.order.OrderResponse;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -84,11 +85,11 @@ class OrderApiControllerTest {
     @DisplayName("상품 주문")
     void orderProduct() throws Exception {
 
-        CreateOrderRequest request = new CreateOrderRequest(1L, 1, "message");
+        CreateOrderRequest request = new CreateOrderRequest(1L, 1, 0, "message");
         String content = objectMapper.writeValueAsString(request);
 
         given(orderService.createOrder(any(String.class), any(Long.class), any()))
-            .willReturn(new OrderResponse(1L, 1L, 10, "message", LocalDateTime.now()));
+            .willReturn(new CreateOrderResponse(1L, 1L, 10, 0, "message", LocalDateTime.now()));
 
         mockMvc
             .perform(
@@ -103,6 +104,7 @@ class OrderApiControllerTest {
                     requestFields(
                         fieldWithPath("optionId").type(JsonFieldType.NUMBER).description("상품 옵션 ID"),
                         fieldWithPath("quantity").type(JsonFieldType.NUMBER).description("주문 수량"),
+                        fieldWithPath("point").type(JsonFieldType.NUMBER).description("포인트"),
                         fieldWithPath("message").type(JsonFieldType.STRING).description("메시지")
                     ),
                     responseFields(
@@ -110,6 +112,7 @@ class OrderApiControllerTest {
                         fieldWithPath("optionId").type(JsonFieldType.NUMBER).description("상품 옵션 ID"),
                         fieldWithPath("quantity").type(JsonFieldType.NUMBER).description("주문 수량"),
                         fieldWithPath("message").type(JsonFieldType.STRING).description("메시지"),
+                        fieldWithPath("point").type(JsonFieldType.NUMBER).description("포인트"),
                         fieldWithPath("orderDateTime").type(JsonFieldType.ARRAY).description("주문 일시")
                     )
                 )

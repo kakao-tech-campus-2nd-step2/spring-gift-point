@@ -8,3 +8,6 @@ operation::member-api-controller-test/login[]
 
 === 회원 조회
 operation::member-api-controller-test/read-member[]
+
+=== 포인트 조회
+operation::member-api-controller-test/read-point[]

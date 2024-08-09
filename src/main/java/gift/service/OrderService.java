@@ -4,10 +4,12 @@ import gift.authentication.token.JwtResolver;
 import gift.authentication.token.Token;
 import gift.config.KakaoProperties;
 import gift.domain.Order;
+import gift.domain.vo.Point;
 import gift.repository.OrderRepository;
 import gift.web.client.KakaoClient;
 import gift.web.client.dto.KakaoCommerce;
 import gift.web.dto.request.order.CreateOrderRequest;
+import gift.web.dto.response.order.CreateOrderResponse;
 import gift.web.dto.response.order.OrderResponse;
 import gift.web.dto.response.product.ReadProductResponse;
 import java.util.List;
@@ -25,53 +27,51 @@ public class OrderService {
 
     private final ProductOptionService productOptionService;
     private final ProductService productService;
+    private final MemberService memberService;
     private final OrderRepository orderRepository;
 
+    private final double REWARD_POINT_RATE = 0.03; //주문 시, 3% 적립
+
     public OrderService(KakaoClient kakaoClient, JwtResolver jwtResolver, ProductOptionService productOptionService,
-        ProductService productService, KakaoProperties kakaoProperties,
+        ProductService productService, KakaoProperties kakaoProperties, MemberService memberService,
         OrderRepository orderRepository) {
         this.kakaoClient = kakaoClient;
         this.jwtResolver = jwtResolver;
         this.productOptionService = productOptionService;
         this.productService = productService;
         this.kakaoProperties = kakaoProperties;
+        this.memberService = memberService;
         this.orderRepository = orderRepository;
     }
 
-//    /**
-//     * 주문을 생성합니다<br>
-//     * 카카오 로그인을 통해 서비스를 이용 중인 회원은 나에게 보내기를 통해 알림을 전송합니다.
-//     * @param accessToken 우리 서비스의 토큰
-//     * @param productId 구매할 상품 ID
-//     * @param memberId 구매자 ID
-//     * @param request 주문 요청
-//     * @return
-//     */
-//    @Transactional
-//    public OrderResponse createOrder(String accessToken, Long productId, Long memberId, CreateOrderRequest request) {
-//        //상품 옵션 수량 차감
-//        productOptionService.subtractOptionStock(request);
-//
-//        //주문 정보 저장
-//        Order order = orderRepository.save(request.toEntity(memberId, productId));
-//
-//        sendOrderMessageIfSocialMember(accessToken, productId, request);
-//        return OrderResponse.from(order);
-//    }
-
     @Transactional
-    public OrderResponse createOrder(String accessToken, Long memberId, CreateOrderRequest request) {
+    public CreateOrderResponse createOrder(String accessToken, Long memberId, CreateOrderRequest request) {
         //상품 옵션 수량 차감
         productOptionService.subtractOptionStock(request);
 
         Long optionId = request.getOptionId();
         Long productId = productOptionService.readProductOptionById(optionId).getProductId();
 
+        //포인트 차감
+        memberService.subtractPoint(memberId, request.getPoint());
+
         //주문 정보 저장
         Order order = orderRepository.save(request.toEntity(memberId, productId));
 
+        //포인트 적립
+        Point remainingPoint = memberService.addPoint(memberId, rewardPoint(order));
+
         sendOrderMessageIfSocialMember(accessToken, productId, request);
-        return OrderResponse.from(order);
+        return CreateOrderResponse.from(order, remainingPoint);
+    }
+
+    private int rewardPoint(Order order) {
+        Integer price = productService.readProductById(order.getProductId()).getPrice();
+        Integer quantity = order.getQuantity();
+
+        int totalPrice = price * quantity;
+
+        return (int) (totalPrice * REWARD_POINT_RATE);
     }
 
     /**

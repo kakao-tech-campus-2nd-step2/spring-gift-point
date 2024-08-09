@@ -21,6 +21,7 @@ import gift.web.dto.request.LoginRequest;
 import gift.web.dto.request.member.CreateMemberRequest;
 import gift.web.dto.response.LoginResponse;
 import gift.web.dto.response.member.CreateMemberResponse;
+import gift.web.dto.response.member.PointResponse;
 import gift.web.dto.response.member.ReadMemberResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -165,6 +166,27 @@ class MemberApiControllerTest {
                         fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
                         fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호"),
                         fieldWithPath("name").type(JsonFieldType.STRING).description("이름")
+                    )
+                )
+            );
+    }
+
+    @Test
+    @DisplayName("포인트 조회")
+    void readPoint() throws Exception {
+        given(memberService.readPoint(any(Long.class)))
+            .willReturn(new PointResponse(100));
+
+        mockMvc
+            .perform(
+                get(BASE_URL + "/points")
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+            )
+            .andExpect(status().isOk())
+            .andDo(
+                restDocs.document(
+                    responseFields(
+                        fieldWithPath("point").type(JsonFieldType.NUMBER).description("포인트")
                     )
                 )
             );

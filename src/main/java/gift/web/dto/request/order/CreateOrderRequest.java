@@ -13,12 +13,15 @@ public class CreateOrderRequest {
     @Min(1)
     private final Integer quantity;
 
+    private final Integer point;
+
     @NotEmpty
     private final String message;
 
-    public CreateOrderRequest(Long optionId, Integer quantity, String message) {
+    public CreateOrderRequest(Long optionId, Integer quantity, Integer point, String message) {
         this.optionId = optionId;
         this.quantity = quantity;
+        this.point = point;
         this.message = message;
     }
 
@@ -38,6 +41,10 @@ public class CreateOrderRequest {
 
     public Integer getQuantity() {
         return quantity;
+    }
+
+    public Integer getPoint() {
+        return point;
     }
 
     public String getMessage() {

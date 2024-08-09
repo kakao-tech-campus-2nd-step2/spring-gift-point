@@ -10,6 +10,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -18,21 +19,15 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 public class AuthenticationFilter extends OncePerRequestFilter {
 
-    private final List<String> ignorePaths = List.of(
-        "/api/members/login",
-        "/api/members/register",
-        "/api/login/oauth2/kakao");
-
-    private final List<String> ignorePathsOnlyMethodGet = List.of(
-        "/api/categories",
-        "/api/products",
-        "/api/products/\\d+",
-        "/api/products/\\d+/options");
+    private final List<String> ignorePaths = new ArrayList<>();
+    private final List<String> ignorePathsOnlyMethodGet = new ArrayList<>();
     private final String BEARER = "Bearer ";
     private final JwtResolver jwtResolver;
 
-    public AuthenticationFilter(JwtResolver jwtResolver) {
+    public AuthenticationFilter(JwtResolver jwtResolver, List<String> ignorePaths, List<String> ignorePathsOnlyMethodGet) {
         this.jwtResolver = jwtResolver;
+        this.ignorePaths.addAll(ignorePaths);
+        this.ignorePathsOnlyMethodGet.addAll(ignorePathsOnlyMethodGet);
     }
 
     @Override
