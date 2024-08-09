@@ -37,6 +37,9 @@ public class Order {
 	@Column(nullable = false)
 	private String message;
 	
+	@Column(nullable = false)
+    private int finalPrice;
+	
 	public Order(Option option, User user, int quantity, String message) {
 		this.option = option;
 		this.user = user;
@@ -68,6 +71,14 @@ public class Order {
 	public void setOrderDateTime(LocalDateTime orderDateTime) {
 		this.orderDateTime = orderDateTime;
 	}
+	
+	public int getFinalPrice() {
+        return finalPrice;
+    }
+
+    public void setFinalPrice(int finalPrice) {
+        this.finalPrice = finalPrice;
+    }
 	
 	public OrderResponse toDto() {
 		return new OrderResponse(this.id, this.option.getId(), this.quantity, this.orderDateTime, this.message);
