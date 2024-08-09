@@ -40,6 +40,10 @@ public class OrderRequest {
 		this.message = message;
 	}
 	
+	public int getTotalPrice(Option option) {
+        return option.getProduct().getPrice() * this.quantity;
+    }
+	
 	public Order toEntity(User user, Option option) {
 		return new Order(option, user, this.quantity, this.message);
 	}
