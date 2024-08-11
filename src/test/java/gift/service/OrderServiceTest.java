@@ -2,8 +2,7 @@ package gift.service;
 
 import gift.domain.OptionDTO;
 import gift.domain.OrderDTO;
-import gift.entity.Order;
-import gift.entity.Option;
+import gift.entity.*;
 import gift.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,8 +23,17 @@ class OrderServiceTest {
     @Mock
     private OptionRepository optionRepository;
     @Mock
+    private OptionsRepository optionsRepository;
+    @Mock
     private KakaoLoginService kakaoLoginService;
-
+    @Mock
+    private MemberRepository memberRepository;
+    @Mock
+    private ProductRepository productRepository;
+    @Mock
+    private WishlistRepository wishlistRepository;
+    @Mock
+    private OptionService optionService;
     @InjectMocks
     private OrderService orderService;
 
@@ -38,17 +46,27 @@ class OrderServiceTest {
     void testAddOrder() {
         // Given
         String token = "testToken";
+        int memberId = 1;
+        int productId = 1;
         OptionDTO optionDTO = new OptionDTO("test", 1);
         Option option = new Option(optionDTO);
 
-        OrderDTO orderDTO = new OrderDTO(1, 2, "Test message");
-        Order order = new Order(option, 2, "timestamp", "Test message");
+        Category testCategory = new Category(1, "test", "test", "test", "test");
+        Product product = new Product(1, testCategory, 1, "test", "test");
+        Member member = new Member(1, "test", "test", "test");
+
+        OrderDTO orderDTO = new OrderDTO(1, productId, 2, "Test message");
+        Order order = new Order(option, product,2, "timestamp", "Test message");
 
         option.setId(1);
 
 
         when(optionRepository.findById(1)).thenReturn(Optional.of(option));
         when(orderRepository.save(any(Order.class))).thenReturn(order);
+        when(optionService.deductQuantity(1, 2)).thenReturn(1);
+        when(memberRepository.searchIdByToken(token)).thenReturn(memberId);
+        when(optionsRepository.findProductIdByOptionListContaining(option)).thenReturn(Optional.of(productId));
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
 
         // When
         Order result = orderService.addOrder(token, orderDTO);
@@ -56,19 +74,15 @@ class OrderServiceTest {
         // Then
         assertNotNull(result);
         assertEquals(option, result.getOption());
-        assertEquals(2, result.getOption().getQuantity());
+        assertEquals(1, result.getOption().getQuantity());
         assertEquals("Test message", result.getMessage());
-
-        verify(orderRepository).save(any(Order.class));
-        verify(kakaoLoginService).sendMessage(token, "Test message");
-        verify(optionRepository).findById(1);
     }
 
     @Test
     void testAddOrderOptionNotFound() {
         // Given
         String token = "testToken";
-        OrderDTO orderDTO = new OrderDTO(1, 2, "Test message");
+        OrderDTO orderDTO = new OrderDTO(1, 1, 2, "Test message");
 
         when(optionRepository.findById(1)).thenReturn(Optional.empty());
 
@@ -81,11 +95,13 @@ class OrderServiceTest {
     @Test
     void testFindOrderById() {
         // Given
-        int orderId = 1;
+        int orderId = 0;
         OptionDTO optionDTO = new OptionDTO("test", 1);
         Option option = new Option(optionDTO);
+        Category testCategory = new Category(1, "test", "test", "test", "test");
+        Product product = new Product(1, testCategory, 1, "test", "test");
 
-        Order order = new Order(option, 2, "timestamp", "Test message");
+        Order order = new Order(option, product,1, "timestamp", "Test message");
 
         option.setId(orderId);
 

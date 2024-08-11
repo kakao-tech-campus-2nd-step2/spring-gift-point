@@ -18,24 +18,32 @@ public class OrderService {
     private final MemberRepository memberRepository;
     private final OptionService optionService;
     private final KakaoLoginService kakaoLoginService;
+    private final OptionsRepository optionsRepository;
+    private final ProductRepository productRepository;
 
-    public OrderService(OrderRepository orderRepository, OptionRepository optionRepository, WishlistRepository wishlistRepository, MemberRepository memberRepository, OptionService optionService, KakaoLoginService kakaoLoginService) {
+    public OrderService(OrderRepository orderRepository, OptionRepository optionRepository, WishlistRepository wishlistRepository, MemberRepository memberRepository, OptionService optionService, KakaoLoginService kakaoLoginService, OptionsRepository optionsRepository, ProductRepository productRepository) {
         this.orderRepository = orderRepository;
         this.optionRepository = optionRepository;
         this.wishlistRepository = wishlistRepository;
         this.memberRepository = memberRepository;
         this.optionService = optionService;
         this.kakaoLoginService = kakaoLoginService;
+        this.optionsRepository = optionsRepository;
+        this.productRepository = productRepository;
     }
 
     @Transactional
     public Order addOrder(String token, OrderDTO orderDTO) {
         var option = optionRepository.findById(orderDTO.optionId()).orElseThrow(NoSuchElementException::new);
+        var product = productRepository.findById(orderDTO.productId()).orElseThrow(NoSuchElementException::new);
         var timeStamp = new Timestamp(System.currentTimeMillis());
-        var order = orderRepository.save(new Order(option, orderDTO.quantity(), timeStamp.toString(), orderDTO.message()));
+        var order = orderRepository.save(new Order(option, product, orderDTO.quantity(), timeStamp.toString(), orderDTO.message()));
+
         optionService.deductQuantity(orderDTO.optionId(), orderDTO.quantity());
         deleteWishlist(token, orderDTO.optionId());
         kakaoLoginService.sendMessage(token, orderDTO.message());
+        memberRepository.updatePointByToken(order.getPoint(), token);
+
         return order;
     }
 

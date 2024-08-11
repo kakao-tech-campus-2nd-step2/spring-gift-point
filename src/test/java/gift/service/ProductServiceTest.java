@@ -62,10 +62,10 @@ class ProductServiceTest {
         int id = 1;
         Category testCategory = new Category("test", "test", "test", "test");
         Product product = new Product(testCategory,1, "test", "testURL");
-        when(productRepository.findById(id)).thenReturn(product);
+        when(productRepository.findById(id)).thenReturn(Optional.of(product));
 
         // When
-        Optional<Product> result = productService.getProductById(id);
+        Optional<Product> result = Optional.ofNullable(productService.getProductById(id));
 
         // Then
         assertTrue(result.isPresent());
@@ -76,13 +76,10 @@ class ProductServiceTest {
     void testGetProductByIdNotFound() {
         // Given
         int id = 1;
-        when(productRepository.findById(id)).thenReturn(null);
+        when(productRepository.findById(id)).thenReturn(Optional.empty());
 
-        // When
-        Optional<Product> result = productService.getProductById(id);
-
-        // Then
-        assertTrue(result.isEmpty());
+        // When & Then
+        assertThrows(NoSuchElementException.class, () -> productService.getProductById(id));
     }
 
     @Test
