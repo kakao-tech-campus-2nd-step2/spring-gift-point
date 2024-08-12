@@ -107,7 +107,7 @@ public class OrderService {
 
     private void addPoint(Order order) {
         long point = order.calcPoint();
-        order.getMember().addPoint(point);
+        order.addPoint(point);
     }
 
     private Member findMember(String email) {

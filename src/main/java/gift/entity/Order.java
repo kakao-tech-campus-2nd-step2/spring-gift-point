@@ -67,4 +67,8 @@ public class Order extends BaseEntity {
             .sum();
         return (int) (sum / 100.0 * 5);
     }
+
+    public void addPoint(long point) {
+        member.addPoint(point);
+    }
 }
