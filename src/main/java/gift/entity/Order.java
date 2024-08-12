@@ -62,7 +62,8 @@ public class Order extends BaseEntity {
 
     public long calcPoint() {
         long sum = orderProductOptions.stream()
-            .mapToLong(productOption -> productOption.getProduct().getPrice())
+            .map(OrderProductOption::getProduct)
+            .mapToLong(Product::getPrice)
             .sum();
         return (int) (sum / 100.0 * 5);
     }
