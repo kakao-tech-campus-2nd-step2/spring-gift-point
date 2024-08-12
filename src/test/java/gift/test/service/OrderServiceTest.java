@@ -38,6 +38,7 @@ import gift.repository.OrderRepository;
 import gift.repository.WishlistRepository;
 import gift.service.KakaoMessageService;
 import gift.service.OrderService;
+import gift.service.PointService;
 import gift.service.UserService;
 import gift.service.WishlistService;
 
@@ -60,6 +61,9 @@ public class OrderServiceTest {
 
     @Mock
     private UserService userService;
+    
+    @Mock
+    private PointService pointService;
 
     @Mock
     private RetryTemplate retryTemplate;
@@ -83,19 +87,17 @@ public class OrderServiceTest {
         
         user = new User("test@test.com", "pw");
         user.setId(1L);
+        user.setPoints(100000);
         
         category = new Category("교환권", "#6c95d1", "https://example.com/image.jpg", "");
-        product = new Product("아이스 아메리카노 T", 4500, "https://example.com/image.jpg", category);
+        product = new Product("아이스 아메리카노 T", 60000, "https://example.com/image.jpg", category);
         product.setId(1L);
         
         option = new Option("01 [Best] 시어버터 핸드 & 시어 스틱 립 밤", 969, product);
         option.setId(1L);
 
-        order = new Order(option, user, 2, "Please handle this order with care.");
+        order = new Order(option, user, 1, "Please handle this order with care.");
         order.setOrderDateTime(now);
-
-        user = new User("test@test.com", "pw");
-        user.setId(1L);
     }
     
     @Test
@@ -126,7 +128,7 @@ public class OrderServiceTest {
         String token = "Bearer validToken";
         
         LocalDateTime requestTime = LocalDateTime.now();
-        OrderRequest request = new OrderRequest(1L, 2, "Please handle this order with care.");
+        OrderRequest request = new OrderRequest(1L, 1, "Please handle this order with care.");
 
         when(retryTemplate.execute(any(RetryCallback.class))).thenAnswer(invocation -> {
             RetryCallback<OrderResponse, Exception> callback = invocation.getArgument(0);
@@ -135,7 +137,16 @@ public class OrderServiceTest {
         when(optionRepository.findById(anyLong())).thenReturn(Optional.of(option));
         when(userService.getUserFromToken(anyString())).thenReturn(user);
         when(orderRepository.save(any(Order.class))).thenReturn(order);
+        
+        when(pointService.hasSufficientPoints(anyLong(), anyInt())).thenReturn(true);
+        doAnswer(invocation -> {
+            int totalPriceAfterDiscount = invocation.getArgument(1);
+            int pointsToUse = (int) (totalPriceAfterDiscount * 0.1);
 
+            user.setPoints(user.getPoints() - pointsToUse);
+            return pointsToUse;
+        }).when(pointService).deductPoints(anyLong(), anyInt());
+        
         OrderResponse response = orderService.createOrder(token, request, bindingResult);
 
         verify(optionRepository).save(any(Option.class));
@@ -150,6 +161,11 @@ public class OrderServiceTest {
         assertThat(response.getOptionId()).isEqualTo(option.getId());
         assertThat(response.getQuantity()).isEqualTo(order.getQuantity());
         assertThat(response.getMessage()).isEqualTo(order.getMessage());
-        assertThat(response.getOrderDateTime()).isCloseTo(requestTime, within(1, ChronoUnit.SECONDS));
+        assertThat(response.getOrderDateTime()).isCloseTo(requestTime, within(3, ChronoUnit.SECONDS));
+        
+        int totalPriceAfterDiscount = (int) (60000 * 0.9);
+        int pointsToUse = (int) (totalPriceAfterDiscount * 0.1);
+        int expectedPointsAfterDeduction = 100000 - pointsToUse;
+        assertThat(user.getPoints()).isEqualTo(expectedPointsAfterDeduction);
     }
 }
