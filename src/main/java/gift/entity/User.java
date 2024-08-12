@@ -77,7 +77,9 @@ public class User {
     }
 	
 	public void deductPoints(int pointsToDeduct) {
-	    int newPoints = this.points - pointsToDeduct;
-	    setPoints(newPoints);
+		if (this.points < pointsToDeduct) {
+            throw new InvalidPointException("Not enough points.");
+        }
+	    this.points -= pointsToDeduct;
 	}
 }
