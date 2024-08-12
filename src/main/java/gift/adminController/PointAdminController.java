@@ -11,12 +11,12 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin/points")
-public class UserAdminController {
+public class PointAdminController {
 
     private final UserService userService;
     private final PointService pointService;
 
-    public UserAdminController(UserService userService, PointService pointService) {
+    public PointAdminController(UserService userService, PointService pointService) {
         this.userService = userService;
         this.pointService = pointService;
     }
@@ -25,14 +25,14 @@ public class UserAdminController {
     public String showUserPoints(Model model) {
         List<User> users = userService.getAllUsers();
         model.addAttribute("users", users);
-        return "userAdmin/admin-points";
+        return "pointAdmin/admin-points";
     }
 
     @GetMapping("/charge/{userId}")
     public String showChargePointsPage(@PathVariable Long userId, Model model) {
         User user = userService.findById(userId);
         model.addAttribute("user", user);
-        return "userAdmin/user-charge";
+        return "pointAdmin/point-charge";
     }
 
     @PostMapping("/charge")
