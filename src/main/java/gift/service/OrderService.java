@@ -64,7 +64,7 @@ public class OrderService {
 	        Option option = updateOptionQuantity(request);
 	        User user = userService.getUserFromToken(token);
 	        
-	        int totalPrice = calculateTotalPriceWithDiscount(request, option);
+	        int totalPrice = calculateTotalPrice(request, option);
             int pointsToUse = processPayment(user, totalPrice);;
 	        
             Order order = saveOrder(user, request, option, totalPrice - pointsToUse); 
@@ -73,8 +73,8 @@ public class OrderService {
 	    });
     }
     
-    private int calculateTotalPriceWithDiscount(OrderRequest request, Option option) {
-        int totalPrice = request.getTotalPrice(option);
+    private int calculateTotalPrice(OrderRequest request, Option option) {
+        int totalPrice = option.getProduct().getPrice() * request.getQuantity();
         return applyDiscount(totalPrice);
     }
     
