@@ -53,7 +53,7 @@ public class MemberService {
     public PointResponseDTO getPoints(String email) {
         Member member = memberRepository.findByEmail(email);
         if (member == null) {
-            throw new InvalidInputValueException("유효하지 않은 이메일입니다.");
+            throw new NotFoundException("유효하지 않은 이메일입니다.");
         }
         return new PointResponseDTO(member.getPoints());
     }
@@ -65,6 +65,16 @@ public class MemberService {
             throw new NotFoundException("유효하지 않은 이메일입니다.");
         }
         member.subtractPoints(pointRequestDTO.points());
+        memberRepository.save(member);
+    }
+
+    @Transactional
+    public void chargePoints(PointRequestDTO pointRequestDTO) {
+        Member member = memberRepository.findByEmail(pointRequestDTO.email());
+        if (member == null) {
+            throw new NotFoundException("사용자를 찾을 수 없습니다.");
+        }
+        member.addPoints(pointRequestDTO.points());
         memberRepository.save(member);
     }
 }
