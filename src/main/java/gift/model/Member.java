@@ -25,16 +25,20 @@ public class Member {
     @Column(name = "role")
     private String role;
 
+    @Column(name = "points")
+    private Long points;
+
     protected Member() {
     }
 
-    public Member(Long id, String email, String password, String role) {
+    public Member(Long id, String email, String password, String role, Long points) {
         validateEmail(email);
         validatePassword(password);
         this.id = id;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.points = points;
     }
 
     public Long getId() {
@@ -51,6 +55,21 @@ public class Member {
 
     public String getRole() {
         return role;
+    }
+
+    public Long getPoints() {
+        return points;
+    }
+
+    public void addPoints(Long points) {
+        this.points += points;
+    }
+
+    public void subtractPoints(Long price) {
+        if (this.points < price) {
+            throw new InvalidInputValueException("포인트가 부족합니다.");
+        }
+        this.points -= price;
     }
 
     private void validateEmail(String email) {
