@@ -51,3 +51,12 @@
 - 커스텀 예외 만들기
   - 커스텀 예외 사용하기
 </details>
+
+---
+<details>
+<summary><strong>2단계 - 배포하기</strong></summary>
+
+- 배포 쉘 스크립트 작성
+- CORS 설정 작성
+- CORS 테스트 코드 작성
+</details>
