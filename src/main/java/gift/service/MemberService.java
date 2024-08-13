@@ -2,8 +2,10 @@ package gift.service;
 
 import gift.dto.memberDTO.LoginRequestDTO;
 import gift.dto.memberDTO.RegisterRequestDTO;
+import gift.dto.pointDTO.PointRequestDTO;
 import gift.dto.pointDTO.PointResponseDTO;
 import gift.exception.InvalidInputValueException;
+import gift.exception.NotFoundException;
 import gift.model.Member;
 import gift.repository.MemberRepository;
 import gift.util.JwtUtil;
@@ -57,12 +59,12 @@ public class MemberService {
     }
 
     @Transactional
-    public void subtractPoints(String email, Long price) {
-        Member member = memberRepository.findByEmail(email);
+    public void subtractPoints(PointRequestDTO pointRequestDTO) {
+        Member member = memberRepository.findByEmail(pointRequestDTO.email());
         if (member == null) {
-            throw new InvalidInputValueException("유효하지 않은 이메일입니다.");
+            throw new NotFoundException("유효하지 않은 이메일입니다.");
         }
-        member.subtractPoints(price);
+        member.subtractPoints(pointRequestDTO.points());
         memberRepository.save(member);
     }
 }
