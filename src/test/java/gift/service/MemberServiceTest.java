@@ -48,7 +48,7 @@ class MemberServiceTest {
 
     @Test
     void testLoginMember() {
-        Member member = new Member(null, "test@email.com", "password", "user");
+        Member member = new Member(null, "test@email.com", "password", "user", 0L);
         Member savedMember = memberRepository.save(member);
         String token = memberService.loginMember(loginRequestDTO);
         assertNotNull(token);
@@ -56,7 +56,7 @@ class MemberServiceTest {
 
     @Test
     void testGetMemberByEmail() {
-        Member member = new Member(null, "kbm@kbm.com", "kbm", "user");
+        Member member = new Member(null, "kbm@kbm.com", "kbm", "user", 0L);
         memberRepository.save(member);
 
         Member foundMember = memberService.getMemberByEmail("kbm@kbm.com");

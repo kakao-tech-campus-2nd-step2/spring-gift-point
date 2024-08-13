@@ -2,7 +2,10 @@ package gift.service;
 
 import gift.dto.memberDTO.LoginRequestDTO;
 import gift.dto.memberDTO.RegisterRequestDTO;
+import gift.dto.pointDTO.PointRequestDTO;
+import gift.dto.pointDTO.PointResponseDTO;
 import gift.exception.InvalidInputValueException;
+import gift.exception.NotFoundException;
 import gift.model.Member;
 import gift.repository.MemberRepository;
 import gift.util.JwtUtil;
@@ -28,7 +31,7 @@ public class MemberService {
             throw new InvalidInputValueException("이메일이 이미 존재합니다.");
         }
         Member member = new Member(null, registerRequestDTO.email(), registerRequestDTO.password(),
-            "user");
+            "user", 0L);
         memberRepository.save(member);
 
         return jwtUtil.generateToken(member.getEmail(), member.getPassword());
@@ -45,5 +48,33 @@ public class MemberService {
 
     public Member getMemberByEmail(String email) {
         return memberRepository.findByEmail(email);
+    }
+
+    public PointResponseDTO getPoints(String email) {
+        Member member = memberRepository.findByEmail(email);
+        if (member == null) {
+            throw new NotFoundException("유효하지 않은 이메일입니다.");
+        }
+        return new PointResponseDTO(member.getPoints());
+    }
+
+    @Transactional
+    public void subtractPoints(PointRequestDTO pointRequestDTO) {
+        Member member = memberRepository.findByEmail(pointRequestDTO.email());
+        if (member == null) {
+            throw new NotFoundException("유효하지 않은 이메일입니다.");
+        }
+        member.subtractPoints(pointRequestDTO.points());
+        memberRepository.save(member);
+    }
+
+    @Transactional
+    public void chargePoints(PointRequestDTO pointRequestDTO) {
+        Member member = memberRepository.findByEmail(pointRequestDTO.email());
+        if (member == null) {
+            throw new NotFoundException("사용자를 찾을 수 없습니다.");
+        }
+        member.addPoints(pointRequestDTO.points());
+        memberRepository.save(member);
     }
 }
