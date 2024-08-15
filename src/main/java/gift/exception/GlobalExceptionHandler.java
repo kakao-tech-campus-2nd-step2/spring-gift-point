@@ -57,4 +57,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleInvalidTokenFormatException(InvalidTokenFormatException e){
     	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
+    
+    @ExceptionHandler(InvalidPointException.class)
+    public ResponseEntity<String> handleInvalidPointException(InvalidPointException e){
+    	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }
