@@ -1,5 +1,6 @@
 package gift.entity;
 
+import gift.constants.ErrorMessage;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -50,5 +51,24 @@ public class Order extends BaseEntity {
 
     public String getMessage() {
         return message;
+    }
+
+    public void addProductOption(OrderProductOption orderProductOption) {
+        if (orderProductOption == null) {
+            throw new NullPointerException(ErrorMessage.NULL_POINTER_EXCEPTION_MSG);
+        }
+        this.orderProductOptions.add(orderProductOption);
+    }
+
+    public long calcPoint() {
+        long sum = orderProductOptions.stream()
+            .map(OrderProductOption::getProduct)
+            .mapToLong(Product::getPrice)
+            .sum();
+        return (int) (sum / 100.0 * 5);
+    }
+
+    public void addPoint(long point) {
+        member.addPoint(point);
     }
 }

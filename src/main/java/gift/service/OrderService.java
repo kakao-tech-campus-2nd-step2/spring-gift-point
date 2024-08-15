@@ -75,6 +75,8 @@ public class OrderService {
         // 주문 객체 생성 및 insert
         Order order = new Order(member, orderRequest.getQuantity(), orderRequest.getMessage());
         saveOrder(order, product, option);
+        subtractPoint(order, orderRequest.getPoint());
+        addPoint(order);
 
         // 만약 위시리스트에 존재하면 제거
         if (member.containsWish(product.getId())) {
@@ -83,8 +85,10 @@ public class OrderService {
     }
 
     private void saveOrder(Order order, Product product, Option option) {
+        OrderProductOption productOption = new OrderProductOption(order, product, option);
+        order.addProductOption(productOption);
         orderJpaDao.save(order);
-        orderProductOptionJpaDao.save(new OrderProductOption(order, product, option));
+        orderProductOptionJpaDao.save(productOption);
     }
 
     private void sendMessageForMe(Product product, OrderRequest orderRequest, String email)
@@ -95,6 +99,15 @@ public class OrderService {
                 orderRequest.getMessage(),
                 product.getImageUrl(), (int) product.getPrice())
         );
+    }
+
+    private void subtractPoint(Order order, long usedPoint) {
+        order.getMember().subtractPoint(usedPoint);
+    }
+
+    private void addPoint(Order order) {
+        long point = order.calcPoint();
+        order.addPoint(point);
     }
 
     private Member findMember(String email) {
